@@ -1,10 +1,10 @@
 {
   "clean_curve": {
-    "ending_equity": 128.7621,
+    "ending_equity": 130.1399,
     "leverage": 25.0,
     "max_drawdown": 13.7588,
     "max_drawdown_pct": 11.41,
-    "net_pct": 28.76,
+    "net_pct": 30.14,
     "notional_cap": 5000.0,
     "points": [
       {
@@ -294,12 +294,18 @@
         "pnl": 1.6379,
         "return_pct": 0.05154,
         "time": "2026-07-12T09:25:00Z"
+      },
+      {
+        "equity": 130.1399,
+        "pnl": 1.3777,
+        "return_pct": 0.0428,
+        "time": "2026-07-12T17:57:00Z"
       }
     ],
     "starting_equity": 100.0
   },
   "live_status": {
-    "available_balance": 68.390784,
+    "available_balance": 69.122638,
     "live_enabled": true,
     "monitor_ok": true,
     "paper_action": "WAIT",
@@ -307,15 +313,15 @@
     "pending_order_count": 0,
     "position_btc_abs": 0.0,
     "position_side": "flat",
-    "total_asset_value": 68.390784,
+    "total_asset_value": 69.122638,
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-12T17:32:20Z",
+    "generated_at_utc": "2026-07-12T18:31:03Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-12T17:32:04+00:00"
+    "tracker_synced_at_utc": "2026-07-12T18:30:50+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -338,6 +344,25 @@
     "until_utc": "2026-07-09T23:34:52+00:00"
   },
   "recent_trades": [
+    {
+      "closed_at": "2026-07-12T17:57:00Z",
+      "entry": 64020.4,
+      "execution_cost_bp": 3.3357,
+      "exit": 64047.8,
+      "exit_reason": "market",
+      "market": "BTCUSDC.P",
+      "notional": 1709.98,
+      "opened_at": "2026-07-12T17:54:00Z",
+      "order_type": "market",
+      "pnl": 0.7319,
+      "qty": 0.02671,
+      "return_pct": 0.0428,
+      "role": "taker -> taker",
+      "side": "long",
+      "slippage_bp": 2.4064,
+      "spread_bp": 0.9293,
+      "status": "closed"
+    },
     {
       "closed_at": "2026-07-12T09:25:00Z",
       "entry": 63737.2,
@@ -888,38 +913,19 @@
       "slippage_bp": 5.013,
       "spread_bp": 0.3172,
       "status": "closed"
-    },
-    {
-      "closed_at": "2026-06-29T23:26:00Z",
-      "entry": 60197.2,
-      "execution_cost_bp": -0.3902,
-      "exit": 60229.7,
-      "exit_reason": "market",
-      "market": "BTCUSDC.P",
-      "notional": 2457.85,
-      "opened_at": "2026-06-29T23:24:00Z",
-      "order_type": "market",
-      "pnl": 1.327,
-      "qty": 0.04083,
-      "return_pct": 0.05399,
-      "role": "taker -> taker",
-      "side": "long",
-      "slippage_bp": -0.6808,
-      "spread_bp": 0.2906,
-      "status": "closed"
     }
   ],
   "summary": {
-    "avg_execution_cost_bp": -1.436,
-    "avg_slippage_bp": -1.7448,
-    "avg_spread_bp": 0.354,
-    "avg_trade_pnl": 0.4015,
-    "avg_trade_return_pct": 0.02348,
+    "avg_execution_cost_bp": -1.3366,
+    "avg_slippage_bp": -1.6583,
+    "avg_spread_bp": 0.3677,
+    "avg_trade_pnl": 0.4084,
+    "avg_trade_return_pct": 0.02388,
     "gross_loss": -31.9798,
-    "gross_profit": 50.8518,
-    "net_pnl": 18.8719,
-    "profit_factor": 1.5901,
-    "trade_count": 47,
-    "win_rate_pct": 70.21
+    "gross_profit": 51.5836,
+    "net_pnl": 19.6038,
+    "profit_factor": 1.613,
+    "trade_count": 48,
+    "win_rate_pct": 70.83
   }
 }
