@@ -348,8 +348,11 @@
     function renderSnapshot(data) {
       const live = data.live_status || {};
       const expected = data.model_match || {};
+      const meta = data.meta || {};
       const box = byId("snapshot");
       box.replaceChildren(
+        row("Last export", formatTime(meta.generated_at_utc) || "--"),
+        row("Tracker sync", formatTime(meta.tracker_synced_at_utc) || "--"),
         row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
         row("Watchdog", live.watchdog_ok ? "Running" : "Not running", live.watchdog_ok ? "green" : "red"),
         row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
