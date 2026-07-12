@@ -1,0 +1,9 @@
+{
+  "name": "lighter-public-stats",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "export": "python export_public_stats.py",
+    "start": "python -m http.server 8080"
+  }
+}

@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BTC Bot Public Stats</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05080b;
+      --panel: #0b1117;
+      --panel-2: #0f1720;
+      --line: #233241;
+      --muted: #8fa0af;
+      --text: #eef6ff;
+      --green: #22e6a8;
+      --green-soft: rgba(34, 230, 168, 0.14);
+      --red: #ff5d66;
+      --red-soft: rgba(255, 93, 102, 0.16);
+      --blue: #60a5fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(34, 230, 168, 0.08), transparent 28rem), var(--bg);
+      color: var(--text);
+      font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1380px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 52px);
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .subhead {
+      margin-top: 10px;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      background: rgba(15, 23, 32, 0.72);
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .dot.ok { background: var(--green); }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-bottom: 14px;
+    }
+
+    .card, .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(15, 23, 32, 0.95), rgba(8, 13, 19, 0.98));
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+    }
+
+    .card {
+      min-height: 116px;
+      padding: 16px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 10px;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: 760;
+      letter-spacing: 0;
+      line-height: 1.08;
+      overflow-wrap: anywhere;
+    }
+
+    .value.small { font-size: 22px; }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .muted { color: var(--muted); }
+
+    .panels {
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.7fr);
+      margin-bottom: 14px;
+    }
+
+    .panel {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .chart-wrap {
+      height: 360px;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      transform: translate(-50%, -112%);
+      display: none;
+      min-width: 160px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(5, 8, 11, 0.94);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(35, 50, 65, 0.64);
+      padding-bottom: 10px;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      background: rgba(5, 8, 11, 0.58);
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid rgba(35, 50, 65, 0.7);
+      padding: 12px 14px;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      background: rgba(15, 23, 32, 0.92);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .side {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(34, 230, 168, 0.45);
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .notice {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1100px) {
+      .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .panels { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { width: min(100vw - 20px, 1380px); padding-top: 16px; }
+      header { display: block; }
+      .pill { margin-top: 14px; white-space: normal; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .card { min-height: 100px; padding: 14px; }
+      .value { font-size: 22px; }
+      .chart-wrap { height: 280px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>BTC Bot Public Stats</h1>
+        <div class="subhead" id="subtitle">Loading sanitized public snapshot...</div>
+      </div>
+      <div class="pill"><span class="dot" id="liveDot"></span><span id="liveText">Checking bot status</span></div>
+    </header>
+
+    <section class="grid cards">
+      <div class="card"><div class="label">Clean 25x Curve</div><div class="value" id="cleanNet">--</div><div class="muted" id="cleanEquity">--</div></div>
+      <div class="card"><div class="label">Realized PnL</div><div class="value" id="netPnl">--</div><div class="muted" id="tradeCount">--</div></div>
+      <div class="card"><div class="label">Profit Factor</div><div class="value" id="pf">--</div><div class="muted" id="avgTrade">--</div></div>
+      <div class="card"><div class="label">Win Rate</div><div class="value" id="winRate">--</div><div class="muted" id="gross">--</div></div>
+      <div class="card"><div class="label">Max Drawdown</div><div class="value" id="maxDd">--</div><div class="muted" id="maxDdPct">--</div></div>
+      <div class="card"><div class="label">Execution</div><div class="value small" id="execution">--</div><div class="muted" id="slippage">--</div></div>
+    </section>
+
+    <section class="grid panels">
+      <div class="panel">
+        <h2>Equity Curve</h2>
+        <div class="chart-wrap">
+          <canvas id="equityChart"></canvas>
+          <div class="tooltip" id="tooltip"></div>
+        </div>
+        <div class="notice">Curve uses public bot trades with $100 starting equity, 25x exposure, and $5,000 notional cap. It updates only when a new public export is published.</div>
+      </div>
+      <div class="panel">
+        <h2>Live Snapshot</h2>
+        <div class="stack" id="snapshot"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Recent Bot Trades</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Closed</th>
+              <th>Market</th>
+              <th>Side</th>
+              <th>Entry</th>
+              <th>Exit</th>
+              <th>Notional</th>
+              <th>PnL</th>
+              <th>Return</th>
+              <th>Spread</th>
+              <th>Slippage</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="tradeRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const fmtUsd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+    const fmtNum = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
+    const state = { points: [] };
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function setText(id, value) {
+      byId(id).textContent = value;
+    }
+
+    function classFor(value) {
+      return value >= 0 ? "green" : "red";
+    }
+
+    function setSigned(id, value, suffix = "") {
+      const el = byId(id);
+      el.textContent = `${value >= 0 ? "+" : ""}${fmtNum.format(value)}${suffix}`;
+      el.classList.remove("green", "red");
+      el.classList.add(classFor(value));
+    }
+
+    function formatTime(iso) {
+      if (!iso) return "--";
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return iso;
+      return date.toLocaleString([], { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function row(label, value, tone = "") {
+      const wrap = document.createElement("div");
+      wrap.className = "row";
+      const left = document.createElement("span");
+      left.className = "muted";
+      left.textContent = label;
+      const right = document.createElement("strong");
+      right.textContent = value;
+      if (tone) right.classList.add(tone);
+      wrap.append(left, right);
+      return wrap;
+    }
+
+    function renderSnapshot(data) {
+      const live = data.live_status || {};
+      const expected = data.model_match || {};
+      const box = byId("snapshot");
+      box.replaceChildren(
+        row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
+        row("Watchdog", live.watchdog_ok ? "Running" : "Not running", live.watchdog_ok ? "green" : "red"),
+        row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
+        row("Paper status", live.paper_status || "--"),
+        row("Paper action", live.paper_action || "--"),
+        row("Position", `${live.position_side || "flat"} ${live.position_btc_abs ? fmtNum.format(live.position_btc_abs) + " BTC" : ""}`.trim()),
+        row("Available", fmtUsd.format(live.available_balance || 0)),
+        row("Model expected", `${expected.filled_expected_entries || 0} filled / ${expected.missing_expected_entries || 0} missed`)
+      );
+    }
+
+    function renderTrades(trades) {
+      const tbody = byId("tradeRows");
+      tbody.replaceChildren();
+      for (const trade of trades || []) {
+        const tr = document.createElement("tr");
+        const cells = [
+          formatTime(trade.closed_at),
+          trade.market || "BTCUSDC.P",
+          trade.side || "",
+          fmtNum.format(trade.entry || 0),
+          fmtNum.format(trade.exit || 0),
+          fmtUsd.format(trade.notional || 0),
+          fmtUsd.format(trade.pnl || 0),
+          `${fmtNum.format(trade.return_pct || 0)}%`,
+          `${fmtNum.format(trade.spread_bp || 0)} bp`,
+          `${fmtNum.format(trade.slippage_bp || 0)} bp`,
+          trade.exit_reason || "--"
+        ];
+        cells.forEach((value, index) => {
+          const td = document.createElement("td");
+          if (index === 2) {
+            const badge = document.createElement("span");
+            badge.className = "side";
+            badge.textContent = value;
+            td.append(badge);
+          } else {
+            td.textContent = value;
+          }
+          if (index === 6 || index === 7) td.classList.add((trade.pnl || 0) >= 0 ? "green" : "red");
+          tr.append(td);
+        });
+        tbody.append(tr);
+      }
+    }
+
+    function renderChart(points) {
+      const canvas = byId("equityChart");
+      const tooltip = byId("tooltip");
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+      canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const pad = { top: 16, right: 22, bottom: 28, left: 58 };
+      const values = points.map(point => point.equity);
+      if (values.length < 2) return;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = Math.max(1, max - min);
+      const yMin = Math.max(0, min - range * 0.18);
+      const yMax = max + range * 0.18;
+
+      const x = index => pad.left + index / (points.length - 1) * (rect.width - pad.left - pad.right);
+      const y = value => pad.top + (yMax - value) / (yMax - yMin) * (rect.height - pad.top - pad.bottom);
+
+      ctx.strokeStyle = "rgba(143, 160, 175, 0.18)";
+      ctx.lineWidth = 1;
+      ctx.fillStyle = "#8fa0af";
+      ctx.font = "12px system-ui";
+      for (let i = 0; i < 5; i++) {
+        const value = yMin + (yMax - yMin) * i / 4;
+        const yy = y(value);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, yy);
+        ctx.lineTo(rect.width - pad.right, yy);
+        ctx.stroke();
+        ctx.fillText(fmtUsd.format(value), 6, yy + 4);
+      }
+
+      const gradient = ctx.createLinearGradient(0, pad.top, 0, rect.height - pad.bottom);
+      gradient.addColorStop(0, "rgba(34, 230, 168, 0.32)");
+      gradient.addColorStop(1, "rgba(34, 230, 168, 0.02)");
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const xx = x(index);
+        const yy = y(point.equity);
+        if (index === 0) ctx.moveTo(xx, yy);
+        else ctx.lineTo(xx, yy);
+      });
+      ctx.lineTo(x(points.length - 1), rect.height - pad.bottom);
+      ctx.lineTo(x(0), rect.height - pad.bottom);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const xx = x(index);
+        const yy = y(point.equity);
+        if (index === 0) ctx.moveTo(xx, yy);
+        else ctx.lineTo(xx, yy);
+      });
+      ctx.strokeStyle = "#22e6a8";
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+
+      function showTip(event) {
+        const localX = event.clientX - rect.left;
+        const idx = Math.max(0, Math.min(points.length - 1, Math.round((localX - pad.left) / (rect.width - pad.left - pad.right) * (points.length - 1))));
+        const point = points[idx];
+        const xx = x(idx);
+        const yy = y(point.equity);
+        tooltip.style.display = "block";
+        tooltip.style.left = `${xx}px`;
+        tooltip.style.top = `${yy}px`;
+        tooltip.textContent = `${formatTime(point.time)} | ${fmtUsd.format(point.equity)} | ${point.pnl >= 0 ? "+" : ""}${fmtUsd.format(point.pnl)}`;
+      }
+
+      canvas.onmousemove = showTip;
+      canvas.onmouseleave = () => { tooltip.style.display = "none"; };
+    }
+
+    async function load() {
+      const response = await fetch(`./data/stats.json?ts=${Date.now()}`);
+      if (!response.ok) throw new Error(`Could not load stats.json: ${response.status}`);
+      const data = await response.json();
+      const summary = data.summary || {};
+      const curve = data.clean_curve || {};
+      const meta = data.meta || {};
+      state.points = curve.points || [];
+
+      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)}`);
+      const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
+      byId("liveDot").classList.toggle("ok", liveOk);
+      setText("liveText", liveOk ? "Bot monitor running in last export" : "Bot monitor not confirmed in last export");
+
+      setSigned("cleanNet", curve.net_pct || 0, "%");
+      setText("cleanEquity", `${fmtUsd.format(curve.starting_equity || 100)} -> ${fmtUsd.format(curve.ending_equity || 0)} at ${curve.leverage || 25}x`);
+      setText("netPnl", fmtUsd.format(summary.net_pnl || 0));
+      setText("tradeCount", `${summary.trade_count || 0} public bot trades`);
+      setText("pf", fmtNum.format(summary.profit_factor || 0));
+      setText("avgTrade", `${fmtUsd.format(summary.avg_trade_pnl || 0)} / ${fmtNum.format(summary.avg_trade_return_pct || 0)}% avg`);
+      setText("winRate", `${fmtNum.format(summary.win_rate_pct || 0)}%`);
+      setText("gross", `${fmtUsd.format(summary.gross_profit || 0)} gross profit / ${fmtUsd.format(summary.gross_loss || 0)} gross loss`);
+      setText("maxDd", fmtUsd.format(curve.max_drawdown || 0));
+      setText("maxDdPct", `${fmtNum.format(curve.max_drawdown_pct || 0)}%`);
+      setText("execution", `${fmtNum.format(summary.avg_spread_bp || 0)} bp spread`);
+      setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
+
+      renderSnapshot(data);
+      renderTrades(data.recent_trades || []);
+      renderChart(state.points);
+    }
+
+    window.addEventListener("resize", () => renderChart(state.points));
+    load().catch(error => {
+      setText("subtitle", error.message);
+      byId("liveDot").classList.remove("ok");
+      setText("liveText", "Stats file missing");
+    });
+  </script>
+</body>
+</html>
