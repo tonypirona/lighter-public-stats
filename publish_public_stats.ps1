@@ -31,7 +31,7 @@ if ($LASTEXITCODE -ne 0) {
   exit 0
 }
 
-git add index.html README.md vercel.json package.json .gitignore export_public_stats.py publish_public_stats.ps1 data/stats.json
+git add index.html README.md vercel.json package.json .gitignore export_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 data/stats.json
 
 $Status = git status --porcelain
 if (-not $Status) {

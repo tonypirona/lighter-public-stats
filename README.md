@@ -30,6 +30,12 @@ cd "C:\Users\tntod\Documents\testing creation\lighter-public-stats"
 
 If the repo is connected to GitHub, this exports a fresh `data/stats.json`, commits it, and pushes it. Vercel will redeploy after the GitHub push.
 
+## Automatic Updates
+
+This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 5 minutes, exports fresh stats, and pushes only when the actual bot stats changed.
+
+The public page also re-fetches stats every 60 seconds while it is open.
+
 ## First GitHub Setup
 
 Create an empty GitHub repo named `lighter-public-stats`, then run:

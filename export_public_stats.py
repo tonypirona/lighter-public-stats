@@ -176,6 +176,14 @@ def compact_expected(summary: dict[str, Any]) -> dict[str, Any]:
     return public
 
 
+def comparable_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    comparable = json.loads(json.dumps(payload, sort_keys=True))
+    meta = comparable.get("meta", {})
+    meta.pop("generated_at_utc", None)
+    meta.pop("tracker_synced_at_utc", None)
+    return comparable
+
+
 def main() -> None:
     tracker = read_json(TRACKER_PATH, {})
     account = read_json(ACCOUNT_PATH, {})
@@ -282,6 +290,11 @@ def main() -> None:
     }
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    existing_payload = read_json(OUT_PATH, {})
+    if existing_payload and comparable_payload(existing_payload) == comparable_payload(payload):
+        print(f"No public stat changes. Kept {OUT_PATH}")
+        return
+
     OUT_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     print(f"Wrote {OUT_PATH}")
     print(
