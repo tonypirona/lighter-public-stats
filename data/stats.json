@@ -329,7 +329,7 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-13T13:31:11Z",
+    "generated_at_utc": "2026-07-13T13:31:15Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
