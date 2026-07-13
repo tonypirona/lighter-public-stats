@@ -2,5 +2,7 @@
 node_modules/
 *.log
 *.tmp
+logs/
+auto_publish.lock
 .DS_Store
 Thumbs.db
