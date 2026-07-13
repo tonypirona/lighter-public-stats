@@ -304,6 +304,10 @@
   <script>
     const fmtUsd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
     const fmtNum = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
+    const STATS_SOURCES = [
+      "https://raw.githubusercontent.com/tonypirona/lighter-public-stats/main/data/stats.json",
+      "./data/stats.json"
+    ];
     const state = { points: [] };
 
     function byId(id) {
@@ -479,16 +483,30 @@
       canvas.onmouseleave = () => { tooltip.style.display = "none"; };
     }
 
+    async function fetchStats() {
+      const errors = [];
+      for (const source of STATS_SOURCES) {
+        try {
+          const response = await fetch(`${source}?ts=${Date.now()}`, { cache: "no-store" });
+          if (!response.ok) throw new Error(`${source}: ${response.status}`);
+          const data = await response.json();
+          data.__source = source.includes("raw.githubusercontent.com") ? "GitHub live data" : "Vercel bundled data";
+          return data;
+        } catch (error) {
+          errors.push(error.message);
+        }
+      }
+      throw new Error(`Could not load stats: ${errors.join(" | ")}`);
+    }
+
     async function load() {
-      const response = await fetch(`./data/stats.json?ts=${Date.now()}`);
-      if (!response.ok) throw new Error(`Could not load stats.json: ${response.status}`);
-      const data = await response.json();
+      const data = await fetchStats();
       const summary = data.summary || {};
       const curve = data.clean_curve || {};
       const meta = data.meta || {};
       state.points = curve.points || [];
 
-      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)}`);
+      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | ${data.__source} | auto-refresh 60s`);
       const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
       byId("liveDot").classList.toggle("ok", liveOk);
       setText("liveText", liveOk ? "Bot monitor running in last export" : "Bot monitor not confirmed in last export");
@@ -517,6 +535,13 @@
       byId("liveDot").classList.remove("ok");
       setText("liveText", "Stats file missing");
     });
+    setInterval(() => {
+      load().catch(error => {
+        setText("subtitle", error.message);
+        byId("liveDot").classList.remove("ok");
+        setText("liveText", "Stats refresh failed");
+      });
+    }, 60000);
   </script>
 </body>
 </html>
