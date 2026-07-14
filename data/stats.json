@@ -329,23 +329,23 @@
     "starting_equity": 100.0
   },
   "live_status": {
-    "available_balance": 73.446664,
+    "available_balance": 24.222128,
     "live_enabled": true,
     "monitor_ok": true,
     "paper_action": "WAIT",
-    "paper_status": "flat_no_pending_signal",
+    "paper_status": "possible_live_open_trade",
     "pending_order_count": 0,
-    "position_btc_abs": 0.0,
-    "position_side": "flat",
-    "total_asset_value": 73.446664,
+    "position_btc_abs": 0.02937,
+    "position_side": "long",
+    "total_asset_value": 74.555673,
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-14T03:21:15Z",
+    "generated_at_utc": "2026-07-14T09:41:16Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-14T03:21:08+00:00"
+    "tracker_synced_at_utc": "2026-07-14T09:41:03+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
