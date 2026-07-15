@@ -661,7 +661,10 @@
         snapshots.sort((a, b) => {
           const aTime = new Date((a.meta || {}).tracker_synced_at_utc || (a.meta || {}).generated_at_utc || 0).getTime() || 0;
           const bTime = new Date((b.meta || {}).tracker_synced_at_utc || (b.meta || {}).generated_at_utc || 0).getTime() || 0;
-          return bTime - aTime;
+          if (bTime !== aTime) return bTime - aTime;
+          const aScore = ((a.execution_quality || {}).slippage_buckets || []).length + (((a.guard_activity || {}).windows || []).length * 10);
+          const bScore = ((b.execution_quality || {}).slippage_buckets || []).length + (((b.guard_activity || {}).windows || []).length * 10);
+          return bScore - aScore;
         });
         return snapshots[0];
       }
