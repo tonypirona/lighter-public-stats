@@ -598,7 +598,7 @@ def strategy_shadow_status() -> dict[str, Any]:
     if not isinstance(shadows, list):
         shadows = []
     selected = None
-    for preferred_name in ("entry_research_best", "entry_research_h16_atr_guard", "relaxed_quality_atr150", "entry_research_quality_guard"):
+    for preferred_name in ("entry_research_net_best", "entry_research_best", "entry_research_h16_atr_guard", "relaxed_quality_atr150", "entry_research_quality_guard"):
         selected = next(
             (shadow for shadow in shadows if isinstance(shadow, dict) and shadow.get("name") == preferred_name),
             None,
@@ -713,6 +713,7 @@ def strategy_overlap_status() -> dict[str, Any]:
         "total_public_bot_trades": int(number(summary.get("total_public_bot_trades"))),
         "current_live_matched": compact("current_live_matched"),
         "entry_research_best_skipped_current_live": compact("entry_research_best_skipped_current_live"),
+        "entry_research_net_best_skipped_current_live": compact("entry_research_net_best_skipped_current_live"),
         "quality_guard_skipped_current_live": compact("quality_guard_skipped_current_live"),
         "h16_atr_guard_skipped_current_live": compact("h16_atr_guard_skipped_current_live"),
         "relaxed_quality_skipped_current_live": compact("relaxed_quality_skipped_current_live"),
@@ -784,6 +785,7 @@ def decision_queue(
         )
         overlap_key = {
             "entry_research_best": "entry_research_best_skipped_current_live",
+            "entry_research_net_best": "entry_research_net_best_skipped_current_live",
             "entry_research_h16_atr_guard": "h16_atr_guard_skipped_current_live",
             "entry_research_quality_guard": "quality_guard_skipped_current_live",
             "relaxed_quality_atr150": "relaxed_quality_skipped_current_live",
@@ -1188,6 +1190,11 @@ def main() -> None:
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
     live_status = tracker.get("live_status") or {}
+    available_balance = number(latest_account.get("available_balance"))
+    target_leverage = number(order_config.get("target_leverage"))
+    max_notional = number(order_config.get("max_notional_usdc"))
+    desired_notional = available_balance * target_leverage if target_leverage > 0 else 0.0
+    intended_notional = min(desired_notional, max_notional) if max_notional > 0 else desired_notional
 
     recent = []
     for trade in reversed(published_trades[-30:]):
@@ -1278,7 +1285,7 @@ def main() -> None:
             "paper_action": live_status.get("paper_action") or expected.get("current_paper_action") or "",
             "position_side": position.get("side", "flat"),
             "position_btc_abs": number(position.get("position_btc_abs")),
-            "available_balance": number(latest_account.get("available_balance")),
+            "available_balance": available_balance,
             "total_asset_value": number(latest_account.get("total_asset_value")),
             "pending_order_count": int(number(latest_account.get("pending_order_count"))),
         },
@@ -1287,8 +1294,11 @@ def main() -> None:
             "sizing_mode": order_config.get("sizing_mode", ""),
             "entry_preflight_guard_version": order_config.get("entry_preflight_guard_version", ""),
             "entry_preflight_guard_effective_at_utc": order_config.get("entry_preflight_guard_effective_at_utc", ""),
-            "target_leverage": number(order_config.get("target_leverage")),
-            "max_notional_usdc": number(order_config.get("max_notional_usdc")),
+            "target_leverage": target_leverage,
+            "max_notional_usdc": max_notional,
+            "desired_notional_usdc": round(desired_notional, 4),
+            "intended_entry_notional_usdc": round(intended_notional, 4),
+            "notional_cap_active": bool(max_notional > 0 and desired_notional > max_notional),
             "entry_max_slippage_bp": number(order_config.get("entry_max_slippage_bp")),
             "entry_preflight_max_book_chase_bp": number(order_config.get("entry_preflight_max_book_chase_bp")),
             "entry_preflight_candidate_book_chase_bp": number(order_config.get("entry_preflight_candidate_book_chase_bp")),
