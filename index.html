@@ -388,6 +388,69 @@
     </section>
 
     <section class="panel">
+      <h2>Performance Breakdowns</h2>
+      <div class="grid quality-grid">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Side</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="sideBreakdownRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Exit</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="exitBreakdownRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Weekday UTC</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="weekdayBreakdownRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Hour UTC</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="hourBreakdownRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notice">Breakdowns use closed public bot trades. UTC grouping keeps the same buckets for every viewer.</div>
+    </section>
+
+    <section class="panel">
       <h2>Execution Quality</h2>
       <div class="grid quality-grid">
         <div class="table-wrap">
@@ -614,6 +677,19 @@
       if ((week.trade_count || 0) >= 8 && (full.profit_factor || 0) > 0 && (week.profit_factor || 0) < (full.profit_factor || 0) * 0.75) {
         add("yellow", "7d PF lagging", `7d PF ${fmtNum.format(week.profit_factor || 0)} vs all ${fmtNum.format(full.profit_factor || 0)}.`);
       }
+      const breakdowns = data.performance_breakdowns || {};
+      const weakHour = (breakdowns.hour_utc || [])
+        .filter(item => (item.count || 0) >= 8 && (item.net_pnl || 0) < 0 && (item.profit_factor || 0) < 1)
+        .sort((a, b) => (a.net_pnl || 0) - (b.net_pnl || 0))[0];
+      if (weakHour) {
+        add("yellow", "Weak hour bucket", `${weakHour.label}: ${fmtUsd.format(weakHour.net_pnl || 0)}, PF ${fmtNum.format(weakHour.profit_factor || 0)}.`);
+      }
+      const weakDay = (breakdowns.weekday_utc || [])
+        .filter(item => (item.count || 0) >= 5 && (item.net_pnl || 0) < 0 && (item.profit_factor || 0) < 1)
+        .sort((a, b) => (a.net_pnl || 0) - (b.net_pnl || 0))[0];
+      if (weakDay) {
+        add("yellow", "Weak weekday bucket", `${weakDay.label} UTC: ${fmtUsd.format(weakDay.net_pnl || 0)}, PF ${fmtNum.format(weakDay.profit_factor || 0)}.`);
+      }
 
       if (!alerts.length) add("green", "No urgent issues", "Bot, tracker, publisher, and model-match checks look clean.");
       for (const alert of alerts.slice(0, 6)) {
@@ -760,6 +836,14 @@
       renderQualityRows("slippageBuckets", quality.slippage_buckets || []);
       renderQualityRows("entryChaseBuckets", quality.entry_book_chase_buckets || []);
       renderQualityRows("entryChaseWhatIf", quality.entry_book_chase_what_if || [], "whatif");
+    }
+
+    function renderPerformanceBreakdowns(breakdowns) {
+      breakdowns = breakdowns || {};
+      renderQualityRows("sideBreakdownRows", breakdowns.side || []);
+      renderQualityRows("exitBreakdownRows", breakdowns.exit_reason || []);
+      renderQualityRows("weekdayBreakdownRows", breakdowns.weekday_utc || []);
+      renderQualityRows("hourBreakdownRows", breakdowns.hour_utc || []);
     }
 
     function renderGuardActivity(activity) {
@@ -991,6 +1075,7 @@
       renderHealth(data);
       renderModelMatch(data.model_match || {});
       renderPerformanceWindows(data.performance_windows || []);
+      renderPerformanceBreakdowns(data.performance_breakdowns || {});
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});

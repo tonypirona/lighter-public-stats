@@ -224,6 +224,68 @@ def performance_windows(trades: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
+def compact_trade_stats(label: str, trades: list[dict[str, Any]]) -> dict[str, Any]:
+    pnls = [number(trade.get("pnl")) for trade in trades]
+    returns = [trade_return_pct(trade) for trade in trades]
+    wins = [pnl for pnl in pnls if pnl > 0]
+    execution_costs = [
+        number(trade.get("executionCostBp"), math.nan)
+        for trade in trades
+        if trade.get("executionCostBp") not in ("", None)
+    ]
+    return {
+        "label": label,
+        "count": len(trades),
+        "net_pnl": round(sum(pnls), 4),
+        "profit_factor": round(profit_factor(pnls), 4),
+        "win_rate_pct": round(len(wins) / len(trades) * 100.0, 2) if trades else 0.0,
+        "avg_trade_pnl": round(avg(pnls), 4),
+        "avg_return_pct": round(avg(returns), 5),
+        "avg_execution_cost_bp": round(avg(execution_costs), 4),
+    }
+
+
+def performance_breakdowns(trades: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    hour_buckets = [
+        ("00-05 UTC", 0, 6),
+        ("06-11 UTC", 6, 12),
+        ("12-17 UTC", 12, 18),
+        ("18-23 UTC", 18, 24),
+    ]
+
+    def closed_dt(trade: dict[str, Any]) -> datetime:
+        return parse_time(trade.get("closedAt") or trade.get("openedAt"))
+
+    side_rows = []
+    for side in sorted({str(trade.get("side", "")).lower() or "unknown" for trade in trades}):
+        side_rows.append(compact_trade_stats(side, [trade for trade in trades if str(trade.get("side", "")).lower() == side]))
+
+    reason_rows = []
+    for reason in sorted({str(trade.get("exitReason", "")).lower() or "unknown" for trade in trades}):
+        bucket = [
+            trade for trade in trades
+            if (str(trade.get("exitReason", "")).lower() or "unknown") == reason
+        ]
+        reason_rows.append(compact_trade_stats(reason, bucket))
+    reason_rows.sort(key=lambda item: item["count"], reverse=True)
+
+    weekday_rows = []
+    for index, label in enumerate(weekdays):
+        weekday_rows.append(compact_trade_stats(label, [trade for trade in trades if closed_dt(trade).weekday() == index]))
+
+    hour_rows = []
+    for label, low, high in hour_buckets:
+        hour_rows.append(compact_trade_stats(label, [trade for trade in trades if low <= closed_dt(trade).hour < high]))
+
+    return {
+        "side": side_rows,
+        "exit_reason": reason_rows,
+        "weekday_utc": weekday_rows,
+        "hour_utc": hour_rows,
+    }
+
+
 def bucket_stats(
     trades: list[dict[str, Any]],
     field: str,
@@ -541,6 +603,7 @@ def main() -> None:
             "avg_execution_cost_bp": round(avg(execution_costs), 4),
         },
         "performance_windows": performance_windows(published_trades),
+        "performance_breakdowns": performance_breakdowns(published_trades),
         "clean_curve": {
             "starting_equity": START_EQUITY,
             "leverage": CLEAN_LEVERAGE,
