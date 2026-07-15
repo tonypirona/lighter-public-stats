@@ -559,11 +559,11 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T14:04:33Z",
+    "generated_at_utc": "2026-07-15T14:09:21Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T14:04:22+00:00"
+    "tracker_synced_at_utc": "2026-07-15T14:09:16+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
