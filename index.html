@@ -612,16 +612,25 @@
 
     async function fetchStats() {
       const errors = [];
+      const snapshots = [];
       for (const source of STATS_SOURCES) {
         try {
           const response = await fetch(`${source}?ts=${Date.now()}`, { cache: "no-store" });
           if (!response.ok) throw new Error(`${source}: ${response.status}`);
           const data = await response.json();
           data.__source = source.includes("raw.githubusercontent.com") ? "GitHub live data" : "Vercel bundled data";
-          return data;
+          snapshots.push(data);
         } catch (error) {
           errors.push(error.message);
         }
+      }
+      if (snapshots.length) {
+        snapshots.sort((a, b) => {
+          const aTime = new Date((a.meta || {}).tracker_synced_at_utc || (a.meta || {}).generated_at_utc || 0).getTime() || 0;
+          const bTime = new Date((b.meta || {}).tracker_synced_at_utc || (b.meta || {}).generated_at_utc || 0).getTime() || 0;
+          return bTime - aTime;
+        });
+        return snapshots[0];
       }
       throw new Error(`Could not load stats: ${errors.join(" | ")}`);
     }
