@@ -372,7 +372,7 @@
       "topic": "Strategy candidate: relaxed_quality_atr150"
     },
     {
-      "evidence": "live_only_signal; live L 10/10 / S 10/12 vs shadow L 11/12 / S 11/13; blocker quality_long_hour16_block_ok; history 2 events, 2 divergences.",
+      "evidence": "live_only_signal; live L 10/10 / S 10/12 vs shadow L 11/12 / S 11/13; blocker quality_long_hour16_block_ok; history 3 events, 3 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "candidate",
       "status": "diverged",
@@ -591,26 +591,26 @@
     ]
   },
   "live_status": {
-    "available_balance": 42.390755,
+    "available_balance": 43.571929,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T16:38:29Z",
-    "monitor_cycle": 1917,
+    "monitor_checked_at_utc": "2026-07-15T16:39:37Z",
+    "monitor_cycle": 1919,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "possible_live_open_trade",
     "pending_order_count": 0,
     "position_btc_abs": 0.0535,
     "position_side": "long",
-    "total_asset_value": 137.333433,
-    "watchdog_checked_at_utc": "2026-07-15T16:38:31Z",
+    "total_asset_value": 138.547883,
+    "watchdog_checked_at_utc": "2026-07-15T16:39:32Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T16:38:38Z",
+    "generated_at_utc": "2026-07-15T16:39:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T16:38:28+00:00"
+    "tracker_synced_at_utc": "2026-07-15T16:39:24+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -795,7 +795,7 @@
       "gross_profit": 0,
       "net_pnl": -2.8849,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-14T16:38:38Z",
+      "since_utc": "2026-07-14T16:39:38Z",
       "trade_count": 1,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -812,7 +812,7 @@
       "gross_profit": 11.6635,
       "net_pnl": 7.2129,
       "profit_factor": 2.6206,
-      "since_utc": "2026-07-08T16:38:38Z",
+      "since_utc": "2026-07-08T16:39:38Z",
       "trade_count": 16,
       "win_rate_pct": 62.5,
       "window": "7d"
@@ -829,7 +829,7 @@
       "gross_profit": 57.3071,
       "net_pnl": 22.0638,
       "profit_factor": 1.626,
-      "since_utc": "2026-06-15T16:38:38Z",
+      "since_utc": "2026-06-15T16:39:38Z",
       "trade_count": 54,
       "win_rate_pct": 68.52,
       "window": "30d"
@@ -1570,40 +1570,40 @@
     "total_public_bot_trades": 54
   },
   "strategy_shadow": {
-    "atr_pct": 0.00089032,
+    "atr_pct": 0.00087381,
     "blockers": [
       "quality_long_hour16_block_ok",
       "rsi_high_enough",
       "range_large_enough"
     ],
-    "data_end": "2026-07-15T16:37:00Z",
+    "data_end": "2026-07-15T16:38:00Z",
     "hour_utc": 16,
     "live_long_gate": "10/10",
     "live_model": "lighter_tight_block_short_ret240_pos",
     "live_short_gate": "10/12",
-    "live_status": "possible_live_open_trade",
+    "live_status": "exit_now",
     "live_would_enter_on_latest_candle": true,
     "model": "tight_ret240_long_stop240_trail_tight_h16_atr150",
     "name": "relaxed_quality_atr150",
     "primary_blocker": "quality_long_hour16_block_ok",
-    "rsi5": 4.7592,
+    "rsi5": 4.3517,
     "shadow_long_gate": "11/12",
     "shadow_short_gate": "11/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "live_only_signal",
-    "updated_at_utc": "2026-07-15T16:38:23Z"
+    "updated_at_utc": "2026-07-15T16:39:36Z"
   },
   "strategy_shadow_activity": {
-    "latest_event_utc": "2026-07-15T16:38:23Z",
+    "latest_event_utc": "2026-07-15T16:39:36Z",
     "models": [
       {
-        "both_would_enter": 27,
+        "both_would_enter": 28,
         "by_status": {
-          "both_would_enter": 27
+          "both_would_enter": 28
         },
         "divergences": 0,
-        "events": 27,
-        "latest_event_utc": "2026-07-15T16:38:23Z",
+        "events": 28,
+        "latest_event_utc": "2026-07-15T16:39:36Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.5_lrm0.90_srm0.95",
         "name": "entry_research_best",
@@ -1612,12 +1612,12 @@
       {
         "both_would_enter": 0,
         "by_status": {
-          "live_only_signal": 2
+          "live_only_signal": 3
         },
-        "divergences": 2,
-        "events": 2,
-        "latest_event_utc": "2026-07-15T16:38:23Z",
-        "live_only": 2,
+        "divergences": 3,
+        "events": 3,
+        "latest_event_utc": "2026-07-15T16:39:36Z",
+        "live_only": 3,
         "model": "entry_research_best_h16_atr_q975",
         "name": "entry_research_h16_atr_guard",
         "shadow_only": 0
@@ -1625,12 +1625,12 @@
       {
         "both_would_enter": 0,
         "by_status": {
-          "live_only_signal": 2
+          "live_only_signal": 3
         },
-        "divergences": 2,
-        "events": 2,
-        "latest_event_utc": "2026-07-15T16:38:23Z",
-        "live_only": 2,
+        "divergences": 3,
+        "events": 3,
+        "latest_event_utc": "2026-07-15T16:39:36Z",
+        "live_only": 3,
         "model": "entry_research_best_h23_h16_atr_q975",
         "name": "entry_research_quality_guard",
         "shadow_only": 0
@@ -1638,12 +1638,12 @@
       {
         "both_would_enter": 0,
         "by_status": {
-          "live_only_signal": 2
+          "live_only_signal": 3
         },
-        "divergences": 2,
-        "events": 2,
-        "latest_event_utc": "2026-07-15T16:38:23Z",
-        "live_only": 2,
+        "divergences": 3,
+        "events": 3,
+        "latest_event_utc": "2026-07-15T16:39:36Z",
+        "live_only": 3,
         "model": "tight_ret240_long_stop240_trail_tight_h16_atr150",
         "name": "relaxed_quality_atr150",
         "shadow_only": 0
@@ -1652,103 +1652,103 @@
     "recent_events": [
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:37:00Z",
-        "logged_at_utc": "2026-07-15T16:38:23Z",
+        "data_end": "2026-07-15T16:38:00Z",
+        "logged_at_utc": "2026-07-15T16:39:36Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00065151,
-        "relvol_median_1440": 2.7473,
-        "ret240_pct": -0.0582,
-        "rsi5": 4.7592,
+        "range_pct": 0.00065631,
+        "relvol_median_1440": 2.2542,
+        "ret240_pct": -0.0323,
+        "rsi5": 4.3517,
         "shadow_name": "relaxed_quality_atr150",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:37:00Z",
-        "logged_at_utc": "2026-07-15T16:38:23Z",
+        "data_end": "2026-07-15T16:38:00Z",
+        "logged_at_utc": "2026-07-15T16:39:36Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00065151,
-        "relvol_median_1440": 2.7473,
-        "ret240_pct": -0.0582,
-        "rsi5": 4.7592,
+        "range_pct": 0.00065631,
+        "relvol_median_1440": 2.2542,
+        "ret240_pct": -0.0323,
+        "rsi5": 4.3517,
         "shadow_name": "entry_research_quality_guard",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:37:00Z",
-        "logged_at_utc": "2026-07-15T16:38:23Z",
+        "data_end": "2026-07-15T16:38:00Z",
+        "logged_at_utc": "2026-07-15T16:39:36Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00065151,
-        "relvol_median_1440": 2.7473,
-        "ret240_pct": -0.0582,
-        "rsi5": 4.7592,
+        "range_pct": 0.00065631,
+        "relvol_median_1440": 2.2542,
+        "ret240_pct": -0.0323,
+        "rsi5": 4.3517,
         "shadow_name": "entry_research_h16_atr_guard",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:37:00Z",
-        "logged_at_utc": "2026-07-15T16:38:23Z",
+        "data_end": "2026-07-15T16:38:00Z",
+        "logged_at_utc": "2026-07-15T16:39:36Z",
         "primary_blocker": "",
-        "range_pct": 0.00065151,
-        "relvol_median_1440": 2.7473,
-        "ret240_pct": -0.0582,
-        "rsi5": 4.7592,
+        "range_pct": 0.00065631,
+        "relvol_median_1440": 2.2542,
+        "ret240_pct": -0.0323,
+        "rsi5": 4.3517,
         "shadow_name": "entry_research_best",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:36:00Z",
-        "logged_at_utc": "2026-07-15T16:37:08Z",
+        "data_end": "2026-07-15T16:37:00Z",
+        "logged_at_utc": "2026-07-15T16:38:23Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00165298,
-        "relvol_median_1440": 3.6804,
-        "ret240_pct": 0.0904,
-        "rsi5": 5.2303,
+        "range_pct": 0.00065151,
+        "relvol_median_1440": 2.7473,
+        "ret240_pct": -0.0582,
+        "rsi5": 4.7592,
         "shadow_name": "relaxed_quality_atr150",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:36:00Z",
-        "logged_at_utc": "2026-07-15T16:37:08Z",
+        "data_end": "2026-07-15T16:37:00Z",
+        "logged_at_utc": "2026-07-15T16:38:23Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00165298,
-        "relvol_median_1440": 3.6804,
-        "ret240_pct": 0.0904,
-        "rsi5": 5.2303,
+        "range_pct": 0.00065151,
+        "relvol_median_1440": 2.7473,
+        "ret240_pct": -0.0582,
+        "rsi5": 4.7592,
         "shadow_name": "entry_research_quality_guard",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:36:00Z",
-        "logged_at_utc": "2026-07-15T16:37:08Z",
+        "data_end": "2026-07-15T16:37:00Z",
+        "logged_at_utc": "2026-07-15T16:38:23Z",
         "primary_blocker": "quality_long_hour16_block_ok",
-        "range_pct": 0.00165298,
-        "relvol_median_1440": 3.6804,
-        "ret240_pct": 0.0904,
-        "rsi5": 5.2303,
+        "range_pct": 0.00065151,
+        "relvol_median_1440": 2.7473,
+        "ret240_pct": -0.0582,
+        "rsi5": 4.7592,
         "shadow_name": "entry_research_h16_atr_guard",
         "status": "live_only_signal"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-15T16:36:00Z",
-        "logged_at_utc": "2026-07-15T16:37:08Z",
+        "data_end": "2026-07-15T16:37:00Z",
+        "logged_at_utc": "2026-07-15T16:38:23Z",
         "primary_blocker": "",
-        "range_pct": 0.00165298,
-        "relvol_median_1440": 3.6804,
-        "ret240_pct": 0.0904,
-        "rsi5": 5.2303,
+        "range_pct": 0.00065151,
+        "relvol_median_1440": 2.7473,
+        "ret240_pct": -0.0582,
+        "rsi5": 4.7592,
         "shadow_name": "entry_research_best",
         "status": "both_would_enter"
       }
     ],
     "since_utc": "2026-07-09T23:21:33Z",
-    "total_events": 33
+    "total_events": 37
   },
   "summary": {
     "avg_execution_cost_bp": -1.1728,
