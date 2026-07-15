@@ -29,7 +29,7 @@ STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summa
 OUT_PATH = ROOT / "data" / "stats.json"
 
 START_EQUITY = 100.0
-CLEAN_LEVERAGE = 25.0
+CLEAN_LEVERAGE = 30.0
 NOTIONAL_CAP = 5000.0
 DUST_QTY = 0.0001
 PUBLIC_HEARTBEAT_MINUTES = 4
@@ -1326,7 +1326,7 @@ def main() -> None:
     print(f"Wrote {OUT_PATH}")
     print(
         f"Trades={len(published_trades)} net=${net_pnl:.2f} PF={payload['summary']['profit_factor']:.2f} "
-        f"clean_25x={payload['clean_curve']['net_pct']:.2f}%"
+        f"clean_{CLEAN_LEVERAGE:.0f}x={payload['clean_curve']['net_pct']:.2f}%"
     )
 
 
