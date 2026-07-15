@@ -1451,7 +1451,7 @@
       const diagnostics = [];
       const now = Date.now();
       for (const source of STATS_SOURCES) {
-        if (source.kind === "github-api" && now - state.lastGithubApiAt < GITHUB_API_REFRESH_MS) {
+        if (source.kind === "github-api" && state.lastGithubApiSnapshot && now - state.lastGithubApiAt < GITHUB_API_REFRESH_MS) {
           if (state.lastGithubApiSnapshot) {
             snapshots.push(state.lastGithubApiSnapshot);
             diagnostics.push(sourceDiagnostic(source, state.lastGithubApiSnapshot, "cached", "checked less than 60s ago"));
