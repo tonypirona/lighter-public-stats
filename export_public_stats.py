@@ -605,6 +605,7 @@ def strategy_shadow_status() -> dict[str, Any]:
         shadows = []
     selected = None
     for preferred_name in (
+        "entry_research_atr975_long_stop260",
         "entry_research_atr975",
         "entry_research_block_long_h10",
         "entry_research_net_best",
@@ -729,6 +730,9 @@ def strategy_overlap_status() -> dict[str, Any]:
         "entry_research_best_skipped_current_live": compact("entry_research_best_skipped_current_live"),
         "entry_research_net_best_skipped_current_live": compact("entry_research_net_best_skipped_current_live"),
         "entry_research_atr975_skipped_current_live": compact("entry_research_atr975_skipped_current_live"),
+        "entry_research_atr975_long_stop260_skipped_current_live": compact(
+            "entry_research_atr975_long_stop260_skipped_current_live"
+        ),
         "entry_research_block_long_h10_skipped_current_live": compact(
             "entry_research_block_long_h10_skipped_current_live"
         ),
@@ -805,6 +809,7 @@ def decision_queue(
             "entry_research_best": "entry_research_best_skipped_current_live",
             "entry_research_net_best": "entry_research_net_best_skipped_current_live",
             "entry_research_atr975": "entry_research_atr975_skipped_current_live",
+            "entry_research_atr975_long_stop260": "entry_research_atr975_long_stop260_skipped_current_live",
             "entry_research_block_long_h10": "entry_research_block_long_h10_skipped_current_live",
             "entry_research_h16_atr_guard": "h16_atr_guard_skipped_current_live",
             "entry_research_quality_guard": "quality_guard_skipped_current_live",
