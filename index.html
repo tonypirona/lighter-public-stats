@@ -311,6 +311,23 @@
     </section>
 
     <section class="panel">
+      <h2>Model Match</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Read</th>
+            </tr>
+          </thead>
+          <tbody id="modelMatchRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">This compares the strategy model to live bot records in the latest public-safe model-match window. It helps separate missed execution from normal guard-blocked entries.</div>
+    </section>
+
+    <section class="panel">
       <h2>Execution Quality</h2>
       <div class="grid quality-grid">
         <div class="table-wrap">
@@ -666,6 +683,40 @@
       }
     }
 
+    function renderModelMatch(model) {
+      const tbody = byId("modelMatchRows");
+      tbody.replaceChildren();
+      model = model || {};
+      const expected = model.expected_model_trades || 0;
+      const filled = model.filled_expected_entries || 0;
+      const blocked = model.blocked_expected_entries || 0;
+      const missing = model.missing_expected_entries || 0;
+      const unexpected = model.unexpected_live_entries || 0;
+      const sentNoFill = model.sent_no_fill_entries || 0;
+      const coverage = expected ? filled / expected * 100 : 0;
+      const drift = model.avg_return_delta_bp || 0;
+      const period = model.since_utc && model.until_utc
+        ? `${formatTime(model.since_utc)} -> ${formatTime(model.until_utc)}`
+        : "--";
+      const rows = [
+        ["Model", model.model || "--", period],
+        ["Expected / filled", `${fmtNum.format(expected)} / ${fmtNum.format(filled)}`, expected ? `${fmtNum.format(coverage)}% filled` : "--", coverage >= 80 || !expected ? "green" : "yellow"],
+        ["Guard-blocked", fmtNum.format(blocked), blocked ? "blocked before live order" : "none", blocked ? "yellow" : "green"],
+        ["Missed", fmtNum.format(missing), missing ? "model trade not found live" : "none", missing ? "red" : "green"],
+        ["Sent no fill", fmtNum.format(sentNoFill), sentNoFill ? "order sent but not filled" : "none", sentNoFill ? "yellow" : "green"],
+        ["Unexpected live", fmtNum.format(unexpected), unexpected ? "live trade outside model" : "none", unexpected ? "red" : "green"],
+        ["Actual return PF", model.actual_return_profit_factor ? fmtNum.format(model.actual_return_profit_factor) : "--", "model-match window", (model.actual_return_profit_factor || 0) >= 1 ? "green" : "red"],
+        ["Return drift", `${drift >= 0 ? "+" : ""}${fmtNum.format(drift)} bp avg`, "actual vs model", drift >= 0 ? "green" : "red"],
+      ];
+      for (const [metric, value, read, tone] of rows) {
+        const tr = document.createElement("tr");
+        appendCell(tr, metric);
+        appendCell(tr, value, tone || "");
+        appendCell(tr, read);
+        tbody.append(tr);
+      }
+    }
+
     function renderChart(points) {
       const canvas = byId("equityChart");
       const tooltip = byId("tooltip");
@@ -805,6 +856,7 @@
 
       renderSnapshot(data);
       renderHealth(data);
+      renderModelMatch(data.model_match || {});
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});
