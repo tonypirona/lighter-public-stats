@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>BTC Bot Public Stats</title>
   <style>
     :root {
@@ -359,7 +362,7 @@
           <canvas id="equityChart"></canvas>
           <div class="tooltip" id="tooltip"></div>
         </div>
-        <div class="notice">Curve uses public bot trades with $100 starting equity, 25x exposure, and $5,000 notional cap. It updates only when a new public export is published.</div>
+        <div class="notice">Curve uses public bot trades with $100 starting equity, 25x exposure, and $5,000 notional cap. This page checks for newer public exports automatically.</div>
       </div>
       <div class="panel">
         <h2>Live Snapshot</h2>
@@ -623,11 +626,31 @@
   <script>
     const fmtUsd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
     const fmtNum = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
+    const REFRESH_INTERVAL_MS = 10000;
+    const GITHUB_API_REFRESH_MS = 60000;
     const STATS_SOURCES = [
-      "https://raw.githubusercontent.com/tonypirona/lighter-public-stats/main/data/stats.json",
-      "./data/stats.json"
+      {
+        kind: "json",
+        label: "GitHub raw live data",
+        url: "https://raw.githubusercontent.com/tonypirona/lighter-public-stats/main/data/stats.json"
+      },
+      {
+        kind: "json",
+        label: "Vercel bundled data",
+        url: "./data/stats.json"
+      },
+      {
+        kind: "github-api",
+        label: "GitHub API live data",
+        url: "https://api.github.com/repos/tonypirona/lighter-public-stats/contents/data/stats.json?ref=main"
+      }
     ];
-    const state = { points: [] };
+    const state = {
+      points: [],
+      refreshTimer: null,
+      refreshInFlight: false,
+      lastGithubApiAt: 0
+    };
 
     function byId(id) {
       return document.getElementById(id);
@@ -672,6 +695,46 @@
       const date = new Date(iso);
       if (Number.isNaN(date.getTime())) return Number.POSITIVE_INFINITY;
       return Math.max(0, (Date.now() - date.getTime()) / 60000);
+    }
+
+    function cacheBust(url) {
+      const sep = url.includes("?") ? "&" : "?";
+      return `${url}${sep}_=${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+
+    function parseStamp(value) {
+      if (!value) return 0;
+      const time = new Date(value).getTime();
+      return Number.isFinite(time) ? time : 0;
+    }
+
+    function snapshotFreshnessMs(data) {
+      const meta = data.meta || {};
+      const live = data.live_status || {};
+      const model = data.model_match || {};
+      return Math.max(
+        parseStamp(meta.generated_at_utc),
+        parseStamp(meta.tracker_synced_at_utc),
+        parseStamp(live.monitor_checked_at_utc),
+        parseStamp(live.watchdog_checked_at_utc),
+        parseStamp(model.generated_at_utc)
+      );
+    }
+
+    function snapshotRichnessScore(data) {
+      return (
+        (((data.execution_quality || {}).slippage_buckets || []).length * 2) +
+        (((data.guard_activity || {}).windows || []).length * 10) +
+        ((data.decision_queue || []).length * 5) +
+        ((data.recent_trades || []).length)
+      );
+    }
+
+    function decodeBase64Json(content) {
+      const clean = String(content || "").replace(/\s/g, "");
+      const binary = atob(clean);
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+      return JSON.parse(new TextDecoder().decode(bytes));
     }
 
     function healthStatus(iso, ok = true, greenMinutes = 7, yellowMinutes = 12) {
