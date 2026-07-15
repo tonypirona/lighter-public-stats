@@ -345,7 +345,7 @@
     "live_enabled": true,
     "monitor_ok": true,
     "paper_action": "WAIT",
-    "paper_status": "possible_live_open_trade",
+    "paper_status": "flat_no_pending_signal",
     "pending_order_count": 0,
     "position_btc_abs": 0.0,
     "position_side": "flat",
@@ -353,11 +353,11 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T07:31:16Z",
+    "generated_at_utc": "2026-07-15T07:36:16Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T07:31:06+00:00"
+    "tracker_synced_at_utc": "2026-07-15T07:36:16+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
