@@ -54,6 +54,28 @@ FORBIDDEN_VALUE_PATTERNS = [
 ]
 
 
+def as_float(value: Any, default: float = 0.0) -> float:
+    if value in ("", None):
+        return default
+    try:
+        result = float(value)
+    except (TypeError, ValueError):
+        return default
+    return result if result == result and result not in (float("inf"), float("-inf")) else default
+
+
+def as_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(as_float(value, float(default)))
+    except (TypeError, ValueError):
+        return default
+
+
+def assert_close(label: str, left: Any, right: Any, tolerance: float = 0.01) -> None:
+    if abs(as_float(left) - as_float(right)) > tolerance:
+        fail(f"{label} mismatch: {left} vs {right}")
+
+
 def fail(message: str) -> None:
     print(f"VALIDATION FAILED: {message}", file=sys.stderr)
     raise SystemExit(1)
@@ -88,9 +110,10 @@ def validate_public_stats(stats: dict[str, Any]) -> None:
         fail(f"stats missing top-level keys: {', '.join(missing)}")
 
     summary = stats.get("summary") or {}
-    if int(summary.get("trade_count", -1)) < 0:
+    trade_count = as_int(summary.get("trade_count"), -1)
+    if trade_count < 0:
         fail("summary.trade_count must be non-negative")
-    if float(summary.get("profit_factor", 0)) < 0:
+    if as_float(summary.get("profit_factor")) < 0:
         fail("summary.profit_factor must be non-negative")
 
     windows = stats.get("performance_windows") or []
@@ -98,10 +121,51 @@ def validate_public_stats(stats: dict[str, Any]) -> None:
     actual_windows = {item.get("window") for item in windows if isinstance(item, dict)}
     if expected_windows - actual_windows:
         fail(f"performance_windows missing: {', '.join(sorted(expected_windows - actual_windows))}")
+    all_window = next((item for item in windows if isinstance(item, dict) and item.get("window") == "all"), {})
+    if all_window:
+        if as_int(all_window.get("trade_count"), -1) != trade_count:
+            fail("all performance window trade_count must match summary.trade_count")
+        assert_close("all performance window net_pnl", all_window.get("net_pnl"), summary.get("net_pnl"))
+        assert_close("all performance window profit_factor", all_window.get("profit_factor"), summary.get("profit_factor"), 0.001)
+
+    recent = stats.get("recent_trades") or []
+    if not isinstance(recent, list):
+        fail("recent_trades must be a list")
+    if len(recent) > 30:
+        fail("recent_trades must be capped at 30 rows")
+    if len(recent) > trade_count:
+        fail("recent_trades cannot exceed summary.trade_count")
+
+    curve = stats.get("clean_curve") or {}
+    points = curve.get("points") or []
+    if not isinstance(points, list):
+        fail("clean_curve.points must be a list")
+    if len(points) != trade_count + 1:
+        fail("clean_curve.points must equal summary.trade_count plus starting point")
+    if points:
+        assert_close("clean_curve starting equity", points[0].get("equity"), curve.get("starting_equity"))
+        assert_close("clean_curve ending equity", points[-1].get("equity"), curve.get("ending_equity"))
 
     decision_queue = stats.get("decision_queue") or []
     if not isinstance(decision_queue, list) or not decision_queue:
         fail("decision_queue must be a non-empty list")
+    for index, item in enumerate(decision_queue):
+        if not isinstance(item, dict):
+            fail(f"decision_queue[{index}] must be an object")
+        for key in ("topic", "status", "priority", "evidence", "next_step"):
+            if not item.get(key):
+                fail(f"decision_queue[{index}] missing {key}")
+
+    what_if = stats.get("time_filter_what_if") or {}
+    candidates = what_if.get("candidates") or []
+    if not isinstance(candidates, list) or not candidates:
+        fail("time_filter_what_if.candidates must be a non-empty list")
+    valid_readiness = {"candidate", "watch only", "too small", "reject"}
+    for index, item in enumerate(candidates):
+        if item.get("readiness") not in valid_readiness:
+            fail(f"time_filter_what_if.candidates[{index}] has invalid readiness")
+        if as_int(item.get("removed_count"), -1) < 0:
+            fail(f"time_filter_what_if.candidates[{index}] has invalid removed_count")
 
     for path, value in walk_json(stats):
         key = path.rsplit(".", 1)[-1].split("[", 1)[0].lower()
