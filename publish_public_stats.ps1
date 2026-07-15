@@ -7,6 +7,17 @@ $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $Root
 
+function Invoke-Checked {
+  param(
+    [string]$Label,
+    [scriptblock]$Command
+  )
+  & $Command
+  if ($LASTEXITCODE -ne 0) {
+    throw "$Label failed with exit code $LASTEXITCODE"
+  }
+}
+
 $PythonCandidates = @(
   "..\freqtrade\.venv\Scripts\python.exe",
   "python",
@@ -27,8 +38,8 @@ if (-not $Python) {
   throw "Python was not found. Install Python or activate the freqtrade virtual environment."
 }
 
-& $Python ".\export_public_stats.py"
-& $Python ".\validate_public_stats.py"
+Invoke-Checked "export_public_stats.py" { & $Python ".\export_public_stats.py" }
+Invoke-Checked "validate_public_stats.py" { & $Python ".\validate_public_stats.py" }
 
 $Remote = git remote 2>$null
 if ($LASTEXITCODE -ne 0) {
@@ -49,10 +60,10 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 $Stamp = Get-Date -Format "yyyy-MM-dd HH:mm"
-git commit -m "Update public bot stats $Stamp"
+Invoke-Checked "git commit" { git commit -m "Update public bot stats $Stamp" }
 
 if ($Remote) {
-  git push
+  Invoke-Checked "git push" { git push }
 } else {
   Write-Host "Committed locally. Add a GitHub remote, then run git push."
 }

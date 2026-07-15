@@ -23,6 +23,7 @@ REQUIRED_TOP_LEVEL = {
     "current_guard_stats",
     "performance_windows",
     "performance_breakdowns",
+    "risk_hotspots",
     "time_filter_what_if",
     "decision_queue",
     "recent_trades",
@@ -156,6 +157,19 @@ def validate_public_stats(stats: dict[str, Any]) -> None:
             if not item.get(key):
                 fail(f"decision_queue[{index}] missing {key}")
 
+    risk = stats.get("risk_hotspots") or {}
+    if not isinstance(risk, dict):
+        fail("risk_hotspots must be an object")
+    for key in ("loss_count", "gross_loss_abs", "largest_loss_share_pct", "top3_loss_share_pct", "weak_buckets", "worst_losses"):
+        if key not in risk:
+            fail(f"risk_hotspots missing {key}")
+    if as_int(risk.get("loss_count"), -1) < 0:
+        fail("risk_hotspots.loss_count must be non-negative")
+    if not isinstance(risk.get("weak_buckets"), list):
+        fail("risk_hotspots.weak_buckets must be a list")
+    if not isinstance(risk.get("worst_losses"), list):
+        fail("risk_hotspots.worst_losses must be a list")
+
     what_if = stats.get("time_filter_what_if") or {}
     candidates = what_if.get("candidates") or []
     if not isinstance(candidates, list) or not candidates:
@@ -191,6 +205,9 @@ def validate_html(html: str) -> None:
         "decisionRows",
         "healthRows",
         "sourceRows",
+        "riskSummaryRows",
+        "weakBucketRows",
+        "worstLossRows",
         "performanceWindowRows",
         "filterCandidateRows",
         "tradeRows",

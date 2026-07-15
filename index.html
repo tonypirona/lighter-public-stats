@@ -494,6 +494,53 @@
     </section>
 
     <section class="panel">
+      <h2>Risk Hotspots</h2>
+      <div class="grid quality-grid">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody id="riskSummaryRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bucket</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="weakBucketRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Closed</th>
+                <th>Side</th>
+                <th>Bucket</th>
+                <th>PnL</th>
+                <th>Return</th>
+                <th>Slippage</th>
+              </tr>
+            </thead>
+            <tbody id="worstLossRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notice">Hotspots are diagnostics, not automatic rules. They show where losses currently cluster so we can decide what deserves a real strategy test.</div>
+    </section>
+
+    <section class="panel">
       <h2>Time Filter What-If</h2>
       <div class="grid quality-grid">
         <div class="table-wrap">
@@ -1066,6 +1113,53 @@
       renderQualityRows("hourBreakdownRows", breakdowns.hour_utc || []);
     }
 
+    function renderRiskHotspots(risk) {
+      risk = risk || {};
+      const summary = byId("riskSummaryRows");
+      summary.replaceChildren();
+      const drawdown = risk.worst_drawdown || {};
+      const streak = risk.worst_loss_streak || {};
+      const summaryRows = [
+        ["Losing trades", fmtNum.format(risk.loss_count || 0)],
+        ["Gross loss", fmtUsd.format(risk.gross_loss_abs || 0)],
+        ["Largest loss share", `${fmtNum.format(risk.largest_loss_share_pct || 0)}%`],
+        ["Top 3 loss share", `${fmtNum.format(risk.top3_loss_share_pct || 0)}%`],
+        ["Worst curve drawdown", `${fmtUsd.format(drawdown.drawdown || 0)} / ${fmtNum.format(drawdown.drawdown_pct || 0)}%`],
+        ["Worst loss streak", `${fmtNum.format(streak.count || 0)} trades / ${fmtUsd.format(streak.pnl || 0)}`],
+      ];
+      for (const item of summaryRows) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item[0]);
+        appendCell(tr, item[1], String(item[1]).includes("-") ? "red" : "");
+        summary.append(tr);
+      }
+
+      const weak = byId("weakBucketRows");
+      weak.replaceChildren();
+      for (const item of risk.weak_buckets || []) {
+        const tr = document.createElement("tr");
+        appendCell(tr, `${item.group || "--"} ${item.label || "--"}`);
+        appendCell(tr, fmtNum.format(item.count || 0));
+        appendCell(tr, fmtUsd.format(item.net_pnl || 0), classFor(item.net_pnl || 0));
+        appendCell(tr, fmtNum.format(item.profit_factor || 0), (item.profit_factor || 0) >= 1 ? "green" : "red");
+        appendCell(tr, `${fmtNum.format(item.win_rate_pct || 0)}%`);
+        weak.append(tr);
+      }
+
+      const losses = byId("worstLossRows");
+      losses.replaceChildren();
+      for (const item of risk.worst_losses || []) {
+        const tr = document.createElement("tr");
+        appendCell(tr, formatTime(item.closed_at));
+        appendCell(tr, item.side || "--");
+        appendCell(tr, `${item.weekday_utc || "--"} ${item.hour_bucket || "--"}`);
+        appendCell(tr, fmtUsd.format(item.pnl || 0), classFor(item.pnl || 0));
+        appendCell(tr, `${fmtNum.format(item.return_pct || 0)}%`, classFor(item.return_pct || 0));
+        appendCell(tr, `${fmtNum.format(item.slippage_bp || 0)} bp`);
+        losses.append(tr);
+      }
+    }
+
     function renderTimeFilterWhatIf(whatIf) {
       whatIf = whatIf || {};
       function renderRows(id, rows) {
@@ -1394,6 +1488,7 @@
       renderModelMatch(data.model_match || {});
       renderPerformanceWindows(data.performance_windows || []);
       renderPerformanceBreakdowns(data.performance_breakdowns || {});
+      renderRiskHotspots(data.risk_hotspots || {});
       renderTimeFilterWhatIf(data.time_filter_what_if || {});
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});

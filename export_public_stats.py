@@ -286,6 +286,123 @@ def performance_breakdowns(trades: list[dict[str, Any]]) -> dict[str, list[dict[
     }
 
 
+def risk_hotspots(
+    trades: list[dict[str, Any]],
+    curve_points: list[dict[str, Any]],
+    breakdowns: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    losses = sorted(
+        [trade for trade in trades if number(trade.get("pnl")) < 0],
+        key=lambda trade: number(trade.get("pnl")),
+    )
+    gross_loss_abs = abs(sum(number(trade.get("pnl")) for trade in losses))
+
+    def closed_dt(trade: dict[str, Any]) -> datetime:
+        return parse_time(trade.get("closedAt") or trade.get("openedAt"))
+
+    def hour_bucket(dt: datetime) -> str:
+        hour = dt.hour
+        if hour < 6:
+            return "00-05 UTC"
+        if hour < 12:
+            return "06-11 UTC"
+        if hour < 18:
+            return "12-17 UTC"
+        return "18-23 UTC"
+
+    def loss_marker(trade: dict[str, Any]) -> dict[str, Any]:
+        dt = closed_dt(trade)
+        return {
+            "closed_at": public_time(dt),
+            "side": str(trade.get("side", "")).lower(),
+            "pnl": round(number(trade.get("pnl")), 4),
+            "return_pct": round(trade_return_pct(trade), 5),
+            "notional": round(abs(number(trade.get("notional"))), 2),
+            "hour_bucket": hour_bucket(dt),
+            "weekday_utc": dt.strftime("%a"),
+            "entry_book_chase_bp": round(number(trade.get("entryBookChaseBp")), 4),
+            "slippage_bp": round(number(trade.get("slippageBp")), 4),
+            "exit_reason": str(trade.get("exitReason", ""))[:60],
+        }
+
+    worst_drawdown = {
+        "time": "",
+        "drawdown": 0.0,
+        "drawdown_pct": 0.0,
+        "peak_equity": START_EQUITY,
+        "trough_equity": START_EQUITY,
+    }
+    peak = START_EQUITY
+    for point in curve_points:
+        equity = number(point.get("equity"), START_EQUITY)
+        peak = max(peak, equity)
+        drawdown = peak - equity
+        drawdown_pct = drawdown / peak * 100.0 if peak else 0.0
+        if drawdown > worst_drawdown["drawdown"]:
+            worst_drawdown = {
+                "time": public_time(point.get("time")),
+                "drawdown": round(drawdown, 4),
+                "drawdown_pct": round(drawdown_pct, 2),
+                "peak_equity": round(peak, 4),
+                "trough_equity": round(equity, 4),
+            }
+
+    worst_streak = {
+        "count": 0,
+        "pnl": 0.0,
+        "start": "",
+        "end": "",
+    }
+    current_streak: list[dict[str, Any]] = []
+    for trade in trades:
+        if number(trade.get("pnl")) < 0:
+            current_streak.append(trade)
+            streak_pnl = sum(number(item.get("pnl")) for item in current_streak)
+            if len(current_streak) > int(worst_streak["count"]) or streak_pnl < number(worst_streak["pnl"]):
+                worst_streak = {
+                    "count": len(current_streak),
+                    "pnl": round(streak_pnl, 4),
+                    "start": public_time(current_streak[0].get("closedAt") or current_streak[0].get("openedAt")),
+                    "end": public_time(current_streak[-1].get("closedAt") or current_streak[-1].get("openedAt")),
+                }
+        else:
+            current_streak = []
+
+    weak_buckets: list[dict[str, Any]] = []
+    for group, rows in breakdowns.items():
+        for row in rows:
+            count = int(number(row.get("count")))
+            net_pnl = number(row.get("net_pnl"))
+            pf = number(row.get("profit_factor"))
+            if count >= 4 and net_pnl < 0 and pf < 1.0:
+                weak_buckets.append(
+                    {
+                        "group": group,
+                        "label": row.get("label", ""),
+                        "count": count,
+                        "net_pnl": round(net_pnl, 4),
+                        "profit_factor": round(pf, 4),
+                        "win_rate_pct": round(number(row.get("win_rate_pct")), 2),
+                    }
+                )
+    weak_buckets.sort(key=lambda item: item["net_pnl"])
+
+    top_losses = [loss_marker(trade) for trade in losses[:5]]
+    top_three_abs = sum(abs(number(trade.get("pnl"))) for trade in losses[:3])
+    largest_loss_abs = abs(number(losses[0].get("pnl"))) if losses else 0.0
+    return {
+        "loss_count": len(losses),
+        "gross_loss_abs": round(gross_loss_abs, 4),
+        "largest_loss_abs": round(largest_loss_abs, 4),
+        "largest_loss_share_pct": round(largest_loss_abs / gross_loss_abs * 100.0, 2) if gross_loss_abs else 0.0,
+        "top3_loss_share_pct": round(top_three_abs / gross_loss_abs * 100.0, 2) if gross_loss_abs else 0.0,
+        "worst_drawdown": worst_drawdown,
+        "worst_loss_streak": worst_streak,
+        "weak_buckets": weak_buckets[:6],
+        "worst_losses": top_losses,
+    }
+
+
 def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     hour_buckets = [
@@ -755,6 +872,7 @@ def main() -> None:
     dd_dollar, dd_pct = max_drawdown(curve_points)
     performance_window_rows = performance_windows(published_trades)
     performance_breakdown_rows = performance_breakdowns(published_trades)
+    risk_hotspot_rows = risk_hotspots(published_trades, curve_points, performance_breakdown_rows)
     time_filter_rows = time_filter_what_if(published_trades)
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
@@ -813,6 +931,7 @@ def main() -> None:
         },
         "performance_windows": performance_window_rows,
         "performance_breakdowns": performance_breakdown_rows,
+        "risk_hotspots": risk_hotspot_rows,
         "time_filter_what_if": time_filter_rows,
         "decision_queue": decision_queue(
             published_trades,
