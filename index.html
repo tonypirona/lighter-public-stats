@@ -1294,16 +1294,46 @@
     async function fetchStats() {
       const errors = [];
       const snapshots = [];
+      const diagnostics = [];
       const now = Date.now();
       for (const source of STATS_SOURCES) {
-        if (source.kind === "github-api" && now - state.lastGithubApiAt < GITHUB_API_REFRESH_MS && snapshots.length) {
+        if (source.kind === "github-api" && now - state.lastGithubApiAt < GITHUB_API_REFRESH_MS) {
+          if (state.lastGithubApiSnapshot) {
+            snapshots.push(state.lastGithubApiSnapshot);
+            diagnostics.push(sourceDiagnostic(source, state.lastGithubApiSnapshot, "cached", "checked less than 60s ago"));
+          } else {
+            diagnostics.push({
+              source: source.label,
+              status: "skipped",
+              detail: "waiting for first API check",
+              generated_at_utc: "",
+              tracker_synced_at_utc: "",
+              trade_count: 0,
+              net_pnl: 0,
+              freshness_ms: 0,
+              source_sha: ""
+            });
+          }
           continue;
         }
         try {
           const data = await fetchSource(source);
           snapshots.push(data);
+          diagnostics.push(sourceDiagnostic(source, data));
+          if (source.kind === "github-api") state.lastGithubApiSnapshot = data;
         } catch (error) {
           errors.push(error.message);
+          diagnostics.push({
+            source: source.label,
+            status: "error",
+            detail: error.message,
+            generated_at_utc: "",
+            tracker_synced_at_utc: "",
+            trade_count: 0,
+            net_pnl: 0,
+            freshness_ms: 0,
+            source_sha: ""
+          });
         } finally {
           if (source.kind === "github-api") state.lastGithubApiAt = now;
         }
@@ -1315,7 +1345,14 @@
           if (bTime !== aTime) return bTime - aTime;
           return snapshotRichnessScore(b) - snapshotRichnessScore(a);
         });
-        return snapshots[0];
+        const selected = snapshots[0];
+        for (const item of diagnostics) {
+          item.selected = item.status !== "error"
+            && item.source === selected.__source
+            && (!item.source_sha || item.source_sha === selected.__source_sha);
+        }
+        selected.__source_diagnostics = diagnostics;
+        return selected;
       }
       throw new Error(`Could not load stats: ${errors.join(" | ")}`);
     }
@@ -1353,6 +1390,7 @@
       renderDecisionQueue(data.decision_queue || []);
       renderSnapshot(data);
       renderHealth(data);
+      renderSourceDiagnostics(data);
       renderModelMatch(data.model_match || {});
       renderPerformanceWindows(data.performance_windows || []);
       renderPerformanceBreakdowns(data.performance_breakdowns || {});

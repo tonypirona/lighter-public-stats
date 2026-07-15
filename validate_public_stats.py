@@ -190,6 +190,7 @@ def validate_html(html: str) -> None:
         "alertRows",
         "decisionRows",
         "healthRows",
+        "sourceRows",
         "performanceWindowRows",
         "filterCandidateRows",
         "tradeRows",
