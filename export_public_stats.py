@@ -649,6 +649,7 @@ def main() -> None:
         },
         "performance_windows": performance_windows(published_trades),
         "performance_breakdowns": performance_breakdowns(published_trades),
+        "time_filter_what_if": time_filter_what_if(published_trades),
         "clean_curve": {
             "starting_equity": START_EQUITY,
             "leverage": CLEAN_LEVERAGE,

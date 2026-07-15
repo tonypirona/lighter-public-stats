@@ -451,6 +451,43 @@
     </section>
 
     <section class="panel">
+      <h2>Time Filter What-If</h2>
+      <div class="grid quality-grid">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Exclude Hour</th>
+                <th>Kept</th>
+                <th>Removed</th>
+                <th>Net Delta</th>
+                <th>Kept PF</th>
+                <th>PF Delta</th>
+              </tr>
+            </thead>
+            <tbody id="excludeHourRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Exclude Day</th>
+                <th>Kept</th>
+                <th>Removed</th>
+                <th>Net Delta</th>
+                <th>Kept PF</th>
+                <th>PF Delta</th>
+              </tr>
+            </thead>
+            <tbody id="excludeWeekdayRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notice">Diagnostic only. Positive delta means that removing that time bucket would have improved the current public live sample.</div>
+    </section>
+
+    <section class="panel">
       <h2>Execution Quality</h2>
       <div class="grid quality-grid">
         <div class="table-wrap">
@@ -690,6 +727,19 @@
       if (weakDay) {
         add("yellow", "Weak weekday bucket", `${weakDay.label} UTC: ${fmtUsd.format(weakDay.net_pnl || 0)}, PF ${fmtNum.format(weakDay.profit_factor || 0)}.`);
       }
+      const whatIf = data.time_filter_what_if || {};
+      const bestHourFilter = (whatIf.exclude_hour_utc || [])
+        .filter(item => (item.removed_count || 0) >= 6 && (item.net_pnl_delta || 0) > 0 && (item.profit_factor_delta || 0) > 0)
+        .sort((a, b) => (b.net_pnl_delta || 0) - (a.net_pnl_delta || 0))[0];
+      if (bestHourFilter) {
+        add("yellow", "Candidate hour filter", `Excluding ${bestHourFilter.label} improves sample net by ${fmtUsd.format(bestHourFilter.net_pnl_delta || 0)}.`);
+      }
+      const bestDayFilter = (whatIf.exclude_weekday_utc || [])
+        .filter(item => (item.removed_count || 0) >= 5 && (item.net_pnl_delta || 0) > 0 && (item.profit_factor_delta || 0) > 0)
+        .sort((a, b) => (b.net_pnl_delta || 0) - (a.net_pnl_delta || 0))[0];
+      if (bestDayFilter) {
+        add("yellow", "Candidate day filter", `Excluding ${bestDayFilter.label} UTC improves sample net by ${fmtUsd.format(bestDayFilter.net_pnl_delta || 0)}.`);
+      }
 
       if (!alerts.length) add("green", "No urgent issues", "Bot, tracker, publisher, and model-match checks look clean.");
       for (const alert of alerts.slice(0, 6)) {
@@ -844,6 +894,26 @@
       renderQualityRows("exitBreakdownRows", breakdowns.exit_reason || []);
       renderQualityRows("weekdayBreakdownRows", breakdowns.weekday_utc || []);
       renderQualityRows("hourBreakdownRows", breakdowns.hour_utc || []);
+    }
+
+    function renderTimeFilterWhatIf(whatIf) {
+      whatIf = whatIf || {};
+      function renderRows(id, rows) {
+        const tbody = byId(id);
+        tbody.replaceChildren();
+        for (const item of rows || []) {
+          const tr = document.createElement("tr");
+          appendCell(tr, item.label || "--");
+          appendCell(tr, fmtNum.format(item.count || 0));
+          appendCell(tr, fmtNum.format(item.removed_count || 0));
+          appendCell(tr, fmtUsd.format(item.net_pnl_delta || 0), classFor(item.net_pnl_delta || 0));
+          appendCell(tr, item.count ? fmtNum.format(item.profit_factor || 0) : "--", (item.profit_factor || 0) >= 1 ? "green" : "red");
+          appendCell(tr, `${(item.profit_factor_delta || 0) >= 0 ? "+" : ""}${fmtNum.format(item.profit_factor_delta || 0)}`, classFor(item.profit_factor_delta || 0));
+          tbody.append(tr);
+        }
+      }
+      renderRows("excludeHourRows", whatIf.exclude_hour_utc || []);
+      renderRows("excludeWeekdayRows", whatIf.exclude_weekday_utc || []);
     }
 
     function renderGuardActivity(activity) {
@@ -1076,6 +1146,7 @@
       renderModelMatch(data.model_match || {});
       renderPerformanceWindows(data.performance_windows || []);
       renderPerformanceBreakdowns(data.performance_breakdowns || {});
+      renderTimeFilterWhatIf(data.time_filter_what_if || {});
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});
