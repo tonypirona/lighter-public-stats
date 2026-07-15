@@ -150,6 +150,65 @@ def avg(values: list[float]) -> float:
     return sum(values) / len(values) if values else 0.0
 
 
+def bucket_stats(
+    trades: list[dict[str, Any]],
+    field: str,
+    buckets: list[tuple[str, float, float]],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for label, low, high in buckets:
+        bucket = [
+            trade
+            for trade in trades
+            if trade.get(field) not in ("", None)
+            and low <= number(trade.get(field)) < high
+        ]
+        pnls = [number(trade.get("pnl")) for trade in bucket]
+        wins = [pnl for pnl in pnls if pnl > 0]
+        rows.append(
+            {
+                "label": label,
+                "count": len(bucket),
+                "net_pnl": round(sum(pnls), 4),
+                "profit_factor": round(profit_factor(pnls), 4),
+                "win_rate_pct": round(len(wins) / len(bucket) * 100.0, 2) if bucket else 0.0,
+                "avg_trade_pnl": round(avg(pnls), 4),
+                "avg_value": round(avg([number(trade.get(field)) for trade in bucket]), 4),
+            }
+        )
+    return rows
+
+
+def entry_chase_what_if(trades: list[dict[str, Any]], thresholds: list[float]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for threshold in thresholds:
+        kept = [
+            trade
+            for trade in trades
+            if trade.get("entryBookChaseBp") in ("", None)
+            or number(trade.get("entryBookChaseBp")) <= threshold
+        ]
+        blocked = [
+            trade
+            for trade in trades
+            if trade.get("entryBookChaseBp") not in ("", None)
+            and number(trade.get("entryBookChaseBp")) > threshold
+        ]
+        kept_pnls = [number(trade.get("pnl")) for trade in kept]
+        blocked_pnls = [number(trade.get("pnl")) for trade in blocked]
+        rows.append(
+            {
+                "threshold_bp": threshold,
+                "kept_count": len(kept),
+                "blocked_count": len(blocked),
+                "kept_net_pnl": round(sum(kept_pnls), 4),
+                "kept_profit_factor": round(profit_factor(kept_pnls), 4),
+                "blocked_net_pnl": round(sum(blocked_pnls), 4),
+            }
+        )
+    return rows
+
+
 def compact_expected(summary: dict[str, Any]) -> dict[str, Any]:
     allowed = [
         "generated_at_utc",
@@ -209,6 +268,34 @@ def main() -> None:
         for trade in published_trades
         if trade.get("executionCostBp") not in ("", None)
     ]
+    execution_quality = {
+        "slippage_buckets": bucket_stats(
+            published_trades,
+            "slippageBp",
+            [
+                ("favorable <= -2", -999.0, -2.0),
+                ("favorable -2 to 0", -2.0, 0.0),
+                ("mild 0 to 1", 0.0, 1.0),
+                ("adverse 1 to 2", 1.0, 2.0),
+                ("adverse 2 to 5", 2.0, 5.0),
+                ("bad > 5", 5.0, 999.0),
+            ],
+        ),
+        "entry_book_chase_buckets": bucket_stats(
+            published_trades,
+            "entryBookChaseBp",
+            [
+                ("favorable < 0", -999.0, 0.0),
+                ("calm 0 to 2.5", 0.0, 2.5),
+                ("watch 2.5 to 3.5", 2.5, 3.5),
+                ("blocked zone > 3.5", 3.5, 999.0),
+            ],
+        ),
+        "entry_book_chase_what_if": entry_chase_what_if(
+            published_trades,
+            [2.5, 3.0, 3.5, 4.0, 5.0],
+        ),
+    }
 
     curve_points, ending_equity = clean_curve(published_trades)
     dd_dollar, dd_pct = max_drawdown(curve_points)
@@ -301,6 +388,7 @@ def main() -> None:
             "max_live_loss_bp": number(order_config.get("max_live_loss_bp")),
             "max_live_loss_account_pct": number(order_config.get("max_live_loss_account_pct")),
         },
+        "execution_quality": execution_quality,
         "recent_trades": recent,
     }
 

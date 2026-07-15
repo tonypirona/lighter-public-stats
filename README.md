@@ -11,6 +11,7 @@ This repo is intentionally separate from the trading bot repo. It only publishes
 - Profit factor, win rate, drawdown, spread, slippage, and recent public trade rows
 - Basic live snapshot from the latest local export
 - Public-safe execution guard settings such as leverage, max notional, entry chase cap, and slippage caps
+- Public-safe execution-quality buckets for slippage, entry book chase, and entry-chase cap what-if checks
 
 ## What Is Not Public
 

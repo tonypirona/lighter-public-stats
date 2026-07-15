@@ -135,6 +135,11 @@
       margin-bottom: 14px;
     }
 
+    .quality-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 4px;
+    }
+
     .panel {
       padding: 18px;
       min-width: 0;
@@ -197,6 +202,10 @@
       background: rgba(5, 8, 11, 0.58);
     }
 
+    .quality-grid table {
+      min-width: 520px;
+    }
+
     th, td {
       text-align: left;
       border-bottom: 1px solid rgba(35, 50, 65, 0.7);
@@ -231,6 +240,7 @@
     @media (max-width: 1100px) {
       .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .panels { grid-template-columns: 1fr; }
+      .quality-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
@@ -276,6 +286,55 @@
         <h2>Live Snapshot</h2>
         <div class="stack" id="snapshot"></div>
       </div>
+    </section>
+
+    <section class="panel">
+      <h2>Execution Quality</h2>
+      <div class="grid quality-grid">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Slippage</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="slippageBuckets"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Entry Chase</th>
+                <th>Trades</th>
+                <th>Net</th>
+                <th>PF</th>
+                <th>WR</th>
+              </tr>
+            </thead>
+            <tbody id="entryChaseBuckets"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Chase Cap</th>
+                <th>Kept</th>
+                <th>Blocked</th>
+                <th>Kept Net</th>
+                <th>Kept PF</th>
+              </tr>
+            </thead>
+            <tbody id="entryChaseWhatIf"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notice">Execution buckets are public-safe aggregates from bot trades only. Entry chase is measured before entry and is the field we can use for live preflight blocking.</div>
     </section>
 
     <section class="panel">
@@ -435,6 +494,42 @@
       }
     }
 
+    function appendCell(tr, value, tone = "") {
+      const td = document.createElement("td");
+      td.textContent = value;
+      if (tone) td.classList.add(tone);
+      tr.append(td);
+    }
+
+    function renderQualityRows(id, rows, mode = "bucket") {
+      const tbody = byId(id);
+      tbody.replaceChildren();
+      for (const item of rows || []) {
+        const tr = document.createElement("tr");
+        if (mode === "whatif") {
+          appendCell(tr, `${fmtNum.format(item.threshold_bp || 0)} bp`);
+          appendCell(tr, fmtNum.format(item.kept_count || 0));
+          appendCell(tr, fmtNum.format(item.blocked_count || 0));
+          appendCell(tr, fmtUsd.format(item.kept_net_pnl || 0), classFor(item.kept_net_pnl || 0));
+          appendCell(tr, item.kept_count ? fmtNum.format(item.kept_profit_factor || 0) : "--");
+        } else {
+          appendCell(tr, item.label || "--");
+          appendCell(tr, fmtNum.format(item.count || 0));
+          appendCell(tr, fmtUsd.format(item.net_pnl || 0), classFor(item.net_pnl || 0));
+          appendCell(tr, item.count ? fmtNum.format(item.profit_factor || 0) : "--");
+          appendCell(tr, item.count ? `${fmtNum.format(item.win_rate_pct || 0)}%` : "--");
+        }
+        tbody.append(tr);
+      }
+    }
+
+    function renderExecutionQuality(quality) {
+      quality = quality || {};
+      renderQualityRows("slippageBuckets", quality.slippage_buckets || []);
+      renderQualityRows("entryChaseBuckets", quality.entry_book_chase_buckets || []);
+      renderQualityRows("entryChaseWhatIf", quality.entry_book_chase_what_if || [], "whatif");
+    }
+
     function renderChart(points) {
       const canvas = byId("equityChart");
       const tooltip = byId("tooltip");
@@ -559,6 +654,7 @@
       setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
 
       renderSnapshot(data);
+      renderExecutionQuality(data.execution_quality || {});
       renderTrades(data.recent_trades || []);
       renderChart(state.points);
     }

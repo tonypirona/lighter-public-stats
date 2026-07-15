@@ -352,6 +352,144 @@
     "sizing_mode": "available_balance_x_leverage",
     "target_leverage": 25.0
   },
+  "execution_quality": {
+    "entry_book_chase_buckets": [
+      {
+        "avg_trade_pnl": 1.5482,
+        "avg_value": -2.6885,
+        "count": 17,
+        "label": "favorable < 0",
+        "net_pnl": 26.3199,
+        "profit_factor": 31.0768,
+        "win_rate_pct": 88.24
+      },
+      {
+        "avg_trade_pnl": 0.2359,
+        "avg_value": 1.0251,
+        "count": 21,
+        "label": "calm 0 to 2.5",
+        "net_pnl": 4.9533,
+        "profit_factor": 1.4444,
+        "win_rate_pct": 66.67
+      },
+      {
+        "avg_trade_pnl": 0.7266,
+        "avg_value": 2.8242,
+        "count": 2,
+        "label": "watch 2.5 to 3.5",
+        "net_pnl": 1.4532,
+        "profit_factor": 1.4532,
+        "win_rate_pct": 100.0
+      },
+      {
+        "avg_trade_pnl": -0.4116,
+        "avg_value": 6.4446,
+        "count": 8,
+        "label": "blocked zone > 3.5",
+        "net_pnl": -3.2928,
+        "profit_factor": 0.7231,
+        "win_rate_pct": 50.0
+      }
+    ],
+    "entry_book_chase_what_if": [
+      {
+        "blocked_count": 10,
+        "blocked_net_pnl": -1.8396,
+        "kept_count": 44,
+        "kept_net_pnl": 23.9035,
+        "kept_profit_factor": 2.0236,
+        "threshold_bp": 2.5
+      },
+      {
+        "blocked_count": 9,
+        "blocked_net_pnl": -2.561,
+        "kept_count": 45,
+        "kept_net_pnl": 24.6248,
+        "kept_profit_factor": 2.0545,
+        "threshold_bp": 3.0
+      },
+      {
+        "blocked_count": 8,
+        "blocked_net_pnl": -3.2928,
+        "kept_count": 46,
+        "kept_net_pnl": 25.3567,
+        "kept_profit_factor": 2.0858,
+        "threshold_bp": 3.5
+      },
+      {
+        "blocked_count": 7,
+        "blocked_net_pnl": -1.4921,
+        "kept_count": 47,
+        "kept_net_pnl": 23.5559,
+        "kept_profit_factor": 1.9365,
+        "threshold_bp": 4.0
+      },
+      {
+        "blocked_count": 6,
+        "blocked_net_pnl": 0.5562,
+        "kept_count": 48,
+        "kept_net_pnl": 21.5076,
+        "kept_profit_factor": 1.7907,
+        "threshold_bp": 5.0
+      }
+    ],
+    "slippage_buckets": [
+      {
+        "avg_trade_pnl": 1.1349,
+        "avg_value": -6.9071,
+        "count": 21,
+        "label": "favorable <= -2",
+        "net_pnl": 23.8329,
+        "profit_factor": 2.9624,
+        "win_rate_pct": 80.95
+      },
+      {
+        "avg_trade_pnl": 0.4264,
+        "avg_value": -0.646,
+        "count": 9,
+        "label": "favorable -2 to 0",
+        "net_pnl": 3.8375,
+        "profit_factor": 62.4976,
+        "win_rate_pct": 77.78
+      },
+      {
+        "avg_trade_pnl": 0.1285,
+        "avg_value": 0.4719,
+        "count": 5,
+        "label": "mild 0 to 1",
+        "net_pnl": 0.6425,
+        "profit_factor": 1.3747,
+        "win_rate_pct": 80.0
+      },
+      {
+        "avg_trade_pnl": -0.0635,
+        "avg_value": 1.6098,
+        "count": 4,
+        "label": "adverse 1 to 2",
+        "net_pnl": -0.2538,
+        "profit_factor": 0.6433,
+        "win_rate_pct": 25.0
+      },
+      {
+        "avg_trade_pnl": 0.526,
+        "avg_value": 3.31,
+        "count": 13,
+        "label": "adverse 2 to 5",
+        "net_pnl": 6.8385,
+        "profit_factor": 1.8794,
+        "win_rate_pct": 61.54
+      },
+      {
+        "avg_trade_pnl": -6.4169,
+        "avg_value": 8.9571,
+        "count": 2,
+        "label": "bad > 5",
+        "net_pnl": -12.8337,
+        "profit_factor": 0.0,
+        "win_rate_pct": 0.0
+      }
+    ]
+  },
   "live_status": {
     "available_balance": 71.582681,
     "live_enabled": true,
@@ -365,11 +503,11 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T13:50:09Z",
+    "generated_at_utc": "2026-07-15T13:54:15Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T13:50:00+00:00"
+    "tracker_synced_at_utc": "2026-07-15T13:54:00+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
