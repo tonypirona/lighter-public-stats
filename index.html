@@ -1206,28 +1206,54 @@
       canvas.onmouseleave = () => { tooltip.style.display = "none"; };
     }
 
+    async function fetchSource(source) {
+      const headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
+      };
+      const response = await fetch(cacheBust(source.url), {
+        cache: "no-store",
+        headers
+      });
+      if (!response.ok) throw new Error(`${source.label}: ${response.status}`);
+
+      if (source.kind === "github-api") {
+        const wrapper = await response.json();
+        const data = decodeBase64Json(wrapper.content || "");
+        data.__source = source.label;
+        data.__source_sha = wrapper.sha || "";
+        return data;
+      }
+
+      const data = await response.json();
+      data.__source = source.label;
+      return data;
+    }
+
     async function fetchStats() {
       const errors = [];
       const snapshots = [];
+      const now = Date.now();
       for (const source of STATS_SOURCES) {
+        if (source.kind === "github-api" && now - state.lastGithubApiAt < GITHUB_API_REFRESH_MS && snapshots.length) {
+          continue;
+        }
         try {
-          const response = await fetch(`${source}?ts=${Date.now()}`, { cache: "no-store" });
-          if (!response.ok) throw new Error(`${source}: ${response.status}`);
-          const data = await response.json();
-          data.__source = source.includes("raw.githubusercontent.com") ? "GitHub live data" : "Vercel bundled data";
+          const data = await fetchSource(source);
           snapshots.push(data);
         } catch (error) {
           errors.push(error.message);
+        } finally {
+          if (source.kind === "github-api") state.lastGithubApiAt = now;
         }
       }
       if (snapshots.length) {
         snapshots.sort((a, b) => {
-          const aTime = new Date((a.meta || {}).tracker_synced_at_utc || (a.meta || {}).generated_at_utc || 0).getTime() || 0;
-          const bTime = new Date((b.meta || {}).tracker_synced_at_utc || (b.meta || {}).generated_at_utc || 0).getTime() || 0;
+          const aTime = snapshotFreshnessMs(a);
+          const bTime = snapshotFreshnessMs(b);
           if (bTime !== aTime) return bTime - aTime;
-          const aScore = ((a.execution_quality || {}).slippage_buckets || []).length + (((a.guard_activity || {}).windows || []).length * 10);
-          const bScore = ((b.execution_quality || {}).slippage_buckets || []).length + (((b.guard_activity || {}).windows || []).length * 10);
-          return bScore - aScore;
+          return snapshotRichnessScore(b) - snapshotRichnessScore(a);
         });
         return snapshots[0];
       }
@@ -1244,7 +1270,7 @@
 
       const checkedAt = new Date().toISOString();
       data.__checked_at = checkedAt;
-      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | checked ${formatTime(checkedAt)} | ${data.__source} | auto-refresh 15s`);
+      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | checked ${formatTime(checkedAt)} | ${data.__source} | auto-refresh ${Math.round(REFRESH_INTERVAL_MS / 1000)}s`);
       const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
       byId("liveDot").classList.remove("ok", "warn");
       if (liveOk && fresh.dot) byId("liveDot").classList.add(fresh.dot);
@@ -1278,24 +1304,34 @@
       renderChart(state.points);
     }
 
-    window.addEventListener("resize", () => renderChart(state.points));
-    load().catch(error => {
-      setText("subtitle", error.message);
-      byId("liveDot").classList.remove("ok");
-      setText("liveText", "Stats file missing");
-    });
-    setInterval(() => {
+    function scheduleRefresh(delay = REFRESH_INTERVAL_MS) {
+      clearTimeout(state.refreshTimer);
+      state.refreshTimer = setTimeout(refreshNow, delay);
+    }
+
+    async function refreshNow() {
+      if (state.refreshInFlight) return;
+      state.refreshInFlight = true;
       load().catch(error => {
         setText("subtitle", error.message);
         byId("liveDot").classList.remove("ok");
         setText("liveText", "Stats refresh failed");
+      }).finally(() => {
+        state.refreshInFlight = false;
+        scheduleRefresh();
       });
-    }, 15000);
+    }
+
+    window.addEventListener("resize", () => renderChart(state.points));
+    window.addEventListener("focus", () => refreshNow());
+    window.addEventListener("online", () => refreshNow());
+    window.addEventListener("pageshow", () => refreshNow());
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
-        load().catch(() => {});
+        refreshNow();
       }
     });
+    refreshNow();
   </script>
 </body>
 </html>

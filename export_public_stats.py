@@ -684,6 +684,10 @@ def comparable_payload(payload: dict[str, Any]) -> dict[str, Any]:
     meta = comparable.get("meta", {})
     meta.pop("generated_at_utc", None)
     meta.pop("tracker_synced_at_utc", None)
+    live = comparable.get("live_status", {})
+    live.pop("monitor_checked_at_utc", None)
+    live.pop("watchdog_checked_at_utc", None)
+    live.pop("monitor_cycle", None)
     return comparable
 
 
