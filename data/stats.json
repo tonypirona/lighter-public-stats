@@ -490,6 +490,44 @@
       }
     ]
   },
+  "guard_activity": {
+    "latest_block": {
+      "book_chase_bp": 6.6867,
+      "effect": "open_long",
+      "reason": "Entry preflight blocked: buy/long entry book moved 6.6867 bp from reference, max is 5.0000 bp.",
+      "spread_bp": 0.0155,
+      "time": "2026-07-15T07:29:27Z"
+    },
+    "windows": [
+      {
+        "avg_block_chase_bp": 6.6867,
+        "block_rate_pct": 50.0,
+        "blocked_entries": 1,
+        "entry_records": 2,
+        "max_block_chase_bp": 6.6867,
+        "sent_entries": 1,
+        "window": "24h"
+      },
+      {
+        "avg_block_chase_bp": 7.7978,
+        "block_rate_pct": 11.11,
+        "blocked_entries": 2,
+        "entry_records": 18,
+        "max_block_chase_bp": 8.9089,
+        "sent_entries": 16,
+        "window": "7d"
+      },
+      {
+        "avg_block_chase_bp": 6.946,
+        "block_rate_pct": 7.46,
+        "blocked_entries": 5,
+        "entry_records": 67,
+        "max_block_chase_bp": 8.9089,
+        "sent_entries": 62,
+        "window": "all"
+      }
+    ]
+  },
   "live_status": {
     "available_balance": 71.582681,
     "live_enabled": true,
@@ -503,11 +541,11 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T13:54:15Z",
+    "generated_at_utc": "2026-07-15T13:59:11Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T13:54:00+00:00"
+    "tracker_synced_at_utc": "2026-07-15T13:59:02+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,

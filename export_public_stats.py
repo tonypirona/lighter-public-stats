@@ -13,6 +13,7 @@ LIVE_STATE = FREQTRADE_ROOT / "user_data" / "live_state"
 LIVE_REPORTS = FREQTRADE_ROOT / "user_data" / "live_reports"
 
 TRACKER_PATH = LIVE_STATE / "lighter_tracker_trades.json"
+LEDGER_PATH = LIVE_STATE / "lighter_live_order_ledger.jsonl"
 ACCOUNT_PATH = LIVE_STATE / "lighter_account_status.json"
 HEARTBEAT_PATH = LIVE_STATE / "lighter_live_monitor_heartbeat.json"
 WATCHDOG_PATH = LIVE_STATE / "lighter_live_watchdog_status.json"
@@ -34,6 +35,25 @@ def read_json(path: Path, default: Any) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return default
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                item = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(item, dict):
+                rows.append(item)
+    except Exception:
+        return rows
+    return rows
 
 
 def number(value: Any, default: float = 0.0) -> float:
@@ -209,6 +229,64 @@ def entry_chase_what_if(trades: list[dict[str, Any]], thresholds: list[float]) -
     return rows
 
 
+def is_entry_record(record: dict[str, Any]) -> bool:
+    return str(record.get("effect", "")).startswith("open_")
+
+
+def is_blocked_record(record: dict[str, Any]) -> bool:
+    return str(record.get("mode", "")).lower() == "live_blocked"
+
+
+def entry_chase_from_record(record: dict[str, Any]) -> float:
+    snapshot = record.get("orderbook_snapshot") or {}
+    return number(snapshot.get("entry_book_chase_bp"), math.nan)
+
+
+def guard_activity(ledger_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    now = datetime.now(timezone.utc)
+    windows = [
+        ("24h", now - timedelta(hours=24)),
+        ("7d", now - timedelta(days=7)),
+        ("all", datetime.min.replace(tzinfo=timezone.utc)),
+    ]
+    entry_rows = [row for row in ledger_rows if is_entry_record(row)]
+    blocked_rows = [row for row in entry_rows if is_blocked_record(row)]
+    by_window: list[dict[str, Any]] = []
+
+    for label, start in windows:
+        scoped_entries = [row for row in entry_rows if parse_time(row.get("checked_at_utc")) >= start]
+        scoped_blocked = [row for row in blocked_rows if parse_time(row.get("checked_at_utc")) >= start]
+        chase_values = [entry_chase_from_record(row) for row in scoped_blocked]
+        chase_values = [value for value in chase_values if not math.isnan(value)]
+        by_window.append(
+            {
+                "window": label,
+                "entry_records": len(scoped_entries),
+                "sent_entries": len([row for row in scoped_entries if str(row.get("mode", "")).lower() == "live"]),
+                "blocked_entries": len(scoped_blocked),
+                "block_rate_pct": round(len(scoped_blocked) / len(scoped_entries) * 100.0, 2) if scoped_entries else 0.0,
+                "avg_block_chase_bp": round(avg(chase_values), 4),
+                "max_block_chase_bp": round(max(chase_values), 4) if chase_values else 0.0,
+            }
+        )
+
+    latest_block = max(blocked_rows, key=lambda row: parse_time(row.get("checked_at_utc")), default={})
+    latest_snapshot = latest_block.get("orderbook_snapshot") or {}
+    latest_reasons = (latest_block.get("result") or {}).get("reasons") or []
+    return {
+        "windows": by_window,
+        "latest_block": {
+            "time": public_time(latest_block.get("checked_at_utc")),
+            "effect": latest_block.get("effect", ""),
+            "book_chase_bp": round(number(latest_snapshot.get("entry_book_chase_bp")), 4),
+            "spread_bp": round(number(latest_snapshot.get("spread_bp")), 4),
+            "reason": str(latest_reasons[0])[:160] if latest_reasons else "",
+        }
+        if latest_block
+        else {},
+    }
+
+
 def compact_expected(summary: dict[str, Any]) -> dict[str, Any]:
     allowed = [
         "generated_at_utc",
@@ -252,6 +330,7 @@ def main() -> None:
     watchdog = read_json(WATCHDOG_PATH, {})
     expected = read_json(EXPECTED_PATH, {})
     order_config = read_json(ORDER_CONFIG_PATH, {})
+    ledger_rows = read_jsonl(LEDGER_PATH)
 
     raw_trades = tracker.get("trades") or []
     published_trades = sorted(
@@ -389,6 +468,7 @@ def main() -> None:
             "max_live_loss_account_pct": number(order_config.get("max_live_loss_account_pct")),
         },
         "execution_quality": execution_quality,
+        "guard_activity": guard_activity(ledger_rows),
         "recent_trades": recent,
     }
 

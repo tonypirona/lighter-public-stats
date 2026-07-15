@@ -333,6 +333,20 @@
             <tbody id="entryChaseWhatIf"></tbody>
           </table>
         </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Guard Window</th>
+                <th>Signals</th>
+                <th>Sent</th>
+                <th>Blocked</th>
+                <th>Avg Chase</th>
+              </tr>
+            </thead>
+            <tbody id="guardActivityRows"></tbody>
+          </table>
+        </div>
       </div>
       <div class="notice">Execution buckets are public-safe aggregates from bot trades only. Entry chase is measured before entry and is the field we can use for live preflight blocking.</div>
     </section>
@@ -438,6 +452,9 @@
       const expected = data.model_match || {};
       const meta = data.meta || {};
       const guard = data.execution_guard || {};
+      const guardActivity = data.guard_activity || {};
+      const guard24h = (guardActivity.windows || []).find(item => item.window === "24h") || {};
+      const latestBlock = guardActivity.latest_block || {};
       const fresh = freshness(meta);
       const box = byId("snapshot");
       box.replaceChildren(
@@ -455,7 +472,9 @@
         row("Max notional", guard.max_notional_usdc ? fmtUsd.format(guard.max_notional_usdc) : "--"),
         row("Entry chase guard", guard.entry_preflight_max_book_chase_bp ? `${fmtNum.format(guard.entry_preflight_max_book_chase_bp)} bp` : "--"),
         row("Entry slip cap", guard.entry_max_slippage_bp ? `${fmtNum.format(guard.entry_max_slippage_bp)} bp` : "--"),
-        row("Exit slip cap", guard.exit_max_slippage_bp ? `${fmtNum.format(guard.exit_max_slippage_bp)} bp` : "--")
+        row("Exit slip cap", guard.exit_max_slippage_bp ? `${fmtNum.format(guard.exit_max_slippage_bp)} bp` : "--"),
+        row("Entry guard 24h", `${guard24h.blocked_entries || 0} blocked / ${guard24h.entry_records || 0} signals`),
+        row("Latest guard block", latestBlock.time ? `${formatTime(latestBlock.time)} | ${fmtNum.format(latestBlock.book_chase_bp || 0)} bp` : "--")
       );
     }
 
@@ -528,6 +547,20 @@
       renderQualityRows("slippageBuckets", quality.slippage_buckets || []);
       renderQualityRows("entryChaseBuckets", quality.entry_book_chase_buckets || []);
       renderQualityRows("entryChaseWhatIf", quality.entry_book_chase_what_if || [], "whatif");
+    }
+
+    function renderGuardActivity(activity) {
+      const tbody = byId("guardActivityRows");
+      tbody.replaceChildren();
+      for (const item of (activity || {}).windows || []) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item.window || "--");
+        appendCell(tr, fmtNum.format(item.entry_records || 0));
+        appendCell(tr, fmtNum.format(item.sent_entries || 0));
+        appendCell(tr, fmtNum.format(item.blocked_entries || 0), item.blocked_entries ? "yellow" : "");
+        appendCell(tr, item.blocked_entries ? `${fmtNum.format(item.avg_block_chase_bp || 0)} bp` : "--");
+        tbody.append(tr);
+      }
     }
 
     function renderChart(points) {
@@ -664,6 +697,7 @@
 
       renderSnapshot(data);
       renderExecutionQuality(data.execution_quality || {});
+      renderGuardActivity(data.guard_activity || {});
       renderTrades(data.recent_trades || []);
       renderChart(state.points);
     }
