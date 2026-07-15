@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import math
 from datetime import datetime, timedelta, timezone
@@ -21,6 +22,9 @@ EXPECTED_PATH = LIVE_REPORTS / "lighter_expected_vs_actual_summary.json"
 ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
 PAPER_STATE_PATH = LIVE_STATE / "lighter_native_paper_state.json"
 STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_simple_filter_robustness_decision.json"
+STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
+STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
+STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
 OUT_PATH = ROOT / "data" / "stats.json"
 
 START_EQUITY = 100.0
@@ -56,6 +60,16 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     except Exception:
         return rows
     return rows
+
+
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            return list(csv.DictReader(handle))
+    except Exception:
+        return []
 
 
 def count_by(rows: list[dict[str, Any]], key: str) -> dict[str, int]:
@@ -499,6 +513,38 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
 
 
 def strategy_research_candidate() -> dict[str, Any]:
+    relaxed = read_json(STRATEGY_RELAXED_PATH, {})
+    selected = relaxed.get("selected") or {}
+    if selected:
+        rows = read_csv_rows(STRATEGY_RELAXED_CSV_PATH)
+        baseline = next(
+            (
+                row for row in rows
+                if row.get("model") == "tight_ret240"
+                and row.get("exit_variant") == "base_exit"
+                and not row.get("atr_cap")
+                and row.get("block_long_h16") == "False"
+            ),
+            {},
+        )
+        return {
+            "model": "relaxed_quality_atr150",
+            "variant": (
+                f"{selected.get('model', '')}:{selected.get('exit_variant', '')}:"
+                f"atr={selected.get('atr_cap', '')}:h16={selected.get('block_long_h16', '')}"
+            ),
+            "net_pct": round(number(selected.get("visible_net_pct")), 4),
+            "profit_factor": round(number(selected.get("visible_pf")), 4),
+            "max_drawdown_pct": round(number(selected.get("visible_dd_pct")), 4),
+            "trades_per_year": round(number(selected.get("trades_per_year")), 2),
+            "avg_trade_pct": round(number(selected.get("avg_trade_pct")), 5),
+            "baseline_net_pct": round(number(baseline.get("visible_net_pct")), 4),
+            "baseline_profit_factor": round(number(baseline.get("visible_pf")), 4),
+            "baseline_max_drawdown_pct": round(number(baseline.get("visible_dd_pct")), 4),
+            "baseline_trades_per_year": round(number(baseline.get("trades_per_year")), 2),
+            "caution": "Shadow candidate only; live overlap is checked separately before promotion.",
+        }
+
     research = read_json(STRATEGY_RESEARCH_PATH, {})
     selected = research.get("selected_visible_spread") or {}
     baseline = research.get("baseline_visible_spread") or {}
@@ -525,10 +571,14 @@ def strategy_shadow_status() -> dict[str, Any]:
     shadows = state.get("entry_shadows")
     if not isinstance(shadows, list):
         shadows = []
-    selected = next(
-        (shadow for shadow in shadows if isinstance(shadow, dict) and shadow.get("name") == "entry_research_quality_guard"),
-        None,
-    )
+    selected = None
+    for preferred_name in ("relaxed_quality_atr150", "entry_research_h16_atr_guard", "entry_research_quality_guard"):
+        selected = next(
+            (shadow for shadow in shadows if isinstance(shadow, dict) and shadow.get("name") == preferred_name),
+            None,
+        )
+        if selected is not None:
+            break
     if selected is None:
         selected = state.get("entry_shadow") if isinstance(state.get("entry_shadow"), dict) else None
     if not selected:
@@ -614,12 +664,42 @@ def strategy_shadow_activity() -> dict[str, Any]:
     }
 
 
+def strategy_overlap_status() -> dict[str, Any]:
+    summary = read_json(STRATEGY_OVERLAP_PATH, {})
+    if not summary:
+        return {}
+
+    def compact(name: str) -> dict[str, Any]:
+        item = summary.get(name) or {}
+        if not isinstance(item, dict):
+            return {}
+        return {
+            "count": int(number(item.get("count"))),
+            "net_pnl": round(number(item.get("net_pnl")), 4),
+            "profit_factor": round(number(item.get("profit_factor")), 4),
+            "win_rate_pct": round(number(item.get("win_rate_pct")), 2),
+            "avg_pnl": round(number(item.get("avg_pnl")), 4),
+            "avg_return_pct": round(number(item.get("avg_return_pct")), 5),
+        }
+
+    return {
+        "generated_at_utc": public_time(summary.get("generated_at_utc")),
+        "total_public_bot_trades": int(number(summary.get("total_public_bot_trades"))),
+        "current_live_matched": compact("current_live_matched"),
+        "quality_guard_skipped_current_live": compact("quality_guard_skipped_current_live"),
+        "h16_atr_guard_skipped_current_live": compact("h16_atr_guard_skipped_current_live"),
+        "relaxed_quality_skipped_current_live": compact("relaxed_quality_skipped_current_live"),
+        "note": "Overlap uses existing live trades only and is a promotion warning, not proof.",
+    }
+
+
 def decision_queue(
     trades: list[dict[str, Any]],
     time_filter: dict[str, Any],
     strategy_research: dict[str, Any],
     strategy_shadow: dict[str, Any],
     shadow_activity: dict[str, Any],
+    strategy_overlap: dict[str, Any],
     current_guard: dict[str, Any],
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
@@ -670,16 +750,23 @@ def decision_queue(
         net = number(strategy_research.get("net_pct"))
         base_net = number(strategy_research.get("baseline_net_pct"))
         trades_year = number(strategy_research.get("trades_per_year"))
+        model_name = strategy_research.get("model") or "strategy candidate"
         evidence = (
             f"PF {pf:.2f} vs {base_pf:.2f}, DD {dd:.2f}% vs {base_dd:.2f}%, "
             f"net {net:.2f}% vs {base_net:.2f}%, {trades_year:.0f} trades/year."
         )
+        overlap = strategy_overlap.get("relaxed_quality_skipped_current_live") or {}
+        if model_name == "relaxed_quality_atr150" and overlap:
+            evidence += (
+                f" Live overlap: would have skipped {int(number(overlap.get('count')))} current-live "
+                f"matched trades totaling ${number(overlap.get('net_pnl')):.2f}."
+            )
         add(
-            "Strategy candidate: quality guard",
+            f"Strategy candidate: {model_name}",
             "research candidate",
             evidence,
-            "Shadow-test before switching the live default model.",
-            "candidate",
+            "Keep shadow-testing until live overlap stops skipping net-positive current trades.",
+            "watch" if model_name == "relaxed_quality_atr150" and number(overlap.get("net_pnl")) > 0 else "candidate",
         )
 
     if strategy_shadow:
@@ -688,14 +775,14 @@ def decision_queue(
         shadow_ready = bool(strategy_shadow.get("shadow_would_enter_on_latest_candle"))
         blocker = strategy_shadow.get("primary_blocker") or "none"
         models = shadow_activity.get("models") if isinstance(shadow_activity, dict) else []
-        quality_activity = next(
-            (item for item in models or [] if item.get("name") == "entry_research_quality_guard"),
+        selected_activity = next(
+            (item for item in models or [] if item.get("name") == strategy_shadow.get("name")),
             {},
         )
         history = (
-            f"; history {int(number(quality_activity.get('events')))} events, "
-            f"{int(number(quality_activity.get('divergences')))} divergences"
-            if quality_activity
+            f"; history {int(number(selected_activity.get('events')))} events, "
+            f"{int(number(selected_activity.get('divergences')))} divergences"
+            if selected_activity
             else "; history collecting"
         )
         evidence = (
@@ -706,7 +793,7 @@ def decision_queue(
         )
         priority = "candidate" if live_ready != shadow_ready else "watch"
         add(
-            "Strategy shadow: quality guard",
+            f"Strategy shadow: {strategy_shadow.get('name') or 'candidate'}",
             "diverged" if live_ready != shadow_ready else "tracking",
             evidence,
             "Compare shadow divergences with real fills before switching live.",
@@ -1057,6 +1144,7 @@ def main() -> None:
     strategy_research = strategy_research_candidate()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
+    strategy_overlap = strategy_overlap_status()
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -1118,12 +1206,14 @@ def main() -> None:
         "time_filter_what_if": time_filter_rows,
         "strategy_shadow": strategy_shadow,
         "strategy_shadow_activity": shadow_activity,
+        "strategy_overlap": strategy_overlap,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
             strategy_research,
             strategy_shadow,
             shadow_activity,
+            strategy_overlap,
             current_guard,
             expected,
             performance_window_rows,
