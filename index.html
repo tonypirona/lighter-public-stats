@@ -315,6 +315,25 @@
       <div class="alerts" id="alertRows"></div>
     </section>
 
+    <section class="panel">
+      <h2>Decision Queue</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Evidence</th>
+              <th>Next Step</th>
+            </tr>
+          </thead>
+          <tbody id="decisionRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">This is a conservative queue for strategy/web decisions. It highlights what is ready, what is still only a watch item, and what should not be changed yet.</div>
+    </section>
+
     <section class="panel health-panel">
       <h2>System Health</h2>
       <div class="table-wrap">
@@ -764,6 +783,24 @@
       }
     }
 
+    function renderDecisionQueue(rows) {
+      const tbody = byId("decisionRows");
+      tbody.replaceChildren();
+      for (const item of rows || []) {
+        const tr = document.createElement("tr");
+        const priority = String(item.priority || "").toLowerCase();
+        const tone = priority === "urgent" || priority === "reject"
+          ? "red"
+          : (priority === "ok" ? "green" : "yellow");
+        appendCell(tr, item.topic || "--");
+        appendCell(tr, item.status || "--", tone);
+        appendCell(tr, item.priority || "--", tone);
+        appendCell(tr, item.evidence || "--");
+        appendCell(tr, item.next_step || "--");
+        tbody.append(tr);
+      }
+    }
+
     function renderSnapshot(data) {
       const live = data.live_status || {};
       const expected = data.model_match || {};
@@ -1164,6 +1201,7 @@
       setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
 
       renderAlerts(data);
+      renderDecisionQueue(data.decision_queue || []);
       renderSnapshot(data);
       renderHealth(data);
       renderModelMatch(data.model_match || {});

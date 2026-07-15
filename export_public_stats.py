@@ -371,6 +371,115 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
     }
 
 
+def decision_queue(
+    trades: list[dict[str, Any]],
+    time_filter: dict[str, Any],
+    current_guard: dict[str, Any],
+    expected: dict[str, Any],
+    windows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+
+    def add(topic: str, status: str, evidence: str, next_step: str, priority: str = "watch") -> None:
+        rows.append(
+            {
+                "topic": topic,
+                "status": status,
+                "priority": priority,
+                "evidence": evidence,
+                "next_step": next_step,
+            }
+        )
+
+    candidates = time_filter.get("candidates") or []
+    top_filter = candidates[0] if candidates else {}
+    if top_filter:
+        missing_total = max(0, 100 - len(trades))
+        readiness = str(top_filter.get("readiness", "watch"))
+        label = f"{top_filter.get('group', '--')} {top_filter.get('label', '--')}"
+        evidence = (
+            f"Net delta ${number(top_filter.get('net_pnl_delta')):.2f}, "
+            f"PF delta {number(top_filter.get('profit_factor_delta')):.2f}, "
+            f"removed {int(number(top_filter.get('removed_count')))} trades."
+        )
+        if readiness == "candidate":
+            next_step = "Test this as a strategy rule before enabling it live."
+            priority = "candidate"
+        elif readiness == "watch only":
+            next_step = f"Collect {missing_total} more public trades and require the edge to persist."
+            priority = "watch"
+        elif readiness == "too small":
+            next_step = "Collect more removed/kept samples before trusting this bucket."
+            priority = "watch"
+        else:
+            next_step = "Do not use this as a filter."
+            priority = "reject"
+        add(f"Time filter: {label}", readiness, evidence, next_step, priority)
+
+    guard_records = int(number(current_guard.get("entry_records")))
+    guard_version = current_guard.get("version") or "current guard"
+    if guard_version:
+        if guard_records < 20:
+            add(
+                "Entry guard",
+                "collecting",
+                f"{guard_records} signals since {guard_version}.",
+                f"Need {20 - guard_records} more post-guard signals before changing guard thresholds.",
+                "watch",
+            )
+        else:
+            add(
+                "Entry guard",
+                "review",
+                f"{guard_records} signals, {current_guard.get('blocked_entries', 0)} blocked.",
+                "Compare current-guard PF/drawdown before loosening or tightening.",
+                "watch",
+            )
+
+    missed = int(number(expected.get("missing_expected_entries")))
+    unexpected = int(number(expected.get("unexpected_live_entries")))
+    if missed or unexpected:
+        add(
+            "Model/live match",
+            "review now",
+            f"{missed} missed, {unexpected} unexpected.",
+            "Inspect model-match records before trusting new optimization ideas.",
+            "urgent",
+        )
+    else:
+        add(
+            "Model/live match",
+            "healthy",
+            "0 missed and 0 unexpected live entries in latest model-match report.",
+            "Keep monitoring.",
+            "ok",
+        )
+
+    week = next((item for item in windows if item.get("window") == "7d"), {})
+    full = next((item for item in windows if item.get("window") == "all"), {})
+    if week:
+        week_pf = number(week.get("profit_factor"))
+        full_pf = number(full.get("profit_factor"))
+        if week.get("trade_count", 0) and full_pf and week_pf >= full_pf:
+            add(
+                "Recent performance",
+                "healthy",
+                f"7d PF {week_pf:.2f} vs all PF {full_pf:.2f}.",
+                "No recent-performance downgrade needed.",
+                "ok",
+            )
+        else:
+            add(
+                "Recent performance",
+                "watch",
+                f"7d PF {week_pf:.2f} vs all PF {full_pf:.2f}.",
+                "Watch whether recent PF keeps lagging.",
+                "watch",
+            )
+
+    return rows
+
+
 def bucket_stats(
     trades: list[dict[str, Any]],
     field: str,
@@ -633,6 +742,9 @@ def main() -> None:
 
     curve_points, ending_equity = clean_curve(published_trades)
     dd_dollar, dd_pct = max_drawdown(curve_points)
+    performance_window_rows = performance_windows(published_trades)
+    performance_breakdown_rows = performance_breakdowns(published_trades)
+    time_filter_rows = time_filter_what_if(published_trades)
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -665,6 +777,7 @@ def main() -> None:
     wins = [pnl for pnl in pnls if pnl > 0]
     losses = [pnl for pnl in pnls if pnl < 0]
     net_pnl = sum(pnls)
+    current_guard = current_guard_stats(published_trades, ledger_rows, order_config)
 
     payload = {
         "meta": {
@@ -687,9 +800,16 @@ def main() -> None:
             "avg_slippage_bp": round(avg(slippages), 4),
             "avg_execution_cost_bp": round(avg(execution_costs), 4),
         },
-        "performance_windows": performance_windows(published_trades),
-        "performance_breakdowns": performance_breakdowns(published_trades),
-        "time_filter_what_if": time_filter_what_if(published_trades),
+        "performance_windows": performance_window_rows,
+        "performance_breakdowns": performance_breakdown_rows,
+        "time_filter_what_if": time_filter_rows,
+        "decision_queue": decision_queue(
+            published_trades,
+            time_filter_rows,
+            current_guard,
+            expected,
+            performance_window_rows,
+        ),
         "clean_curve": {
             "starting_equity": START_EQUITY,
             "leverage": CLEAN_LEVERAGE,
@@ -732,7 +852,7 @@ def main() -> None:
         },
         "execution_quality": execution_quality,
         "guard_activity": guard_activity(ledger_rows),
-        "current_guard_stats": current_guard_stats(published_trades, ledger_rows, order_config),
+        "current_guard_stats": current_guard,
         "recent_trades": recent,
     }
 

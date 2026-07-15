@@ -356,6 +356,36 @@
     "sent_entries": 0,
     "version": "chase_3p5_2026-07-15"
   },
+  "decision_queue": [
+    {
+      "evidence": "Net delta $12.78, PF delta 1.10, removed 9 trades.",
+      "next_step": "Collect 46 more public trades and require the edge to persist.",
+      "priority": "watch",
+      "status": "watch only",
+      "topic": "Time filter: hour 12-17 UTC"
+    },
+    {
+      "evidence": "0 signals since chase_3p5_2026-07-15.",
+      "next_step": "Need 20 more post-guard signals before changing guard thresholds.",
+      "priority": "watch",
+      "status": "collecting",
+      "topic": "Entry guard"
+    },
+    {
+      "evidence": "0 missed and 0 unexpected live entries in latest model-match report.",
+      "next_step": "Keep monitoring.",
+      "priority": "ok",
+      "status": "healthy",
+      "topic": "Model/live match"
+    },
+    {
+      "evidence": "7d PF 2.62 vs all PF 1.63.",
+      "next_step": "No recent-performance downgrade needed.",
+      "priority": "ok",
+      "status": "healthy",
+      "topic": "Recent performance"
+    }
+  ],
   "execution_guard": {
     "emergency_exit_slippage_bp": 25.0,
     "entry_max_slippage_bp": 5.0,
@@ -549,8 +579,8 @@
   "live_status": {
     "available_balance": 71.582681,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T14:36:21Z",
-    "monitor_cycle": 1715,
+    "monitor_checked_at_utc": "2026-07-15T14:40:02Z",
+    "monitor_cycle": 1721,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -558,15 +588,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 71.582681,
-    "watchdog_checked_at_utc": "2026-07-15T14:36:04Z",
+    "watchdog_checked_at_utc": "2026-07-15T14:40:04Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T14:36:23Z",
+    "generated_at_utc": "2026-07-15T14:40:09Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T14:36:16+00:00"
+    "tracker_synced_at_utc": "2026-07-15T14:40:02+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -751,7 +781,7 @@
       "gross_profit": 0,
       "net_pnl": -2.8849,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-14T14:36:23Z",
+      "since_utc": "2026-07-14T14:40:09Z",
       "trade_count": 1,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -768,7 +798,7 @@
       "gross_profit": 11.6635,
       "net_pnl": 7.2129,
       "profit_factor": 2.6206,
-      "since_utc": "2026-07-08T14:36:23Z",
+      "since_utc": "2026-07-08T14:40:09Z",
       "trade_count": 16,
       "win_rate_pct": 62.5,
       "window": "7d"
@@ -785,7 +815,7 @@
       "gross_profit": 57.3071,
       "net_pnl": 22.0638,
       "profit_factor": 1.626,
-      "since_utc": "2026-06-15T14:36:23Z",
+      "since_utc": "2026-06-15T14:40:09Z",
       "trade_count": 54,
       "win_rate_pct": 68.52,
       "window": "30d"
