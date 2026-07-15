@@ -382,7 +382,7 @@
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
-      "topic": "Strategy shadow: entry_research_net_best"
+      "topic": "Strategy shadow: entry_research_atr975"
     },
     {
       "evidence": "1 signals since chase_3p5_2026-07-15.",
@@ -602,8 +602,8 @@
   "live_status": {
     "available_balance": 140.425733,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T17:34:35Z",
-    "monitor_cycle": 2008,
+    "monitor_checked_at_utc": "2026-07-15T17:35:33Z",
+    "monitor_cycle": 2009,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -611,15 +611,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 140.425733,
-    "watchdog_checked_at_utc": "2026-07-15T17:34:12Z",
+    "watchdog_checked_at_utc": "2026-07-15T17:35:12Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T17:34:38Z",
+    "generated_at_utc": "2026-07-15T17:35:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T17:34:34+00:00"
+    "tracker_synced_at_utc": "2026-07-15T17:35:34+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -800,11 +800,14 @@
       "clean_25x_max_drawdown": 4.6485,
       "clean_25x_max_drawdown_pct": 4.65,
       "clean_25x_net_pct": -3.19,
+      "clean_leveraged_max_drawdown": 4.6485,
+      "clean_leveraged_max_drawdown_pct": 4.65,
+      "clean_leveraged_net_pct": -3.19,
       "gross_loss": -2.8849,
       "gross_profit": 1.7655,
       "net_pnl": -1.1194,
       "profit_factor": 0.612,
-      "since_utc": "2026-07-14T17:34:38Z",
+      "since_utc": "2026-07-14T17:35:38Z",
       "trade_count": 2,
       "win_rate_pct": 50.0,
       "window": "24h"
@@ -817,11 +820,14 @@
       "clean_25x_max_drawdown": 5.5331,
       "clean_25x_max_drawdown_pct": 4.65,
       "clean_25x_net_pct": 15.23,
+      "clean_leveraged_max_drawdown": 5.5331,
+      "clean_leveraged_max_drawdown_pct": 4.65,
+      "clean_leveraged_net_pct": 15.23,
       "gross_loss": -4.4506,
       "gross_profit": 13.429,
       "net_pnl": 8.9784,
       "profit_factor": 3.0173,
-      "since_utc": "2026-07-08T17:34:38Z",
+      "since_utc": "2026-07-08T17:35:38Z",
       "trade_count": 17,
       "win_rate_pct": 64.71,
       "window": "7d"
@@ -834,11 +840,14 @@
       "clean_25x_max_drawdown": 17.1582,
       "clean_25x_max_drawdown_pct": 13.59,
       "clean_25x_net_pct": 44.33,
+      "clean_leveraged_max_drawdown": 17.1582,
+      "clean_leveraged_max_drawdown_pct": 13.59,
+      "clean_leveraged_net_pct": 44.33,
       "gross_loss": -35.2433,
       "gross_profit": 59.0726,
       "net_pnl": 23.8293,
       "profit_factor": 1.6761,
-      "since_utc": "2026-06-15T17:34:38Z",
+      "since_utc": "2026-06-15T17:35:38Z",
       "trade_count": 55,
       "win_rate_pct": 69.09,
       "window": "30d"
@@ -851,6 +860,9 @@
       "clean_25x_max_drawdown": 17.1582,
       "clean_25x_max_drawdown_pct": 13.59,
       "clean_25x_net_pct": 44.33,
+      "clean_leveraged_max_drawdown": 17.1582,
+      "clean_leveraged_max_drawdown_pct": 13.59,
+      "clean_leveraged_net_pct": 44.33,
       "gross_loss": -35.2433,
       "gross_profit": 59.0726,
       "net_pnl": 23.8293,
@@ -1550,7 +1562,23 @@
       "profit_factor": 2.3048,
       "win_rate_pct": 73.47
     },
+    "entry_research_atr975_skipped_current_live": {
+      "avg_pnl": 0.0,
+      "avg_return_pct": 0.0,
+      "count": 0,
+      "net_pnl": 0.0,
+      "profit_factor": 0.0,
+      "win_rate_pct": 0.0
+    },
     "entry_research_best_skipped_current_live": {
+      "avg_pnl": 0.0,
+      "avg_return_pct": 0.0,
+      "count": 0,
+      "net_pnl": 0.0,
+      "profit_factor": 0.0,
+      "win_rate_pct": 0.0
+    },
+    "entry_research_block_long_h10_skipped_current_live": {
       "avg_pnl": 0.0,
       "avg_return_pct": 0.0,
       "count": 0,
@@ -1595,28 +1623,28 @@
     "total_public_bot_trades": 55
   },
   "strategy_shadow": {
-    "atr_pct": 0.00055703,
+    "atr_pct": 0.00056807,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
       "range_large_enough"
     ],
-    "data_end": "2026-07-15T17:33:00Z",
+    "data_end": "2026-07-15T17:34:00Z",
     "hour_utc": 17,
     "live_long_gate": "9/10",
     "live_model": "lighter_tight_block_short_ret240_pos",
     "live_short_gate": "10/12",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
-    "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95",
-    "name": "entry_research_net_best",
+    "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975",
+    "name": "entry_research_atr975",
     "primary_blocker": "rsi_high_enough",
-    "rsi5": 49.9993,
+    "rsi5": 39.0824,
     "shadow_long_gate": "9/10",
     "shadow_short_gate": "10/12",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-15T17:34:11Z"
+    "updated_at_utc": "2026-07-15T17:35:26Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-15T16:39:36Z",
