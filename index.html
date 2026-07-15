@@ -144,6 +144,38 @@
       margin-bottom: 14px;
     }
 
+    .alert-panel {
+      margin-bottom: 14px;
+    }
+
+    .alerts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .alert {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(5, 8, 11, 0.5);
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .alert span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .alert.green { border-color: rgba(34, 230, 168, 0.36); background: rgba(34, 230, 168, 0.08); }
+    .alert.yellow { border-color: rgba(251, 191, 36, 0.42); background: rgba(251, 191, 36, 0.08); color: #fbbf24; }
+    .alert.red { border-color: rgba(255, 93, 102, 0.48); background: rgba(255, 93, 102, 0.1); }
+
     .panel {
       padding: 18px;
       min-width: 0;
@@ -252,6 +284,7 @@
       header { display: block; }
       .pill { margin-top: 14px; white-space: normal; }
       .cards { grid-template-columns: 1fr 1fr; }
+      .alerts { grid-template-columns: 1fr; }
       .card { min-height: 100px; padding: 14px; }
       .value { font-size: 22px; }
       .chart-wrap { height: 280px; }
