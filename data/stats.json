@@ -549,8 +549,8 @@
   "live_status": {
     "available_balance": 71.582681,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T14:21:13Z",
-    "monitor_cycle": 1688,
+    "monitor_checked_at_utc": "2026-07-15T14:22:37Z",
+    "monitor_cycle": 1690,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -558,15 +558,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 71.582681,
-    "watchdog_checked_at_utc": "2026-07-15T14:21:02Z",
+    "watchdog_checked_at_utc": "2026-07-15T14:22:32Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T14:21:15Z",
+    "generated_at_utc": "2026-07-15T14:22:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T14:21:12+00:00"
+    "tracker_synced_at_utc": "2026-07-15T14:22:37+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,

@@ -310,6 +310,11 @@
       <div class="card"><div class="label">Execution</div><div class="value small" id="execution">--</div><div class="muted" id="slippage">--</div></div>
     </section>
 
+    <section class="panel alert-panel">
+      <h2>Action Needed</h2>
+      <div class="alerts" id="alertRows"></div>
+    </section>
+
     <section class="panel health-panel">
       <h2>System Health</h2>
       <div class="table-wrap">
@@ -544,6 +549,55 @@
       if (tone) right.classList.add(tone);
       wrap.append(left, right);
       return wrap;
+    }
+
+    function renderAlerts(data) {
+      const box = byId("alertRows");
+      box.replaceChildren();
+      const live = data.live_status || {};
+      const meta = data.meta || {};
+      const model = data.model_match || {};
+      const summary = data.summary || {};
+      const guard24h = ((data.guard_activity || {}).windows || []).find(item => item.window === "24h") || {};
+      const alerts = [];
+
+      function add(tone, title, detail) {
+        alerts.push({ tone, title, detail });
+      }
+
+      const exportAge = ageMinutes(meta.generated_at_utc);
+      const trackerAge = ageMinutes(meta.tracker_synced_at_utc);
+      const monitorAge = ageMinutes(live.monitor_checked_at_utc);
+      const watchdogAge = ageMinutes(live.watchdog_checked_at_utc);
+      if (exportAge > 12) add("red", "Public export stale", `Last export ${timeAgo(meta.generated_at_utc)}.`);
+      if (trackerAge > 12) add("red", "Tracker sync stale", `Last tracker sync ${timeAgo(meta.tracker_synced_at_utc)}.`);
+      if (!live.monitor_ok || monitorAge > 12) add("red", "Bot monitor stale", `Monitor heartbeat ${timeAgo(live.monitor_checked_at_utc)}.`);
+      if (!live.watchdog_ok || watchdogAge > 12) add("red", "Watchdog stale", `Watchdog heartbeat ${timeAgo(live.watchdog_checked_at_utc)}.`);
+      if (!live.live_enabled) add("red", "Trading disabled", "Live flag is off in the latest public snapshot.");
+      if ((model.missing_expected_entries || 0) > 0) add("red", "Missed model trades", `${model.missing_expected_entries} expected entries were not found live.`);
+      if ((model.unexpected_live_entries || 0) > 0) add("red", "Unexpected live trades", `${model.unexpected_live_entries} live entries were outside the model.`);
+      if ((model.sent_no_fill_entries || 0) > 0) add("yellow", "Sent but not filled", `${model.sent_no_fill_entries} model entries were sent without a fill.`);
+      if ((guard24h.block_rate_pct || 0) >= 35 && (guard24h.entry_records || 0) >= 2) {
+        add("yellow", "Recent guard blocks", `${fmtNum.format(guard24h.block_rate_pct)}% blocked in 24h; watch current-guard stats before changing rules.`);
+      }
+      if ((summary.profit_factor || 0) < 1.2 && (summary.trade_count || 0) >= 20) {
+        add("yellow", "Profit factor weak", `Public bot PF is ${fmtNum.format(summary.profit_factor || 0)}.`);
+      }
+      if ((summary.avg_execution_cost_bp || 0) > 2) {
+        add("yellow", "Execution cost high", `Average execution cost is ${fmtNum.format(summary.avg_execution_cost_bp)} bp.`);
+      }
+
+      if (!alerts.length) add("green", "No urgent issues", "Bot, tracker, publisher, and model-match checks look clean.");
+      for (const alert of alerts.slice(0, 6)) {
+        const item = document.createElement("div");
+        item.className = `alert ${alert.tone}`;
+        const title = document.createElement("strong");
+        title.textContent = alert.title;
+        const detail = document.createElement("span");
+        detail.textContent = alert.detail;
+        item.append(title, detail);
+        box.append(item);
+      }
     }
 
     function renderSnapshot(data) {
@@ -887,6 +941,7 @@
       setText("execution", `${fmtNum.format(summary.avg_spread_bp || 0)} bp spread`);
       setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
 
+      renderAlerts(data);
       renderSnapshot(data);
       renderHealth(data);
       renderModelMatch(data.model_match || {});
