@@ -372,7 +372,7 @@
       "topic": "Strategy candidate: quality guard"
     },
     {
-      "evidence": "both_wait; live 9/10/9/12 vs shadow 11/13/11/14; blocker rsi_low_enough.",
+      "evidence": "both_wait; live L 9/10 / S 9/12 vs shadow L 11/13 / S 11/14; blocker rsi_low_enough; history collecting.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
@@ -593,8 +593,8 @@
   "live_status": {
     "available_balance": 138.660233,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T16:08:28Z",
-    "monitor_cycle": 1868,
+    "monitor_checked_at_utc": "2026-07-15T16:09:37Z",
+    "monitor_cycle": 1870,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -602,15 +602,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 138.660233,
-    "watchdog_checked_at_utc": "2026-07-15T16:08:26Z",
+    "watchdog_checked_at_utc": "2026-07-15T16:09:26Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T16:08:38Z",
+    "generated_at_utc": "2026-07-15T16:09:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T16:08:27+00:00"
+    "tracker_synced_at_utc": "2026-07-15T16:09:23+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -795,7 +795,7 @@
       "gross_profit": 0,
       "net_pnl": -2.8849,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-14T16:08:38Z",
+      "since_utc": "2026-07-14T16:09:38Z",
       "trade_count": 1,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -812,7 +812,7 @@
       "gross_profit": 11.6635,
       "net_pnl": 7.2129,
       "profit_factor": 2.6206,
-      "since_utc": "2026-07-08T16:08:38Z",
+      "since_utc": "2026-07-08T16:09:38Z",
       "trade_count": 16,
       "win_rate_pct": 62.5,
       "window": "7d"
@@ -829,7 +829,7 @@
       "gross_profit": 57.3071,
       "net_pnl": 22.0638,
       "profit_factor": 1.626,
-      "since_utc": "2026-06-15T16:08:38Z",
+      "since_utc": "2026-06-15T16:09:38Z",
       "trade_count": 54,
       "win_rate_pct": 68.52,
       "window": "30d"
@@ -1533,15 +1533,15 @@
     ]
   },
   "strategy_shadow": {
-    "atr_pct": 0.00094586,
+    "atr_pct": 0.00092906,
     "blockers": [
       "rsi_low_enough",
       "quality_long_hour16_block_ok",
       "rsi_high_enough",
-      "relvol1440_under_cap",
+      "range_large_enough",
       "short_ret240_positive_block_ok"
     ],
-    "data_end": "2026-07-15T16:07:00Z",
+    "data_end": "2026-07-15T16:08:00Z",
     "hour_utc": 16,
     "live_long_gate": "9/10",
     "live_model": "lighter_tight_block_short_ret240_pos",
@@ -1551,12 +1551,130 @@
     "model": "entry_research_best_h23_h16_atr_q975",
     "name": "entry_research_quality_guard",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 19.9514,
+    "rsi5": 23.8986,
     "shadow_long_gate": "11/13",
     "shadow_short_gate": "11/14",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-15T16:08:22Z"
+    "updated_at_utc": "2026-07-15T16:09:36Z"
+  },
+  "strategy_shadow_activity": {
+    "latest_event_utc": "2026-07-15T07:29:25Z",
+    "models": [
+      {
+        "both_would_enter": 25,
+        "by_status": {
+          "both_would_enter": 25
+        },
+        "divergences": 0,
+        "events": 25,
+        "latest_event_utc": "2026-07-15T07:29:25Z",
+        "live_only": 0,
+        "model": "entry_lrsi6.45_srsi91.5_lrm0.90_srm0.95",
+        "name": "entry_research_best",
+        "shadow_only": 0
+      }
+    ],
+    "recent_events": [
+      {
+        "closest_side": "short",
+        "data_end": "2026-07-15T07:28:00Z",
+        "logged_at_utc": "2026-07-15T07:29:25Z",
+        "primary_blocker": "rsi_high_enough",
+        "range_pct": 0.00155764,
+        "relvol_median_1440": 2.5359,
+        "ret240_pct": -0.1483,
+        "rsi5": 1.8085,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-15T07:27:00Z",
+        "logged_at_utc": "2026-07-15T07:28:21Z",
+        "primary_blocker": "",
+        "range_pct": 0.00115012,
+        "relvol_median_1440": 4.0703,
+        "ret240_pct": -0.0646,
+        "rsi5": 2.6894,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-15T07:26:00Z",
+        "logged_at_utc": "2026-07-15T07:27:19Z",
+        "primary_blocker": "",
+        "range_pct": 0.00044597,
+        "relvol_median_1440": 2.4719,
+        "ret240_pct": 0.0485,
+        "rsi5": 4.6011,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-15T07:25:00Z",
+        "logged_at_utc": "2026-07-15T07:26:13Z",
+        "primary_blocker": "",
+        "range_pct": 0.00051398,
+        "relvol_median_1440": 1.0755,
+        "ret240_pct": 0.0384,
+        "rsi5": 5.3936,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-14T09:37:00Z",
+        "logged_at_utc": "2026-07-14T09:38:36Z",
+        "primary_blocker": "",
+        "range_pct": 0.00067036,
+        "relvol_median_1440": 5.2289,
+        "ret240_pct": -0.3773,
+        "rsi5": 5.6942,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-14T03:13:00Z",
+        "logged_at_utc": "2026-07-14T03:14:21Z",
+        "primary_blocker": "",
+        "range_pct": 0.00035607,
+        "relvol_median_1440": 0.5021,
+        "ret240_pct": 0.4968,
+        "rsi5": 3.6173,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-14T03:12:00Z",
+        "logged_at_utc": "2026-07-14T03:13:17Z",
+        "primary_blocker": "",
+        "range_pct": 0.00108735,
+        "relvol_median_1440": 2.2024,
+        "ret240_pct": 0.5301,
+        "rsi5": 3.8705,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      },
+      {
+        "closest_side": "long",
+        "data_end": "2026-07-13T16:20:00Z",
+        "logged_at_utc": "2026-07-13T16:21:34Z",
+        "primary_blocker": "",
+        "range_pct": 0.00135954,
+        "relvol_median_1440": 5.2551,
+        "ret240_pct": -0.751,
+        "rsi5": 4.7213,
+        "shadow_name": "entry_research_best",
+        "status": "both_would_enter"
+      }
+    ],
+    "since_utc": "2026-07-09T23:21:33Z",
+    "total_events": 25
   },
   "summary": {
     "avg_execution_cost_bp": -1.1728,
