@@ -170,6 +170,27 @@ def validate_public_stats(stats: dict[str, Any]) -> None:
     if not isinstance(risk.get("worst_losses"), list):
         fail("risk_hotspots.worst_losses must be a list")
 
+    shadow_activity = stats.get("strategy_shadow_activity") or {}
+    if shadow_activity:
+        if not isinstance(shadow_activity, dict):
+            fail("strategy_shadow_activity must be an object")
+        models = shadow_activity.get("models") or []
+        recent_events = shadow_activity.get("recent_events") or []
+        if not isinstance(models, list):
+            fail("strategy_shadow_activity.models must be a list")
+        if not isinstance(recent_events, list):
+            fail("strategy_shadow_activity.recent_events must be a list")
+        if len(recent_events) > 8:
+            fail("strategy_shadow_activity.recent_events must be capped at 8 rows")
+        for index, item in enumerate(models):
+            if not isinstance(item, dict):
+                fail(f"strategy_shadow_activity.models[{index}] must be an object")
+            for key in ("name", "events", "divergences"):
+                if key not in item:
+                    fail(f"strategy_shadow_activity.models[{index}] missing {key}")
+            if as_int(item.get("divergences"), -1) > as_int(item.get("events"), -1):
+                fail(f"strategy_shadow_activity.models[{index}] divergences exceed events")
+
     what_if = stats.get("time_filter_what_if") or {}
     candidates = what_if.get("candidates") or []
     if not isinstance(candidates, list) or not candidates:

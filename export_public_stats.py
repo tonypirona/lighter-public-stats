@@ -58,6 +58,14 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def count_by(rows: list[dict[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in rows:
+        value = str(row.get(key) or "unknown")
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
 def number(value: Any, default: float = 0.0) -> float:
     if value in ("", None):
         return default
@@ -553,11 +561,65 @@ def strategy_shadow_status() -> dict[str, Any]:
     }
 
 
+def strategy_shadow_activity() -> dict[str, Any]:
+    rows = read_jsonl(FREQTRADE_ROOT / "user_data" / "live_state" / "lighter_entry_shadow_journal.jsonl")
+    if not rows:
+        return {"total_events": 0, "models": [], "recent_events": []}
+
+    rows = sorted(rows, key=lambda row: parse_time(row.get("logged_at_utc")))
+    models: list[dict[str, Any]] = []
+    for name in sorted({str(row.get("shadow_name") or "unknown") for row in rows}):
+        scoped = [row for row in rows if str(row.get("shadow_name") or "unknown") == name]
+        divergence = [
+            row for row in scoped
+            if bool(row.get("live_would_enter_on_latest_candle")) != bool(row.get("shadow_would_enter_on_latest_candle"))
+        ]
+        models.append(
+            {
+                "name": name,
+                "model": scoped[-1].get("shadow_model") or "",
+                "events": len(scoped),
+                "divergences": len(divergence),
+                "both_would_enter": len([row for row in scoped if row.get("status") == "both_would_enter"]),
+                "shadow_only": len([row for row in scoped if row.get("status") == "shadow_would_enter"]),
+                "live_only": len([row for row in scoped if row.get("status") == "live_only_signal"]),
+                "by_status": count_by(scoped, "status"),
+                "latest_event_utc": public_time(scoped[-1].get("logged_at_utc")),
+            }
+        )
+
+    recent_events = []
+    for row in reversed(rows[-8:]):
+        recent_events.append(
+            {
+                "logged_at_utc": public_time(row.get("logged_at_utc")),
+                "data_end": public_time(row.get("data_end")),
+                "shadow_name": row.get("shadow_name") or "",
+                "status": row.get("status") or "",
+                "closest_side": row.get("closest_side") or "",
+                "primary_blocker": row.get("shadow_primary_blocker") or "",
+                "rsi5": round(number(row.get("rsi5")), 4),
+                "range_pct": round(number(row.get("range_pct")), 8),
+                "relvol_median_1440": round(number(row.get("relvol_median_1440")), 4),
+                "ret240_pct": round(number(row.get("ret240_pct")), 4),
+            }
+        )
+
+    return {
+        "total_events": len(rows),
+        "since_utc": public_time(rows[0].get("logged_at_utc")),
+        "latest_event_utc": public_time(rows[-1].get("logged_at_utc")),
+        "models": models,
+        "recent_events": recent_events,
+    }
+
+
 def decision_queue(
     trades: list[dict[str, Any]],
     time_filter: dict[str, Any],
     strategy_research: dict[str, Any],
     strategy_shadow: dict[str, Any],
+    shadow_activity: dict[str, Any],
     current_guard: dict[str, Any],
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
@@ -625,11 +687,22 @@ def decision_queue(
         live_ready = bool(strategy_shadow.get("live_would_enter_on_latest_candle"))
         shadow_ready = bool(strategy_shadow.get("shadow_would_enter_on_latest_candle"))
         blocker = strategy_shadow.get("primary_blocker") or "none"
+        models = shadow_activity.get("models") if isinstance(shadow_activity, dict) else []
+        quality_activity = next(
+            (item for item in models or [] if item.get("name") == "entry_research_quality_guard"),
+            {},
+        )
+        history = (
+            f"; history {int(number(quality_activity.get('events')))} events, "
+            f"{int(number(quality_activity.get('divergences')))} divergences"
+            if quality_activity
+            else "; history collecting"
+        )
         evidence = (
-            f"{status}; live {strategy_shadow.get('live_long_gate', '--')}/"
-            f"{strategy_shadow.get('live_short_gate', '--')} vs shadow "
-            f"{strategy_shadow.get('shadow_long_gate', '--')}/"
-            f"{strategy_shadow.get('shadow_short_gate', '--')}; blocker {blocker}."
+            f"{status}; live L {strategy_shadow.get('live_long_gate', '--')} / S "
+            f"{strategy_shadow.get('live_short_gate', '--')} vs shadow L "
+            f"{strategy_shadow.get('shadow_long_gate', '--')} / S "
+            f"{strategy_shadow.get('shadow_short_gate', '--')}; blocker {blocker}{history}."
         )
         priority = "candidate" if live_ready != shadow_ready else "watch"
         add(
@@ -983,6 +1056,7 @@ def main() -> None:
     time_filter_rows = time_filter_what_if(published_trades)
     strategy_research = strategy_research_candidate()
     strategy_shadow = strategy_shadow_status()
+    shadow_activity = strategy_shadow_activity()
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -1043,11 +1117,13 @@ def main() -> None:
         "risk_hotspots": risk_hotspot_rows,
         "time_filter_what_if": time_filter_rows,
         "strategy_shadow": strategy_shadow,
+        "strategy_shadow_activity": shadow_activity,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
             strategy_research,
             strategy_shadow,
+            shadow_activity,
             current_guard,
             expected,
             performance_window_rows,
