@@ -499,6 +499,9 @@ def main() -> None:
         "live_status": {
             "monitor_ok": bool((heartbeat.get("ok") is True) or (live_status.get("monitor_ok") is True)),
             "watchdog_ok": bool((watchdog.get("ok") is True) or (live_status.get("watchdog_ok") is True)),
+            "monitor_checked_at_utc": public_time(heartbeat.get("checked_at_utc")),
+            "watchdog_checked_at_utc": public_time(watchdog.get("checked_at_utc")),
+            "monitor_cycle": int(number(heartbeat.get("cycle"))),
             "live_enabled": bool((account.get("secret_summary") or {}).get("live_enabled") or live_status.get("live_enabled")),
             "paper_status": live_status.get("paper_status") or expected.get("current_paper_status") or "",
             "paper_action": live_status.get("paper_action") or expected.get("current_paper_action") or "",

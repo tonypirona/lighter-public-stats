@@ -467,14 +467,19 @@
       const currentGuard = data.current_guard_stats || {};
       const guard24h = (guardActivity.windows || []).find(item => item.window === "24h") || {};
       const latestBlock = guardActivity.latest_block || {};
+      const checkedAt = data.__checked_at || new Date().toISOString();
       const fresh = freshness(meta);
       const box = byId("snapshot");
       box.replaceChildren(
         row("Snapshot age", fresh.label, fresh.tone),
+        row("Browser checked", formatTime(checkedAt)),
+        row("Data source", data.__source || "--"),
         row("Last export", formatTime(meta.generated_at_utc) || "--"),
         row("Tracker sync", formatTime(meta.tracker_synced_at_utc) || "--"),
         row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
+        row("Monitor heartbeat", live.monitor_checked_at_utc ? `${formatTime(live.monitor_checked_at_utc)} | ${timeAgo(live.monitor_checked_at_utc)}` : "--", live.monitor_ok ? "" : "red"),
         row("Watchdog", live.watchdog_ok ? "Running" : "Not running", live.watchdog_ok ? "green" : "red"),
+        row("Watchdog heartbeat", live.watchdog_checked_at_utc ? `${formatTime(live.watchdog_checked_at_utc)} | ${timeAgo(live.watchdog_checked_at_utc)}` : "--", live.watchdog_ok ? "" : "red"),
         row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
         row("Paper status", live.paper_status || "--"),
         row("Paper action", live.paper_action || "--"),
@@ -716,6 +721,7 @@
       state.points = curve.points || [];
 
       const checkedAt = new Date().toISOString();
+      data.__checked_at = checkedAt;
       setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | checked ${formatTime(checkedAt)} | ${data.__source} | auto-refresh 15s`);
       const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
       byId("liveDot").classList.remove("ok", "warn");
