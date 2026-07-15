@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import math
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +23,7 @@ START_EQUITY = 100.0
 CLEAN_LEVERAGE = 25.0
 NOTIONAL_CAP = 5000.0
 DUST_QTY = 0.0001
+PUBLIC_HEARTBEAT_MINUTES = 15
 
 
 def read_json(path: Path, default: Any) -> Any:
@@ -292,8 +293,11 @@ def main() -> None:
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     existing_payload = read_json(OUT_PATH, {})
     if existing_payload and comparable_payload(existing_payload) == comparable_payload(payload):
-        print(f"No public stat changes. Kept {OUT_PATH}")
-        return
+        existing_stamp = parse_time((existing_payload.get("meta") or {}).get("generated_at_utc"))
+        if existing_stamp.year != 1 and datetime.now(timezone.utc) - existing_stamp < timedelta(minutes=PUBLIC_HEARTBEAT_MINUTES):
+            print(f"No public stat changes. Kept {OUT_PATH}")
+            return
+        print(f"No stat changes, but public heartbeat is older than {PUBLIC_HEARTBEAT_MINUTES} minutes.")
 
     OUT_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     print(f"Wrote {OUT_PATH}")

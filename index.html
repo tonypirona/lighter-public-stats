@@ -356,8 +356,8 @@
       const date = new Date(stamp);
       if (Number.isNaN(date.getTime())) return { tone: "red", dot: "", label: "Snapshot time invalid" };
       const minutes = (Date.now() - date.getTime()) / 60000;
-      if (minutes <= 8) return { tone: "green", dot: "ok", label: `Fresh, ${timeAgo(stamp)}` };
-      if (minutes <= 20) return { tone: "yellow", dot: "warn", label: `Delayed, ${timeAgo(stamp)}` };
+      if (minutes <= 17) return { tone: "green", dot: "ok", label: `Fresh, ${timeAgo(stamp)}` };
+      if (minutes <= 35) return { tone: "yellow", dot: "warn", label: `Delayed, ${timeAgo(stamp)}` };
       return { tone: "red", dot: "", label: `Stale, ${timeAgo(stamp)}` };
     }
 

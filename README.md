@@ -32,7 +32,7 @@ If the repo is connected to GitHub, this exports a fresh `data/stats.json`, comm
 
 ## Automatic Updates
 
-This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 5 minutes, exports fresh stats, and pushes only when the actual bot stats changed.
+This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 5 minutes, exports fresh stats, pushes immediately when actual bot stats changed, and publishes a no-change heartbeat at most every 15 minutes.
 
 The public page also re-fetches stats every 60 seconds while it is open.
 
