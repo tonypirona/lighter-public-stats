@@ -38,7 +38,7 @@ The publisher runs `validate_public_stats.py` before committing. The validator c
 
 ## Automatic Updates
 
-This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 1 minute, exports fresh stats, pushes immediately when actual bot stats changed, and publishes a no-change heartbeat after about 4 minutes.
+This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 1 minute, exports fresh stats, pushes immediately when actual bot stats changed, and publishes a no-change heartbeat after about 4 minutes. The automatic task is stats-only, so it will not commit half-finished dashboard code changes while edits are in progress.
 
 The public page also re-fetches stats every 10 seconds while it is open. It tries GitHub raw data, the Vercel bundled file, and a GitHub API fallback, then renders the newest public snapshot it can find. The exporter republishes no-change heartbeat snapshots after about 4 minutes, so the public page can show that the bot/tracker are alive even when no trade closed.
 

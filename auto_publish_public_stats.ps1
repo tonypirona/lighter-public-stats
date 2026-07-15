@@ -24,7 +24,7 @@ try {
 try {
   Set-Location $Root
   Write-AutoLog "Starting public stats publish."
-  $Output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root "publish_public_stats.ps1") 2>&1
+  $Output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root "publish_public_stats.ps1") -StatsOnly 2>&1
   $ExitCode = $LASTEXITCODE
   foreach ($Line in $Output) {
     Write-AutoLog "  $Line"

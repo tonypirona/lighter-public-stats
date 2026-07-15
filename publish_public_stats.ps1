@@ -1,3 +1,7 @@
+param(
+  [switch]$StatsOnly
+)
+
 $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -32,7 +36,11 @@ if ($LASTEXITCODE -ne 0) {
   exit 0
 }
 
-git add index.html README.md vercel.json package.json .gitignore export_public_stats.py validate_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 install_auto_publish_task.ps1 data/stats.json
+if ($StatsOnly) {
+  git add data/stats.json
+} else {
+  git add index.html README.md vercel.json package.json .gitignore export_public_stats.py validate_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 install_auto_publish_task.ps1 data/stats.json
+}
 
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {
