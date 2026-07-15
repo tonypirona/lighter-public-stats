@@ -688,6 +688,9 @@ def comparable_payload(payload: dict[str, Any]) -> dict[str, Any]:
     live.pop("monitor_checked_at_utc", None)
     live.pop("watchdog_checked_at_utc", None)
     live.pop("monitor_cycle", None)
+    model = comparable.get("model_match", {})
+    model.pop("generated_at_utc", None)
+    model.pop("until_utc", None)
     return comparable
 
 
