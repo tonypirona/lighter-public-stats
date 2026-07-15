@@ -84,6 +84,7 @@
     }
 
     .dot.ok { background: var(--green); }
+    .dot.warn { background: #fbbf24; }
 
     .grid {
       display: grid;
@@ -126,6 +127,7 @@
     .value.small { font-size: 22px; }
     .green { color: var(--green); }
     .red { color: var(--red); }
+    .yellow { color: #fbbf24; }
     .muted { color: var(--muted); }
 
     .panels {
@@ -336,6 +338,29 @@
       return date.toLocaleString([], { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" });
     }
 
+    function timeAgo(iso) {
+      if (!iso) return "unknown";
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return "unknown";
+      const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
+      if (minutes < 1) return "under 1 min ago";
+      if (minutes < 90) return `${minutes} min ago`;
+      const hours = Math.round(minutes / 60);
+      if (hours < 48) return `${hours} hr ago`;
+      return `${Math.round(hours / 24)} days ago`;
+    }
+
+    function freshness(meta) {
+      const stamp = meta.tracker_synced_at_utc || meta.generated_at_utc;
+      if (!stamp) return { tone: "red", dot: "", label: "Snapshot time unknown" };
+      const date = new Date(stamp);
+      if (Number.isNaN(date.getTime())) return { tone: "red", dot: "", label: "Snapshot time invalid" };
+      const minutes = (Date.now() - date.getTime()) / 60000;
+      if (minutes <= 8) return { tone: "green", dot: "ok", label: `Fresh, ${timeAgo(stamp)}` };
+      if (minutes <= 20) return { tone: "yellow", dot: "warn", label: `Delayed, ${timeAgo(stamp)}` };
+      return { tone: "red", dot: "", label: `Stale, ${timeAgo(stamp)}` };
+    }
+
     function row(label, value, tone = "") {
       const wrap = document.createElement("div");
       wrap.className = "row";
@@ -353,8 +378,10 @@
       const live = data.live_status || {};
       const expected = data.model_match || {};
       const meta = data.meta || {};
+      const fresh = freshness(meta);
       const box = byId("snapshot");
       box.replaceChildren(
+        row("Snapshot age", fresh.label, fresh.tone),
         row("Last export", formatTime(meta.generated_at_utc) || "--"),
         row("Tracker sync", formatTime(meta.tracker_synced_at_utc) || "--"),
         row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
@@ -504,12 +531,14 @@
       const summary = data.summary || {};
       const curve = data.clean_curve || {};
       const meta = data.meta || {};
+      const fresh = freshness(meta);
       state.points = curve.points || [];
 
       setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | ${data.__source} | auto-refresh 60s`);
       const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
-      byId("liveDot").classList.toggle("ok", liveOk);
-      setText("liveText", liveOk ? "Bot monitor running in last export" : "Bot monitor not confirmed in last export");
+      byId("liveDot").classList.remove("ok", "warn");
+      if (liveOk && fresh.dot) byId("liveDot").classList.add(fresh.dot);
+      setText("liveText", liveOk ? `${fresh.label}; bot running in last export` : `${fresh.label}; bot monitor not confirmed`);
 
       setSigned("cleanNet", curve.net_pct || 0, "%");
       setText("cleanEquity", `${fmtUsd.format(curve.starting_equity || 100)} -> ${fmtUsd.format(curve.ending_equity || 0)} at ${curve.leverage || 25}x`);
