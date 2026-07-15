@@ -355,6 +355,27 @@
       <div class="notice">Public stats publish every few minutes. If browser is fresh but export/tracker/monitor are stale, the problem is below the page rather than your phone or browser.</div>
     </section>
 
+    <section class="panel health-panel">
+      <h2>Data Sources</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Status</th>
+              <th>Used</th>
+              <th>Export</th>
+              <th>Tracker</th>
+              <th>Trades</th>
+              <th>Net</th>
+            </tr>
+          </thead>
+          <tbody id="sourceRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">If the page looks stale, this shows whether Vercel, GitHub raw, or the GitHub API is lagging. The dashboard uses the newest loaded snapshot.</div>
+    </section>
+
     <section class="grid panels">
       <div class="panel">
         <h2>Equity Curve</h2>
@@ -649,7 +670,8 @@
       points: [],
       refreshTimer: null,
       refreshInFlight: false,
-      lastGithubApiAt: 0
+      lastGithubApiAt: 0,
+      lastGithubApiSnapshot: null
     };
 
     function byId(id) {
@@ -728,6 +750,22 @@
         ((data.decision_queue || []).length * 5) +
         ((data.recent_trades || []).length)
       );
+    }
+
+    function sourceDiagnostic(source, data, status = "loaded", detail = "") {
+      const meta = data.meta || {};
+      const summary = data.summary || {};
+      return {
+        source: source.label,
+        status,
+        detail,
+        generated_at_utc: meta.generated_at_utc || "",
+        tracker_synced_at_utc: meta.tracker_synced_at_utc || "",
+        trade_count: summary.trade_count || 0,
+        net_pnl: summary.net_pnl || 0,
+        freshness_ms: snapshotFreshnessMs(data),
+        source_sha: data.__source_sha || ""
+      };
     }
 
     function decodeBase64Json(content) {
@@ -923,6 +961,28 @@
         appendCell(tr, status.label, status.tone);
         appendCell(tr, formatTime(stamp));
         appendCell(tr, timeAgo(stamp), status.tone);
+        tbody.append(tr);
+      }
+    }
+
+    function renderSourceDiagnostics(data) {
+      const tbody = byId("sourceRows");
+      tbody.replaceChildren();
+      const rows = data.__source_diagnostics || [];
+      for (const item of rows) {
+        const tr = document.createElement("tr");
+        const status = String(item.status || "");
+        const selected = item.selected ? "yes" : "";
+        const tone = item.selected
+          ? "green"
+          : (status === "error" ? "red" : (status === "cached" || status === "skipped" ? "yellow" : ""));
+        appendCell(tr, item.source || "--");
+        appendCell(tr, item.detail ? `${status}: ${item.detail}` : status || "--", tone);
+        appendCell(tr, selected, item.selected ? "green" : "");
+        appendCell(tr, item.generated_at_utc ? `${formatTime(item.generated_at_utc)} | ${timeAgo(item.generated_at_utc)}` : "--", tone);
+        appendCell(tr, item.tracker_synced_at_utc ? `${formatTime(item.tracker_synced_at_utc)} | ${timeAgo(item.tracker_synced_at_utc)}` : "--", tone);
+        appendCell(tr, fmtNum.format(item.trade_count || 0));
+        appendCell(tr, fmtUsd.format(item.net_pnl || 0), classFor(item.net_pnl || 0));
         tbody.append(tr);
       }
     }
