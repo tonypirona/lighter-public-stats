@@ -483,6 +483,21 @@
             <tbody id="excludeWeekdayRows"></tbody>
           </table>
         </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Removed</th>
+                <th>Net Delta</th>
+                <th>PF Delta</th>
+              </tr>
+            </thead>
+            <tbody id="filterCandidateRows"></tbody>
+          </table>
+        </div>
       </div>
       <div class="notice">Diagnostic only. Positive delta means that removing that time bucket would have improved the current public live sample.</div>
     </section>
@@ -728,17 +743,12 @@
         add("yellow", "Weak weekday bucket", `${weakDay.label} UTC: ${fmtUsd.format(weakDay.net_pnl || 0)}, PF ${fmtNum.format(weakDay.profit_factor || 0)}.`);
       }
       const whatIf = data.time_filter_what_if || {};
-      const bestHourFilter = (whatIf.exclude_hour_utc || [])
-        .filter(item => (item.removed_count || 0) >= 6 && (item.net_pnl_delta || 0) > 0 && (item.profit_factor_delta || 0) > 0)
-        .sort((a, b) => (b.net_pnl_delta || 0) - (a.net_pnl_delta || 0))[0];
-      if (bestHourFilter) {
-        add("yellow", "Candidate hour filter", `Excluding ${bestHourFilter.label} improves sample net by ${fmtUsd.format(bestHourFilter.net_pnl_delta || 0)}.`);
-      }
-      const bestDayFilter = (whatIf.exclude_weekday_utc || [])
-        .filter(item => (item.removed_count || 0) >= 5 && (item.net_pnl_delta || 0) > 0 && (item.profit_factor_delta || 0) > 0)
-        .sort((a, b) => (b.net_pnl_delta || 0) - (a.net_pnl_delta || 0))[0];
-      if (bestDayFilter) {
-        add("yellow", "Candidate day filter", `Excluding ${bestDayFilter.label} UTC improves sample net by ${fmtUsd.format(bestDayFilter.net_pnl_delta || 0)}.`);
+      const matureFilter = (whatIf.candidates || []).find(item => item.readiness === "candidate");
+      const watchFilter = (whatIf.candidates || []).find(item => item.readiness === "watch only");
+      if (matureFilter) {
+        add("yellow", "Filter candidate ready", `${matureFilter.group} ${matureFilter.label}: ${fmtUsd.format(matureFilter.net_pnl_delta || 0)} sample improvement.`);
+      } else if (watchFilter) {
+        add("yellow", "Filter watchlist", `${watchFilter.group} ${watchFilter.label}: ${fmtUsd.format(watchFilter.net_pnl_delta || 0)} improvement, but sample still small.`);
       }
 
       if (!alerts.length) add("green", "No urgent issues", "Bot, tracker, publisher, and model-match checks look clean.");
@@ -914,6 +924,19 @@
       }
       renderRows("excludeHourRows", whatIf.exclude_hour_utc || []);
       renderRows("excludeWeekdayRows", whatIf.exclude_weekday_utc || []);
+      const candidatesBody = byId("filterCandidateRows");
+      candidatesBody.replaceChildren();
+      for (const item of whatIf.candidates || []) {
+        const tr = document.createElement("tr");
+        const statusTone = item.readiness === "candidate" ? "green" : (item.readiness === "reject" ? "red" : "yellow");
+        appendCell(tr, `${item.group || "--"} ${item.label || "--"}`);
+        appendCell(tr, item.readiness || "--", statusTone);
+        appendCell(tr, fmtNum.format(item.score || 0));
+        appendCell(tr, fmtNum.format(item.removed_count || 0));
+        appendCell(tr, fmtUsd.format(item.net_pnl_delta || 0), classFor(item.net_pnl_delta || 0));
+        appendCell(tr, `${(item.profit_factor_delta || 0) >= 0 ? "+" : ""}${fmtNum.format(item.profit_factor_delta || 0)}`, classFor(item.profit_factor_delta || 0));
+        candidatesBody.append(tr);
+      }
     }
 
     function renderGuardActivity(activity) {

@@ -314,6 +314,39 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
         )
         return kept_stats
 
+    def candidate_row(group: str, row: dict[str, Any]) -> dict[str, Any]:
+        improved = row["net_pnl_delta"] > 0 and row["profit_factor_delta"] > 0
+        enough_removed = row["removed_count"] >= 8
+        enough_kept = row["count"] >= 30
+        enough_total = len(trades) >= 100
+        if not improved:
+            readiness = "reject"
+            reason = "Would not improve both net PnL and PF."
+        elif not enough_removed or not enough_kept:
+            readiness = "too small"
+            reason = "Positive, but removed/kept sample is too small."
+        elif not enough_total:
+            readiness = "watch only"
+            reason = "Positive, but total live sample is under 100 trades."
+        else:
+            readiness = "candidate"
+            reason = "Improves sample with enough live trades to consider testing as a rule."
+        score = 0.0
+        if improved:
+            score = row["net_pnl_delta"] + row["profit_factor_delta"] * 10.0 + row["removed_count"] * 0.1
+        return {
+            "group": group,
+            "label": row["label"],
+            "readiness": readiness,
+            "reason": reason,
+            "score": round(score, 4),
+            "kept_count": row["count"],
+            "removed_count": row["removed_count"],
+            "net_pnl_delta": row["net_pnl_delta"],
+            "profit_factor": row["profit_factor"],
+            "profit_factor_delta": row["profit_factor_delta"],
+        }
+
     hour_rows = [
         exclusion_row(label, [trade for trade in trades if low <= closed_dt(trade).hour < high])
         for label, low, high in hour_buckets
@@ -324,10 +357,17 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
     ]
     hour_rows.sort(key=lambda item: item["net_pnl_delta"], reverse=True)
     weekday_rows.sort(key=lambda item: item["net_pnl_delta"], reverse=True)
+    candidates = [
+        candidate_row("hour", row) for row in hour_rows
+    ] + [
+        candidate_row("weekday", row) for row in weekday_rows
+    ]
+    candidates.sort(key=lambda item: item["score"], reverse=True)
     return {
         "base": base,
         "exclude_hour_utc": hour_rows,
         "exclude_weekday_utc": weekday_rows,
+        "candidates": candidates,
     }
 
 
