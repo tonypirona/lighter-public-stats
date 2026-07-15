@@ -378,6 +378,7 @@
       const live = data.live_status || {};
       const expected = data.model_match || {};
       const meta = data.meta || {};
+      const guard = data.execution_guard || {};
       const fresh = freshness(meta);
       const box = byId("snapshot");
       box.replaceChildren(
@@ -391,7 +392,11 @@
         row("Paper action", live.paper_action || "--"),
         row("Position", `${live.position_side || "flat"} ${live.position_btc_abs ? fmtNum.format(live.position_btc_abs) + " BTC" : ""}`.trim()),
         row("Available", fmtUsd.format(live.available_balance || 0)),
-        row("Model expected", `${expected.filled_expected_entries || 0} filled / ${expected.missing_expected_entries || 0} missed`)
+        row("Model expected", `${expected.filled_expected_entries || 0} filled / ${expected.missing_expected_entries || 0} missed`),
+        row("Max notional", guard.max_notional_usdc ? fmtUsd.format(guard.max_notional_usdc) : "--"),
+        row("Entry chase guard", guard.entry_preflight_max_book_chase_bp ? `${fmtNum.format(guard.entry_preflight_max_book_chase_bp)} bp` : "--"),
+        row("Entry slip cap", guard.entry_max_slippage_bp ? `${fmtNum.format(guard.entry_max_slippage_bp)} bp` : "--"),
+        row("Exit slip cap", guard.exit_max_slippage_bp ? `${fmtNum.format(guard.exit_max_slippage_bp)} bp` : "--")
       );
     }
 

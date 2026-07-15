@@ -17,6 +17,7 @@ ACCOUNT_PATH = LIVE_STATE / "lighter_account_status.json"
 HEARTBEAT_PATH = LIVE_STATE / "lighter_live_monitor_heartbeat.json"
 WATCHDOG_PATH = LIVE_STATE / "lighter_live_watchdog_status.json"
 EXPECTED_PATH = LIVE_REPORTS / "lighter_expected_vs_actual_summary.json"
+ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
 OUT_PATH = ROOT / "data" / "stats.json"
 
 START_EQUITY = 100.0
@@ -191,6 +192,7 @@ def main() -> None:
     heartbeat = read_json(HEARTBEAT_PATH, {})
     watchdog = read_json(WATCHDOG_PATH, {})
     expected = read_json(EXPECTED_PATH, {})
+    order_config = read_json(ORDER_CONFIG_PATH, {})
 
     raw_trades = tracker.get("trades") or []
     published_trades = sorted(
@@ -287,6 +289,18 @@ def main() -> None:
             "pending_order_count": int(number(latest_account.get("pending_order_count"))),
         },
         "model_match": compact_expected(expected),
+        "execution_guard": {
+            "sizing_mode": order_config.get("sizing_mode", ""),
+            "target_leverage": number(order_config.get("target_leverage")),
+            "max_notional_usdc": number(order_config.get("max_notional_usdc")),
+            "entry_max_slippage_bp": number(order_config.get("entry_max_slippage_bp")),
+            "entry_preflight_max_book_chase_bp": number(order_config.get("entry_preflight_max_book_chase_bp")),
+            "entry_preflight_candidate_book_chase_bp": number(order_config.get("entry_preflight_candidate_book_chase_bp")),
+            "exit_max_slippage_bp": number(order_config.get("exit_max_slippage_bp")),
+            "emergency_exit_slippage_bp": number(order_config.get("emergency_exit_slippage_bp")),
+            "max_live_loss_bp": number(order_config.get("max_live_loss_bp")),
+            "max_live_loss_account_pct": number(order_config.get("max_live_loss_account_pct")),
+        },
         "recent_trades": recent,
     }
 
