@@ -7,7 +7,7 @@ This repo is intentionally separate from the trading bot repo. It only publishes
 ## What Is Public
 
 - Bot-only closed trade stats
-- Clean 30x curve from a $100 starting base with a $5,000 notional cap
+- Clean 30x curve from a $100 starting base with a $8,000 notional cap
 - Profit factor, win rate, drawdown, spread, slippage, and recent public trade rows
 - Basic live snapshot from the latest local export
 - Public-safe execution guard settings such as leverage, max notional, entry chase cap, and slippage caps
