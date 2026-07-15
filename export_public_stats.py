@@ -19,6 +19,7 @@ HEARTBEAT_PATH = LIVE_STATE / "lighter_live_monitor_heartbeat.json"
 WATCHDOG_PATH = LIVE_STATE / "lighter_live_watchdog_status.json"
 EXPECTED_PATH = LIVE_REPORTS / "lighter_expected_vs_actual_summary.json"
 ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
+PAPER_STATE_PATH = LIVE_STATE / "lighter_native_paper_state.json"
 STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_simple_filter_robustness_decision.json"
 OUT_PATH = ROOT / "data" / "stats.json"
 
@@ -511,10 +512,52 @@ def strategy_research_candidate() -> dict[str, Any]:
     }
 
 
+def strategy_shadow_status() -> dict[str, Any]:
+    state = read_json(PAPER_STATE_PATH, {})
+    shadows = state.get("entry_shadows")
+    if not isinstance(shadows, list):
+        shadows = []
+    selected = next(
+        (shadow for shadow in shadows if isinstance(shadow, dict) and shadow.get("name") == "entry_research_quality_guard"),
+        None,
+    )
+    if selected is None:
+        selected = state.get("entry_shadow") if isinstance(state.get("entry_shadow"), dict) else None
+    if not selected:
+        return {}
+
+    setup = selected.get("setup_diagnostics") or {}
+    long_setup = setup.get("long") or {}
+    short_setup = setup.get("short") or {}
+    current = setup.get("current") or {}
+    blockers = list(dict.fromkeys((long_setup.get("blockers") or []) + (short_setup.get("blockers") or [])))
+    return {
+        "name": selected.get("name") or "",
+        "model": selected.get("model") or "",
+        "status": selected.get("status") or "",
+        "updated_at_utc": public_time(state.get("updated_at_utc")),
+        "data_end": public_time(state.get("data_end")),
+        "live_model": state.get("model") or "",
+        "live_status": state.get("status") or "",
+        "live_would_enter_on_latest_candle": bool(selected.get("live_would_enter_on_latest_candle")),
+        "shadow_would_enter_on_latest_candle": bool(selected.get("would_enter_on_latest_candle")),
+        "live_long_gate": selected.get("live_long_gate") or "",
+        "live_short_gate": selected.get("live_short_gate") or "",
+        "shadow_long_gate": selected.get("shadow_long_gate") or "",
+        "shadow_short_gate": selected.get("shadow_short_gate") or "",
+        "primary_blocker": selected.get("shadow_primary_blocker") or setup.get("primary_blocker") or "",
+        "blockers": blockers[:6],
+        "hour_utc": current.get("hour_utc"),
+        "rsi5": round(number(current.get("rsi5")), 4),
+        "atr_pct": round(number(current.get("atr_pct")), 8),
+    }
+
+
 def decision_queue(
     trades: list[dict[str, Any]],
     time_filter: dict[str, Any],
     strategy_research: dict[str, Any],
+    strategy_shadow: dict[str, Any],
     current_guard: dict[str, Any],
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
@@ -575,6 +618,26 @@ def decision_queue(
             evidence,
             "Shadow-test before switching the live default model.",
             "candidate",
+        )
+
+    if strategy_shadow:
+        status = str(strategy_shadow.get("status") or "unknown")
+        live_ready = bool(strategy_shadow.get("live_would_enter_on_latest_candle"))
+        shadow_ready = bool(strategy_shadow.get("shadow_would_enter_on_latest_candle"))
+        blocker = strategy_shadow.get("primary_blocker") or "none"
+        evidence = (
+            f"{status}; live {strategy_shadow.get('live_long_gate', '--')}/"
+            f"{strategy_shadow.get('live_short_gate', '--')} vs shadow "
+            f"{strategy_shadow.get('shadow_long_gate', '--')}/"
+            f"{strategy_shadow.get('shadow_short_gate', '--')}; blocker {blocker}."
+        )
+        priority = "candidate" if live_ready != shadow_ready else "watch"
+        add(
+            "Strategy shadow: quality guard",
+            "diverged" if live_ready != shadow_ready else "tracking",
+            evidence,
+            "Compare shadow divergences with real fills before switching live.",
+            priority,
         )
 
     guard_records = int(number(current_guard.get("entry_records")))
@@ -919,6 +982,7 @@ def main() -> None:
     risk_hotspot_rows = risk_hotspots(published_trades, curve_points, performance_breakdown_rows)
     time_filter_rows = time_filter_what_if(published_trades)
     strategy_research = strategy_research_candidate()
+    strategy_shadow = strategy_shadow_status()
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -978,10 +1042,12 @@ def main() -> None:
         "performance_breakdowns": performance_breakdown_rows,
         "risk_hotspots": risk_hotspot_rows,
         "time_filter_what_if": time_filter_rows,
+        "strategy_shadow": strategy_shadow,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
             strategy_research,
+            strategy_shadow,
             current_guard,
             expected,
             performance_window_rows,
