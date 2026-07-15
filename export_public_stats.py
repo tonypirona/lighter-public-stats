@@ -19,6 +19,7 @@ HEARTBEAT_PATH = LIVE_STATE / "lighter_live_monitor_heartbeat.json"
 WATCHDOG_PATH = LIVE_STATE / "lighter_live_watchdog_status.json"
 EXPECTED_PATH = LIVE_REPORTS / "lighter_expected_vs_actual_summary.json"
 ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
+STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_simple_filter_robustness_decision.json"
 OUT_PATH = ROOT / "data" / "stats.json"
 
 START_EQUITY = 100.0
@@ -488,9 +489,32 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
     }
 
 
+def strategy_research_candidate() -> dict[str, Any]:
+    research = read_json(STRATEGY_RESEARCH_PATH, {})
+    selected = research.get("selected_visible_spread") or {}
+    baseline = research.get("baseline_visible_spread") or {}
+    if not selected or not baseline:
+        return {}
+    return {
+        "model": "entry_research_quality_guard",
+        "variant": selected.get("variant") or "",
+        "net_pct": round(number(selected.get("net_pct")), 4),
+        "profit_factor": round(number(selected.get("profit_factor")), 4),
+        "max_drawdown_pct": round(number(selected.get("max_drawdown_pct")), 4),
+        "trades_per_year": round(number(selected.get("trades_per_year")), 2),
+        "avg_trade_pct": round(number(selected.get("avg_trade_pct")), 5),
+        "baseline_net_pct": round(number(baseline.get("net_pct")), 4),
+        "baseline_profit_factor": round(number(baseline.get("profit_factor")), 4),
+        "baseline_max_drawdown_pct": round(number(baseline.get("max_drawdown_pct")), 4),
+        "baseline_trades_per_year": round(number(baseline.get("trades_per_year")), 2),
+        "caution": "Research candidate only; shadow-test before using as the live default.",
+    }
+
+
 def decision_queue(
     trades: list[dict[str, Any]],
     time_filter: dict[str, Any],
+    strategy_research: dict[str, Any],
     current_guard: dict[str, Any],
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
@@ -532,6 +556,26 @@ def decision_queue(
             next_step = "Do not use this as a filter."
             priority = "reject"
         add(f"Time filter: {label}", readiness, evidence, next_step, priority)
+
+    if strategy_research:
+        pf = number(strategy_research.get("profit_factor"))
+        base_pf = number(strategy_research.get("baseline_profit_factor"))
+        dd = number(strategy_research.get("max_drawdown_pct"))
+        base_dd = number(strategy_research.get("baseline_max_drawdown_pct"))
+        net = number(strategy_research.get("net_pct"))
+        base_net = number(strategy_research.get("baseline_net_pct"))
+        trades_year = number(strategy_research.get("trades_per_year"))
+        evidence = (
+            f"PF {pf:.2f} vs {base_pf:.2f}, DD {dd:.2f}% vs {base_dd:.2f}%, "
+            f"net {net:.2f}% vs {base_net:.2f}%, {trades_year:.0f} trades/year."
+        )
+        add(
+            "Strategy candidate: quality guard",
+            "research candidate",
+            evidence,
+            "Shadow-test before switching the live default model.",
+            "candidate",
+        )
 
     guard_records = int(number(current_guard.get("entry_records")))
     guard_version = current_guard.get("version") or "current guard"
@@ -874,6 +918,7 @@ def main() -> None:
     performance_breakdown_rows = performance_breakdowns(published_trades)
     risk_hotspot_rows = risk_hotspots(published_trades, curve_points, performance_breakdown_rows)
     time_filter_rows = time_filter_what_if(published_trades)
+    strategy_research = strategy_research_candidate()
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -936,6 +981,7 @@ def main() -> None:
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
+            strategy_research,
             current_guard,
             expected,
             performance_window_rows,
