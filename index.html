@@ -140,6 +140,10 @@
       margin-top: 4px;
     }
 
+    .health-panel {
+      margin-bottom: 14px;
+    }
+
     .panel {
       padding: 18px;
       min-width: 0;
@@ -271,6 +275,24 @@
       <div class="card"><div class="label">Win Rate</div><div class="value" id="winRate">--</div><div class="muted" id="gross">--</div></div>
       <div class="card"><div class="label">Max Drawdown</div><div class="value" id="maxDd">--</div><div class="muted" id="maxDdPct">--</div></div>
       <div class="card"><div class="label">Execution</div><div class="value small" id="execution">--</div><div class="muted" id="slippage">--</div></div>
+    </section>
+
+    <section class="panel health-panel">
+      <h2>System Health</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Status</th>
+              <th>Last Seen</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody id="healthRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">Public stats publish every few minutes. If browser is fresh but export/tracker/monitor are stale, the problem is below the page rather than your phone or browser.</div>
     </section>
 
     <section class="grid panels">
@@ -434,6 +456,22 @@
       return `${Math.round(hours / 24)} days ago`;
     }
 
+    function ageMinutes(iso) {
+      if (!iso) return Number.POSITIVE_INFINITY;
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return Number.POSITIVE_INFINITY;
+      return Math.max(0, (Date.now() - date.getTime()) / 60000);
+    }
+
+    function healthStatus(iso, ok = true, greenMinutes = 7, yellowMinutes = 12) {
+      if (!ok) return { label: "Problem", tone: "red" };
+      const minutes = ageMinutes(iso);
+      if (!Number.isFinite(minutes)) return { label: "Unknown", tone: "red" };
+      if (minutes <= greenMinutes) return { label: "Fresh", tone: "green" };
+      if (minutes <= yellowMinutes) return { label: "Delayed", tone: "yellow" };
+      return { label: "Stale", tone: "red" };
+    }
+
     function freshness(meta) {
       const stamp = meta.tracker_synced_at_utc || meta.generated_at_utc;
       if (!stamp) return { tone: "red", dot: "", label: "Snapshot time unknown" };
@@ -495,6 +533,30 @@
         row("Current guard result", `${currentGuard.blocked_entries || 0} blocked / ${currentGuard.entry_records || 0} signals`),
         row("Latest guard block", latestBlock.time ? `${formatTime(latestBlock.time)} | ${fmtNum.format(latestBlock.book_chase_bp || 0)} bp` : "--")
       );
+    }
+
+    function renderHealth(data) {
+      const tbody = byId("healthRows");
+      tbody.replaceChildren();
+      const live = data.live_status || {};
+      const meta = data.meta || {};
+      const checkedAt = data.__checked_at || new Date().toISOString();
+      const rows = [
+        ["Browser refresh", checkedAt, true, 1, 2],
+        ["Public export", meta.generated_at_utc, true, 7, 12],
+        ["Tracker sync", meta.tracker_synced_at_utc, true, 7, 12],
+        ["Bot monitor", live.monitor_checked_at_utc, live.monitor_ok, 7, 12],
+        ["Watchdog", live.watchdog_checked_at_utc, live.watchdog_ok, 7, 12],
+      ];
+      for (const [label, stamp, ok, greenMinutes, yellowMinutes] of rows) {
+        const status = healthStatus(stamp, ok, greenMinutes, yellowMinutes);
+        const tr = document.createElement("tr");
+        appendCell(tr, label);
+        appendCell(tr, status.label, status.tone);
+        appendCell(tr, formatTime(stamp));
+        appendCell(tr, timeAgo(stamp), status.tone);
+        tbody.append(tr);
+      }
     }
 
     function renderTrades(trades) {
@@ -742,6 +804,7 @@
       setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
 
       renderSnapshot(data);
+      renderHealth(data);
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});
