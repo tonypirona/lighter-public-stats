@@ -691,6 +691,10 @@ def comparable_payload(payload: dict[str, Any]) -> dict[str, Any]:
     model = comparable.get("model_match", {})
     model.pop("generated_at_utc", None)
     model.pop("until_utc", None)
+    for window in comparable.get("performance_windows", []):
+        if isinstance(window, dict):
+            window.pop("since_utc", None)
+            window.pop("until_utc", None)
     return comparable
 
 
