@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "export": "python export_public_stats.py",
+    "validate": "python validate_public_stats.py",
     "start": "python -m http.server 8080"
   }
 }

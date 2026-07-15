@@ -24,6 +24,7 @@ if (-not $Python) {
 }
 
 & $Python ".\export_public_stats.py"
+& $Python ".\validate_public_stats.py"
 
 $Remote = git remote 2>$null
 if ($LASTEXITCODE -ne 0) {
@@ -31,7 +32,7 @@ if ($LASTEXITCODE -ne 0) {
   exit 0
 }
 
-git add index.html README.md vercel.json package.json .gitignore export_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 data/stats.json
+git add index.html README.md vercel.json package.json .gitignore export_public_stats.py validate_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 data/stats.json
 
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) {

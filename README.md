@@ -13,6 +13,7 @@ This repo is intentionally separate from the trading bot repo. It only publishes
 - Public-safe execution guard settings such as leverage, max notional, entry chase cap, and slippage caps
 - Public-safe execution-quality buckets for slippage, entry book chase, and entry-chase cap what-if checks
 - Public-safe guard activity counts showing sent and blocked entry records over 24h, 7d, and all-time windows
+- Public-safe rolling performance windows, time-filter what-if diagnostics, and decision queue rows
 
 ## What Is Not Public
 
@@ -33,11 +34,13 @@ cd "C:\Users\tntod\Documents\testing creation\lighter-public-stats"
 
 If the repo is connected to GitHub, this exports a fresh `data/stats.json`, commits it, and pushes it. Vercel will redeploy after the GitHub push.
 
+The publisher runs `validate_public_stats.py` before committing. The validator checks that required public dashboard sections exist, referenced HTML IDs are present, and suspicious private fields such as API keys, private keys, account index, raw order IDs, client IDs, or raw exchange payloads are not present in the public JSON.
+
 ## Automatic Updates
 
-This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 5 minutes, exports fresh stats, pushes immediately when actual bot stats changed, and publishes a no-change heartbeat at most every 15 minutes.
+This PC can run a Windows scheduled task named `Lighter Public Stats Publisher`. It runs `auto_publish_public_stats.ps1` every 5 minutes, exports fresh stats, pushes immediately when actual bot stats changed, and publishes a no-change heartbeat after about 4 minutes.
 
-The public page also re-fetches stats every 60 seconds while it is open.
+The public page also re-fetches stats every 15 seconds while it is open. The exporter republishes no-change heartbeat snapshots after about 4 minutes, so the public page can show that the bot/tracker are alive even when no trade closed.
 
 ## First GitHub Setup
 
