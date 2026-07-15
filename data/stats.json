@@ -371,14 +371,14 @@
       "topic": "Time filter: hour 12-17 UTC"
     },
     {
-      "evidence": "PF 3.59 vs 3.20, DD 0.83% vs 0.83%, net 93.05% vs 94.19%, 1038 trades/year.",
+      "evidence": "PF 3.59 vs 3.20, DD 0.83% vs 0.83%, net 93.05% vs 94.19%, 1038 trades/year. Live overlap: would have skipped 2 current-live matched trades totaling $1.45.",
       "next_step": "Keep shadow-testing until live overlap stops skipping net-positive current trades.",
-      "priority": "candidate",
+      "priority": "watch",
       "status": "research candidate",
       "topic": "Strategy candidate: entry_research_h16_atr_guard"
     },
     {
-      "evidence": "both_wait; live L 8/10 / S 10/12 vs shadow L 10/12 / S 11/13; blocker rsi_high_enough; history 3 events, 3 divergences.",
+      "evidence": "both_wait; live L 9/10 / S 9/12 vs shadow L 10/12 / S 10/13; blocker rsi_low_enough; history 3 events, 3 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
@@ -599,8 +599,8 @@
   "live_status": {
     "available_balance": 140.425733,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-15T16:43:37Z",
-    "monitor_cycle": 1926,
+    "monitor_checked_at_utc": "2026-07-15T16:44:33Z",
+    "monitor_cycle": 1927,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -608,15 +608,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 140.425733,
-    "watchdog_checked_at_utc": "2026-07-15T16:43:32Z",
+    "watchdog_checked_at_utc": "2026-07-15T16:44:33Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T16:43:38Z",
+    "generated_at_utc": "2026-07-15T16:44:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T16:43:24+00:00"
+    "tracker_synced_at_utc": "2026-07-15T16:44:38+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -801,7 +801,7 @@
       "gross_profit": 1.7655,
       "net_pnl": -1.1194,
       "profit_factor": 0.612,
-      "since_utc": "2026-07-14T16:43:38Z",
+      "since_utc": "2026-07-14T16:44:38Z",
       "trade_count": 2,
       "win_rate_pct": 50.0,
       "window": "24h"
@@ -818,7 +818,7 @@
       "gross_profit": 13.429,
       "net_pnl": 8.9784,
       "profit_factor": 3.0173,
-      "since_utc": "2026-07-08T16:43:38Z",
+      "since_utc": "2026-07-08T16:44:38Z",
       "trade_count": 17,
       "win_rate_pct": 64.71,
       "window": "7d"
@@ -835,7 +835,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 23.8293,
       "profit_factor": 1.6761,
-      "since_utc": "2026-06-15T16:43:38Z",
+      "since_utc": "2026-06-15T16:44:38Z",
       "trade_count": 55,
       "win_rate_pct": 69.09,
       "window": "30d"
@@ -1540,65 +1540,66 @@
   },
   "strategy_overlap": {
     "current_live_matched": {
-      "avg_pnl": 0.6132,
-      "avg_return_pct": 0.03347,
-      "count": 48,
-      "net_pnl": 29.4335,
-      "profit_factor": 2.2309,
-      "win_rate_pct": 72.92
+      "avg_pnl": 0.6367,
+      "avg_return_pct": 0.03382,
+      "count": 49,
+      "net_pnl": 31.199,
+      "profit_factor": 2.3048,
+      "win_rate_pct": 73.47
     },
-    "generated_at_utc": "2026-07-15T16:34:35Z",
+    "generated_at_utc": "2026-07-15T16:44:31Z",
     "h16_atr_guard_skipped_current_live": {
-      "avg_pnl": -0.3142,
-      "avg_return_pct": -0.01711,
-      "count": 1,
-      "net_pnl": -0.3142,
-      "profit_factor": 0.0,
-      "win_rate_pct": 0.0
+      "avg_pnl": 0.7256,
+      "avg_return_pct": 0.01691,
+      "count": 2,
+      "net_pnl": 1.4513,
+      "profit_factor": 5.6182,
+      "win_rate_pct": 50.0
     },
     "note": "Overlap uses existing live trades only and is a promotion warning, not proof.",
     "quality_guard_skipped_current_live": {
-      "avg_pnl": 1.0349,
-      "avg_return_pct": 0.05675,
-      "count": 4,
-      "net_pnl": 4.1396,
-      "profit_factor": 14.1729,
-      "win_rate_pct": 75.0
+      "avg_pnl": 1.181,
+      "avg_return_pct": 0.05559,
+      "count": 5,
+      "net_pnl": 5.9051,
+      "profit_factor": 19.791,
+      "win_rate_pct": 80.0
     },
     "relaxed_quality_skipped_current_live": {
-      "avg_pnl": 0.3408,
-      "avg_return_pct": 0.02147,
-      "count": 3,
-      "net_pnl": 1.0224,
-      "profit_factor": 4.2534,
-      "win_rate_pct": 66.67
+      "avg_pnl": 0.697,
+      "avg_return_pct": 0.02884,
+      "count": 4,
+      "net_pnl": 2.7879,
+      "profit_factor": 9.8716,
+      "win_rate_pct": 75.0
     },
-    "total_public_bot_trades": 54
+    "total_public_bot_trades": 55
   },
   "strategy_shadow": {
-    "atr_pct": 0.00087236,
+    "atr_pct": 0.00083823,
     "blockers": [
       "rsi_low_enough",
       "quality_long_hour16_block_ok",
       "rsi_high_enough",
-      "range_large_enough"
+      "range_large_enough",
+      "short_ret240_positive_block_ok"
     ],
-    "data_end": "2026-07-15T16:42:00Z",
+    "data_end": "2026-07-15T16:43:00Z",
     "hour_utc": 16,
-    "live_long_gate": "8/10",
+    "live_long_gate": "9/10",
     "live_model": "lighter_tight_block_short_ret240_pos",
-    "live_short_gate": "10/12",
+    "live_short_gate": "9/12",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
     "model": "entry_research_best_h16_atr_q975",
     "name": "entry_research_h16_atr_guard",
-    "primary_blocker": "rsi_high_enough",
-    "rsi5": 47.4236,
+    "primary_blocker": "rsi_low_enough",
+    "rsi5": 51.0446,
     "shadow_long_gate": "10/12",
-    "shadow_short_gate": "11/13",
+    "shadow_short_gate": "10/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-15T16:43:18Z"
+    "updated_at_utc": "2026-07-15T16:44:32Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-15T16:39:36Z",
