@@ -340,10 +340,28 @@
     ],
     "starting_equity": 100.0
   },
+  "current_guard_stats": {
+    "avg_block_chase_bp": 0.0,
+    "avg_entry_book_chase_bp": 0.0,
+    "avg_slippage_bp": 0.0,
+    "avg_trade_pnl": 0.0,
+    "block_rate_pct": 0.0,
+    "blocked_entries": 0,
+    "closed_trades": 0,
+    "effective_at_utc": "2026-07-15T13:48:37Z",
+    "entry_records": 0,
+    "max_block_chase_bp": 0.0,
+    "net_pnl": 0,
+    "profit_factor": 0.0,
+    "sent_entries": 0,
+    "version": "chase_3p5_2026-07-15"
+  },
   "execution_guard": {
     "emergency_exit_slippage_bp": 25.0,
     "entry_max_slippage_bp": 5.0,
     "entry_preflight_candidate_book_chase_bp": 2.5,
+    "entry_preflight_guard_effective_at_utc": "2026-07-15T13:48:37Z",
+    "entry_preflight_guard_version": "chase_3p5_2026-07-15",
     "entry_preflight_max_book_chase_bp": 3.5,
     "exit_max_slippage_bp": 10.0,
     "max_live_loss_account_pct": 6.0,
@@ -541,11 +559,11 @@
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-15T13:59:11Z",
+    "generated_at_utc": "2026-07-15T14:04:33Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-15T13:59:02+00:00"
+    "tracker_synced_at_utc": "2026-07-15T14:04:22+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,

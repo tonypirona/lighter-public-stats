@@ -347,6 +347,17 @@
             <tbody id="guardActivityRows"></tbody>
           </table>
         </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Current Guard</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody id="currentGuardRows"></tbody>
+          </table>
+        </div>
       </div>
       <div class="notice">Execution buckets are public-safe aggregates from bot trades only. Entry chase is measured before entry and is the field we can use for live preflight blocking.</div>
     </section>
@@ -453,6 +464,7 @@
       const meta = data.meta || {};
       const guard = data.execution_guard || {};
       const guardActivity = data.guard_activity || {};
+      const currentGuard = data.current_guard_stats || {};
       const guard24h = (guardActivity.windows || []).find(item => item.window === "24h") || {};
       const latestBlock = guardActivity.latest_block || {};
       const fresh = freshness(meta);
@@ -474,6 +486,8 @@
         row("Entry slip cap", guard.entry_max_slippage_bp ? `${fmtNum.format(guard.entry_max_slippage_bp)} bp` : "--"),
         row("Exit slip cap", guard.exit_max_slippage_bp ? `${fmtNum.format(guard.exit_max_slippage_bp)} bp` : "--"),
         row("Entry guard 24h", `${guard24h.blocked_entries || 0} blocked / ${guard24h.entry_records || 0} signals`),
+        row("Current guard since", currentGuard.effective_at_utc ? formatTime(currentGuard.effective_at_utc) : "--"),
+        row("Current guard result", `${currentGuard.blocked_entries || 0} blocked / ${currentGuard.entry_records || 0} signals`),
         row("Latest guard block", latestBlock.time ? `${formatTime(latestBlock.time)} | ${fmtNum.format(latestBlock.book_chase_bp || 0)} bp` : "--")
       );
     }
@@ -559,6 +573,28 @@
         appendCell(tr, fmtNum.format(item.sent_entries || 0));
         appendCell(tr, fmtNum.format(item.blocked_entries || 0), item.blocked_entries ? "yellow" : "");
         appendCell(tr, item.blocked_entries ? `${fmtNum.format(item.avg_block_chase_bp || 0)} bp` : "--");
+        tbody.append(tr);
+      }
+    }
+
+    function renderCurrentGuard(stats) {
+      const tbody = byId("currentGuardRows");
+      tbody.replaceChildren();
+      stats = stats || {};
+      const rows = [
+        ["Version", stats.version || "--", ""],
+        ["Effective", stats.effective_at_utc ? formatTime(stats.effective_at_utc) : "--", ""],
+        ["Signals", fmtNum.format(stats.entry_records || 0), ""],
+        ["Sent / Blocked", `${fmtNum.format(stats.sent_entries || 0)} / ${fmtNum.format(stats.blocked_entries || 0)}`, stats.blocked_entries ? "yellow" : ""],
+        ["Closed trades", fmtNum.format(stats.closed_trades || 0), ""],
+        ["Net / PF", `${fmtUsd.format(stats.net_pnl || 0)} / ${fmtNum.format(stats.profit_factor || 0)}`, classFor(stats.net_pnl || 0)],
+        ["Avg chase", stats.closed_trades ? `${fmtNum.format(stats.avg_entry_book_chase_bp || 0)} bp` : "--", ""],
+        ["Avg slippage", stats.closed_trades ? `${fmtNum.format(stats.avg_slippage_bp || 0)} bp` : "--", ""]
+      ];
+      for (const item of rows) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item[0]);
+        appendCell(tr, item[1], item[2]);
         tbody.append(tr);
       }
     }
@@ -679,7 +715,8 @@
       const fresh = freshness(meta);
       state.points = curve.points || [];
 
-      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | ${data.__source} | auto-refresh 60s`);
+      const checkedAt = new Date().toISOString();
+      setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | checked ${formatTime(checkedAt)} | ${data.__source} | auto-refresh 15s`);
       const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
       byId("liveDot").classList.remove("ok", "warn");
       if (liveOk && fresh.dot) byId("liveDot").classList.add(fresh.dot);
@@ -701,6 +738,7 @@
       renderSnapshot(data);
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
+      renderCurrentGuard(data.current_guard_stats || {});
       renderTrades(data.recent_trades || []);
       renderChart(state.points);
     }
@@ -717,7 +755,12 @@
         byId("liveDot").classList.remove("ok");
         setText("liveText", "Stats refresh failed");
       });
-    }, 60000);
+    }, 15000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        load().catch(() => {});
+      }
+    });
   </script>
 </body>
 </html>

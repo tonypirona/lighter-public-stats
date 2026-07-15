@@ -287,6 +287,60 @@ def guard_activity(ledger_rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def current_guard_stats(
+    trades: list[dict[str, Any]],
+    ledger_rows: list[dict[str, Any]],
+    order_config: dict[str, Any],
+) -> dict[str, Any]:
+    effective_at = order_config.get("entry_preflight_guard_effective_at_utc") or ""
+    effective_dt = parse_time(effective_at)
+    if effective_dt.year == 1:
+        return {}
+
+    entry_rows = [
+        row
+        for row in ledger_rows
+        if is_entry_record(row) and parse_time(row.get("checked_at_utc")) >= effective_dt
+    ]
+    blocked_rows = [row for row in entry_rows if is_blocked_record(row)]
+    sent_rows = [row for row in entry_rows if str(row.get("mode", "")).lower() == "live"]
+    closed_trades = [
+        trade
+        for trade in trades
+        if parse_time(trade.get("openedAt")) >= effective_dt
+    ]
+    pnls = [number(trade.get("pnl")) for trade in closed_trades]
+    chase_values = [
+        number(trade.get("entryBookChaseBp"), math.nan)
+        for trade in closed_trades
+        if trade.get("entryBookChaseBp") not in ("", None)
+    ]
+    slippage_values = [
+        number(trade.get("slippageBp"), math.nan)
+        for trade in closed_trades
+        if trade.get("slippageBp") not in ("", None)
+    ]
+    blocked_chase_values = [entry_chase_from_record(row) for row in blocked_rows]
+    blocked_chase_values = [value for value in blocked_chase_values if not math.isnan(value)]
+
+    return {
+        "version": order_config.get("entry_preflight_guard_version", ""),
+        "effective_at_utc": public_time(effective_at),
+        "entry_records": len(entry_rows),
+        "sent_entries": len(sent_rows),
+        "blocked_entries": len(blocked_rows),
+        "block_rate_pct": round(len(blocked_rows) / len(entry_rows) * 100.0, 2) if entry_rows else 0.0,
+        "closed_trades": len(closed_trades),
+        "net_pnl": round(sum(pnls), 4),
+        "profit_factor": round(profit_factor(pnls), 4),
+        "avg_trade_pnl": round(avg(pnls), 4),
+        "avg_entry_book_chase_bp": round(avg(chase_values), 4),
+        "avg_slippage_bp": round(avg(slippage_values), 4),
+        "avg_block_chase_bp": round(avg(blocked_chase_values), 4),
+        "max_block_chase_bp": round(max(blocked_chase_values), 4) if blocked_chase_values else 0.0,
+    }
+
+
 def compact_expected(summary: dict[str, Any]) -> dict[str, Any]:
     allowed = [
         "generated_at_utc",
@@ -457,6 +511,8 @@ def main() -> None:
         "model_match": compact_expected(expected),
         "execution_guard": {
             "sizing_mode": order_config.get("sizing_mode", ""),
+            "entry_preflight_guard_version": order_config.get("entry_preflight_guard_version", ""),
+            "entry_preflight_guard_effective_at_utc": order_config.get("entry_preflight_guard_effective_at_utc", ""),
             "target_leverage": number(order_config.get("target_leverage")),
             "max_notional_usdc": number(order_config.get("max_notional_usdc")),
             "entry_max_slippage_bp": number(order_config.get("entry_max_slippage_bp")),
@@ -469,6 +525,7 @@ def main() -> None:
         },
         "execution_quality": execution_quality,
         "guard_activity": guard_activity(ledger_rows),
+        "current_guard_stats": current_guard_stats(published_trades, ledger_rows, order_config),
         "recent_trades": recent,
     }
 
