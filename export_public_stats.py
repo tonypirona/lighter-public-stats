@@ -286,6 +286,51 @@ def performance_breakdowns(trades: list[dict[str, Any]]) -> dict[str, list[dict[
     }
 
 
+def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    hour_buckets = [
+        ("00-05 UTC", 0, 6),
+        ("06-11 UTC", 6, 12),
+        ("12-17 UTC", 12, 18),
+        ("18-23 UTC", 18, 24),
+    ]
+    base = compact_trade_stats("base", trades)
+
+    def closed_dt(trade: dict[str, Any]) -> datetime:
+        return parse_time(trade.get("closedAt") or trade.get("openedAt"))
+
+    def exclusion_row(label: str, removed: list[dict[str, Any]]) -> dict[str, Any]:
+        removed_ids = {id(trade) for trade in removed}
+        kept = [trade for trade in trades if id(trade) not in removed_ids]
+        kept_stats = compact_trade_stats(label, kept)
+        removed_stats = compact_trade_stats(label, removed)
+        kept_stats.update(
+            {
+                "removed_count": len(removed),
+                "removed_net_pnl": removed_stats["net_pnl"],
+                "net_pnl_delta": round(kept_stats["net_pnl"] - base["net_pnl"], 4),
+                "profit_factor_delta": round(kept_stats["profit_factor"] - base["profit_factor"], 4),
+            }
+        )
+        return kept_stats
+
+    hour_rows = [
+        exclusion_row(label, [trade for trade in trades if low <= closed_dt(trade).hour < high])
+        for label, low, high in hour_buckets
+    ]
+    weekday_rows = [
+        exclusion_row(label, [trade for trade in trades if closed_dt(trade).weekday() == index])
+        for index, label in enumerate(weekdays)
+    ]
+    hour_rows.sort(key=lambda item: item["net_pnl_delta"], reverse=True)
+    weekday_rows.sort(key=lambda item: item["net_pnl_delta"], reverse=True)
+    return {
+        "base": base,
+        "exclude_hour_utc": hour_rows,
+        "exclude_weekday_utc": weekday_rows,
+    }
+
+
 def bucket_stats(
     trades: list[dict[str, Any]],
     field: str,
