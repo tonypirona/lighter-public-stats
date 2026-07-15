@@ -366,6 +366,28 @@
     </section>
 
     <section class="panel">
+      <h2>Performance Windows</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Window</th>
+              <th>Trades</th>
+              <th>Net</th>
+              <th>PF</th>
+              <th>WR</th>
+              <th>Clean 25x</th>
+              <th>Max DD</th>
+              <th>Avg Cost</th>
+            </tr>
+          </thead>
+          <tbody id="performanceWindowRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">Windows use public bot trades only. Clean 25x return starts each window at $100 with the same public notional cap model.</div>
+    </section>
+
+    <section class="panel">
       <h2>Execution Quality</h2>
       <div class="grid quality-grid">
         <div class="table-wrap">
@@ -586,6 +608,12 @@
       if ((summary.avg_execution_cost_bp || 0) > 2) {
         add("yellow", "Execution cost high", `Average execution cost is ${fmtNum.format(summary.avg_execution_cost_bp)} bp.`);
       }
+      const windows = data.performance_windows || [];
+      const week = windows.find(item => item.window === "7d") || {};
+      const full = windows.find(item => item.window === "all") || {};
+      if ((week.trade_count || 0) >= 8 && (full.profit_factor || 0) > 0 && (week.profit_factor || 0) < (full.profit_factor || 0) * 0.75) {
+        add("yellow", "7d PF lagging", `7d PF ${fmtNum.format(week.profit_factor || 0)} vs all ${fmtNum.format(full.profit_factor || 0)}.`);
+      }
 
       if (!alerts.length) add("green", "No urgent issues", "Bot, tracker, publisher, and model-match checks look clean.");
       for (const alert of alerts.slice(0, 6)) {
@@ -770,6 +798,23 @@
       }
     }
 
+    function renderPerformanceWindows(windows) {
+      const tbody = byId("performanceWindowRows");
+      tbody.replaceChildren();
+      for (const item of windows || []) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item.window || "--");
+        appendCell(tr, fmtNum.format(item.trade_count || 0));
+        appendCell(tr, fmtUsd.format(item.net_pnl || 0), classFor(item.net_pnl || 0));
+        appendCell(tr, item.trade_count ? fmtNum.format(item.profit_factor || 0) : "--", (item.profit_factor || 0) >= 1 ? "green" : "red");
+        appendCell(tr, item.trade_count ? `${fmtNum.format(item.win_rate_pct || 0)}%` : "--");
+        appendCell(tr, `${(item.clean_25x_net_pct || 0) >= 0 ? "+" : ""}${fmtNum.format(item.clean_25x_net_pct || 0)}%`, classFor(item.clean_25x_net_pct || 0));
+        appendCell(tr, item.trade_count ? `${fmtNum.format(item.clean_25x_max_drawdown_pct || 0)}%` : "--", (item.clean_25x_max_drawdown_pct || 0) <= 10 ? "" : "yellow");
+        appendCell(tr, item.trade_count ? `${fmtNum.format(item.avg_execution_cost_bp || 0)} bp` : "--", (item.avg_execution_cost_bp || 0) <= 2 ? "" : "yellow");
+        tbody.append(tr);
+      }
+    }
+
     function renderModelMatch(model) {
       const tbody = byId("modelMatchRows");
       tbody.replaceChildren();
@@ -945,6 +990,7 @@
       renderSnapshot(data);
       renderHealth(data);
       renderModelMatch(data.model_match || {});
+      renderPerformanceWindows(data.performance_windows || []);
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});

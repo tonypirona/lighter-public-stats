@@ -170,6 +170,60 @@ def avg(values: list[float]) -> float:
     return sum(values) / len(values) if values else 0.0
 
 
+def performance_windows(trades: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    now = datetime.now(timezone.utc)
+    windows: list[tuple[str, timedelta | None]] = [
+        ("24h", timedelta(hours=24)),
+        ("7d", timedelta(days=7)),
+        ("30d", timedelta(days=30)),
+        ("all", None),
+    ]
+    rows: list[dict[str, Any]] = []
+    for label, delta in windows:
+        if delta is None:
+            bucket = list(trades)
+            since = parse_time(bucket[0].get("closedAt") or bucket[0].get("openedAt")) if bucket else datetime.min.replace(tzinfo=timezone.utc)
+        else:
+            since = now - delta
+            bucket = [
+                trade for trade in trades
+                if parse_time(trade.get("closedAt") or trade.get("openedAt")) >= since
+            ]
+
+        pnls = [number(trade.get("pnl")) for trade in bucket]
+        returns = [trade_return_pct(trade) for trade in bucket]
+        wins = [pnl for pnl in pnls if pnl > 0]
+        losses = [pnl for pnl in pnls if pnl < 0]
+        slippages = [number(trade.get("slippageBp"), math.nan) for trade in bucket if trade.get("slippageBp") not in ("", None)]
+        execution_costs = [
+            number(trade.get("executionCostBp"), math.nan)
+            for trade in bucket
+            if trade.get("executionCostBp") not in ("", None)
+        ]
+        curve_points, ending_equity = clean_curve(bucket)
+        dd_dollar, dd_pct = max_drawdown(curve_points)
+        rows.append(
+            {
+                "window": label,
+                "since_utc": public_time(since),
+                "trade_count": len(bucket),
+                "net_pnl": round(sum(pnls), 4),
+                "profit_factor": round(profit_factor(pnls), 4),
+                "win_rate_pct": round(len(wins) / len(bucket) * 100.0, 2) if bucket else 0.0,
+                "avg_trade_pnl": round(avg(pnls), 4),
+                "avg_trade_return_pct": round(avg(returns), 5),
+                "gross_profit": round(sum(wins), 4),
+                "gross_loss": round(sum(losses), 4),
+                "avg_slippage_bp": round(avg(slippages), 4),
+                "avg_execution_cost_bp": round(avg(execution_costs), 4),
+                "clean_25x_net_pct": round((ending_equity / START_EQUITY - 1.0) * 100.0, 2),
+                "clean_25x_max_drawdown": round(dd_dollar, 4),
+                "clean_25x_max_drawdown_pct": round(dd_pct, 2),
+            }
+        )
+    return rows
+
+
 def bucket_stats(
     trades: list[dict[str, Any]],
     field: str,
@@ -486,6 +540,7 @@ def main() -> None:
             "avg_slippage_bp": round(avg(slippages), 4),
             "avg_execution_cost_bp": round(avg(execution_costs), 4),
         },
+        "performance_windows": performance_windows(published_trades),
         "clean_curve": {
             "starting_equity": START_EQUITY,
             "leverage": CLEAN_LEVERAGE,
