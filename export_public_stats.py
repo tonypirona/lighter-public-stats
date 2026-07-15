@@ -1288,6 +1288,7 @@ def main() -> None:
         "strategy_shadow": strategy_shadow,
         "strategy_shadow_activity": shadow_activity,
         "strategy_overlap": strategy_overlap,
+        "promotion_candidate": strategy_research,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,

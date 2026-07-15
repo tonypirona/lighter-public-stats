@@ -409,6 +409,24 @@
     </section>
 
     <section class="panel">
+      <h2>Strategy Candidate</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Candidate</th>
+              <th>Current Live</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody id="promotionCandidateRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">Candidate stats use Lighter backtest data with the public visible-spread model. It is a shadow candidate, not the live model unless explicitly switched.</div>
+    </section>
+
+    <section class="panel">
       <h2>Performance Windows</h2>
       <div class="table-wrap">
         <table>
@@ -1284,6 +1302,44 @@
       }
     }
 
+    function renderPromotionCandidate(candidate) {
+      const tbody = byId("promotionCandidateRows");
+      tbody.replaceChildren();
+      candidate = candidate || {};
+      if (!candidate.model) {
+        const tr = document.createElement("tr");
+        appendCell(tr, "Status");
+        appendCell(tr, "No candidate published", "yellow");
+        appendCell(tr, "--");
+        appendCell(tr, "--");
+        tbody.append(tr);
+        return;
+      }
+
+      function delta(candidateValue, baselineValue, suffix = "", inverse = false) {
+        const diff = (candidateValue || 0) - (baselineValue || 0);
+        const tone = diff === 0 ? "" : (inverse ? classFor(-diff) : classFor(diff));
+        return [`${diff >= 0 ? "+" : ""}${fmtNum.format(diff)}${suffix}`, tone];
+      }
+
+      const rows = [
+        ["Model", candidate.model || "--", "tight_ret240", candidate.promotion_safe ? "safe shadow" : "watch"],
+        ["Net", `${fmtNum.format(candidate.net_pct || 0)}%`, `${fmtNum.format(candidate.baseline_net_pct || 0)}%`, ...delta(candidate.net_pct, candidate.baseline_net_pct, "%")],
+        ["Profit factor", fmtNum.format(candidate.profit_factor || 0), fmtNum.format(candidate.baseline_profit_factor || 0), ...delta(candidate.profit_factor, candidate.baseline_profit_factor)],
+        ["Max DD", `${fmtNum.format(candidate.max_drawdown_pct || 0)}%`, `${fmtNum.format(candidate.baseline_max_drawdown_pct || 0)}%`, ...delta(candidate.max_drawdown_pct, candidate.baseline_max_drawdown_pct, "%", true)],
+        ["Trades/year", fmtNum.format(candidate.trades_per_year || 0), fmtNum.format(candidate.baseline_trades_per_year || 0), ...delta(candidate.trades_per_year, candidate.baseline_trades_per_year)],
+        ["Live overlap skipped", `${fmtNum.format(candidate.live_overlap_skipped_count || 0)} trades`, "--", `${fmtUsd.format(candidate.live_overlap_skipped_net_pnl || 0)}`],
+      ];
+      for (const item of rows) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item[0]);
+        appendCell(tr, item[1], item[0] === "Live overlap skipped" ? classFor(-(candidate.live_overlap_skipped_net_pnl || 0)) : "");
+        appendCell(tr, item[2]);
+        appendCell(tr, item[3], item[4] || "");
+        tbody.append(tr);
+      }
+    }
+
     function renderChart(points) {
       const canvas = byId("equityChart");
       const tooltip = byId("tooltip");
@@ -1490,6 +1546,7 @@
       renderHealth(data);
       renderSourceDiagnostics(data);
       renderModelMatch(data.model_match || {});
+      renderPromotionCandidate(data.promotion_candidate || {});
       renderPerformanceWindows(data.performance_windows || []);
       renderPerformanceBreakdowns(data.performance_breakdowns || {});
       renderRiskHotspots(data.risk_hotspots || {});
