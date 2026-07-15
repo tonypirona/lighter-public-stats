@@ -227,6 +227,9 @@ def performance_windows(trades: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ]
         curve_points, ending_equity = clean_curve(bucket)
         dd_dollar, dd_pct = max_drawdown(curve_points)
+        clean_net_pct = round((ending_equity / START_EQUITY - 1.0) * 100.0, 2)
+        clean_dd_dollar = round(dd_dollar, 4)
+        clean_dd_pct = round(dd_pct, 2)
         rows.append(
             {
                 "window": label,
@@ -241,9 +244,12 @@ def performance_windows(trades: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "gross_loss": round(sum(losses), 4),
                 "avg_slippage_bp": round(avg(slippages), 4),
                 "avg_execution_cost_bp": round(avg(execution_costs), 4),
-                "clean_25x_net_pct": round((ending_equity / START_EQUITY - 1.0) * 100.0, 2),
-                "clean_25x_max_drawdown": round(dd_dollar, 4),
-                "clean_25x_max_drawdown_pct": round(dd_pct, 2),
+                "clean_leveraged_net_pct": clean_net_pct,
+                "clean_leveraged_max_drawdown": clean_dd_dollar,
+                "clean_leveraged_max_drawdown_pct": clean_dd_pct,
+                "clean_25x_net_pct": clean_net_pct,
+                "clean_25x_max_drawdown": clean_dd_dollar,
+                "clean_25x_max_drawdown_pct": clean_dd_pct,
             }
         )
     return rows
@@ -598,7 +604,15 @@ def strategy_shadow_status() -> dict[str, Any]:
     if not isinstance(shadows, list):
         shadows = []
     selected = None
-    for preferred_name in ("entry_research_net_best", "entry_research_best", "entry_research_h16_atr_guard", "relaxed_quality_atr150", "entry_research_quality_guard"):
+    for preferred_name in (
+        "entry_research_atr975",
+        "entry_research_block_long_h10",
+        "entry_research_net_best",
+        "entry_research_best",
+        "entry_research_h16_atr_guard",
+        "relaxed_quality_atr150",
+        "entry_research_quality_guard",
+    ):
         selected = next(
             (shadow for shadow in shadows if isinstance(shadow, dict) and shadow.get("name") == preferred_name),
             None,
@@ -714,6 +728,10 @@ def strategy_overlap_status() -> dict[str, Any]:
         "current_live_matched": compact("current_live_matched"),
         "entry_research_best_skipped_current_live": compact("entry_research_best_skipped_current_live"),
         "entry_research_net_best_skipped_current_live": compact("entry_research_net_best_skipped_current_live"),
+        "entry_research_atr975_skipped_current_live": compact("entry_research_atr975_skipped_current_live"),
+        "entry_research_block_long_h10_skipped_current_live": compact(
+            "entry_research_block_long_h10_skipped_current_live"
+        ),
         "quality_guard_skipped_current_live": compact("quality_guard_skipped_current_live"),
         "h16_atr_guard_skipped_current_live": compact("h16_atr_guard_skipped_current_live"),
         "relaxed_quality_skipped_current_live": compact("relaxed_quality_skipped_current_live"),
@@ -786,6 +804,8 @@ def decision_queue(
         overlap_key = {
             "entry_research_best": "entry_research_best_skipped_current_live",
             "entry_research_net_best": "entry_research_net_best_skipped_current_live",
+            "entry_research_atr975": "entry_research_atr975_skipped_current_live",
+            "entry_research_block_long_h10": "entry_research_block_long_h10_skipped_current_live",
             "entry_research_h16_atr_guard": "h16_atr_guard_skipped_current_live",
             "entry_research_quality_guard": "quality_guard_skipped_current_live",
             "relaxed_quality_atr150": "relaxed_quality_skipped_current_live",

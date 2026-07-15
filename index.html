@@ -1241,8 +1241,10 @@
         appendCell(tr, fmtUsd.format(item.net_pnl || 0), classFor(item.net_pnl || 0));
         appendCell(tr, item.trade_count ? fmtNum.format(item.profit_factor || 0) : "--", (item.profit_factor || 0) >= 1 ? "green" : "red");
         appendCell(tr, item.trade_count ? `${fmtNum.format(item.win_rate_pct || 0)}%` : "--");
-        appendCell(tr, `${(item.clean_25x_net_pct || 0) >= 0 ? "+" : ""}${fmtNum.format(item.clean_25x_net_pct || 0)}%`, classFor(item.clean_25x_net_pct || 0));
-        appendCell(tr, item.trade_count ? `${fmtNum.format(item.clean_25x_max_drawdown_pct || 0)}%` : "--", (item.clean_25x_max_drawdown_pct || 0) <= 10 ? "" : "yellow");
+        const cleanNet = item.clean_leveraged_net_pct ?? item.clean_25x_net_pct ?? 0;
+        const cleanDd = item.clean_leveraged_max_drawdown_pct ?? item.clean_25x_max_drawdown_pct ?? 0;
+        appendCell(tr, `${cleanNet >= 0 ? "+" : ""}${fmtNum.format(cleanNet)}%`, classFor(cleanNet));
+        appendCell(tr, item.trade_count ? `${fmtNum.format(cleanDd)}%` : "--", cleanDd <= 10 ? "" : "yellow");
         appendCell(tr, item.trade_count ? `${fmtNum.format(item.avg_execution_cost_bp || 0)} bp` : "--", (item.avg_execution_cost_bp || 0) <= 2 ? "" : "yellow");
         tbody.append(tr);
       }
