@@ -18,6 +18,18 @@ function Invoke-Checked {
   }
 }
 
+function Invoke-AllowExitCodes {
+  param(
+    [string]$Label,
+    [int[]]$AllowedExitCodes,
+    [scriptblock]$Command
+  )
+  & $Command
+  if ($AllowedExitCodes -notcontains $LASTEXITCODE) {
+    throw "$Label failed with exit code $LASTEXITCODE"
+  }
+}
+
 $PythonCandidates = @(
   "..\freqtrade\.venv\Scripts\python.exe",
   "python",
@@ -37,6 +49,15 @@ foreach ($Candidate in $PythonCandidates) {
 if (-not $Python) {
   throw "Python was not found. Install Python or activate the freqtrade virtual environment."
 }
+
+$ExpectedLogDir = Join-Path $Root "logs"
+$ExpectedLogPath = Join-Path $ExpectedLogDir "expected_vs_actual_latest.log"
+New-Item -ItemType Directory -Force -Path $ExpectedLogDir | Out-Null
+
+Invoke-AllowExitCodes "lighter_expected_vs_actual_report.py" @(0, 2) {
+  & $Python "..\freqtrade\lighter_expected_vs_actual_report.py" --model "entry_research_atr975_stop220_h07_h10_trail" --hours 168 *> $ExpectedLogPath
+}
+Write-Host "Expected-vs-actual refreshed. Details: $ExpectedLogPath"
 
 Invoke-Checked "export_public_stats.py" { & $Python ".\export_public_stats.py" }
 Invoke-Checked "validate_public_stats.py" { & $Python ".\validate_public_stats.py" }
