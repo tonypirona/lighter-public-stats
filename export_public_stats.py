@@ -36,6 +36,7 @@ STRATEGY_LT6_LBE4_FOLLOWUP_PATH = FREQTRADE_ROOT / "user_data" / "backtest_resul
 STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt4_ld2_live_overlap_summary.json"
 STRATEGY_LT4_EXECUTION_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_tiny_trail_execution_stress_2026_07_16.json"
 STRATEGY_LT4_INTRABAR_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_intrabar_trail_conservative_check_2026_07_16.json"
+STRATEGY_LT4_TIME_BUCKET_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_time_bucket_robustness_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -918,6 +919,40 @@ def strategy_intrabar_stress() -> dict[str, Any]:
     }
 
 
+def strategy_time_bucket_robustness() -> dict[str, Any]:
+    result = read_json(STRATEGY_LT4_TIME_BUCKET_PATH, {})
+    candidates = result.get("top_candidates") or []
+    if not candidates:
+        return {}
+    top = candidates[0]
+    baseline = result.get("baseline") or {}
+    normal_base = baseline.get("normal") or {}
+    conservative_base = baseline.get("conservative_samebar") or {}
+    return {
+        "generated_at_utc": result.get("generated_at_utc") or "",
+        "read": result.get("read") or "",
+        "top_kind": top.get("kind") or "",
+        "top_label": top.get("label") or "",
+        "top_candidate": bool(top.get("candidate")),
+        "normal_baseline_net": round(number(normal_base.get("net_pct")), 4),
+        "normal_baseline_pf": round(number(normal_base.get("profit_factor")), 5),
+        "normal_net": round(number(top.get("normal_net_pct")), 4),
+        "normal_pf": round(number(top.get("normal_pf")), 5),
+        "normal_net_delta": round(number(top.get("normal_net_delta")), 4),
+        "normal_pf_delta": round(number(top.get("normal_pf_delta")), 5),
+        "normal_removed": int(number(top.get("normal_removed"))),
+        "conservative_baseline_net": round(number(conservative_base.get("net_pct")), 4),
+        "conservative_baseline_pf": round(number(conservative_base.get("profit_factor")), 5),
+        "conservative_net": round(number(top.get("conservative_net_pct")), 4),
+        "conservative_pf": round(number(top.get("conservative_pf")), 5),
+        "conservative_net_delta": round(number(top.get("conservative_net_delta")), 4),
+        "conservative_pf_delta": round(number(top.get("conservative_pf_delta")), 5),
+        "conservative_removed": int(number(top.get("conservative_removed"))),
+        "score": round(number(top.get("score")), 6),
+        "csv": result.get("csv") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1087,6 +1122,7 @@ def decision_queue(
     windows: list[dict[str, Any]],
     execution_stress: dict[str, Any],
     intrabar_stress: dict[str, Any],
+    time_bucket_robustness: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
@@ -1219,6 +1255,19 @@ def decision_queue(
             else "Re-check whether LT4 is too sensitive to intrabar assumptions before promoting further trail tightening."
         )
         add("Intrabar trail realism check", status, evidence, next_step, priority)
+
+    if time_bucket_robustness:
+        label = time_bucket_robustness.get("top_label") or "--"
+        evidence = (
+            f"Full-history LT4 check: block {label}; normal PF +{number(time_bucket_robustness.get('normal_pf_delta')):.3f}, "
+            f"net {number(time_bucket_robustness.get('normal_net_delta')):.2f}%; conservative PF "
+            f"+{number(time_bucket_robustness.get('conservative_pf_delta')):.3f}, "
+            f"net {number(time_bucket_robustness.get('conservative_net_delta')):.2f}%."
+        )
+        next_step = (
+            "Watch this bucket in forward data before enabling; it improves PF but gives up historical net."
+        )
+        add("Historical time-bucket candidate", "watch candidate", evidence, next_step, "watch")
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
@@ -1598,6 +1647,7 @@ def main() -> None:
     strategy_research = strategy_research_candidate()
     execution_stress = strategy_execution_stress()
     intrabar_stress = strategy_intrabar_stress()
+    time_bucket_robustness = strategy_time_bucket_robustness()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
@@ -1676,6 +1726,7 @@ def main() -> None:
         "promotion_candidate": strategy_research,
         "execution_stress": execution_stress,
         "intrabar_stress": intrabar_stress,
+        "historical_time_filter": time_bucket_robustness,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
@@ -1688,6 +1739,7 @@ def main() -> None:
             performance_window_rows,
             execution_stress,
             intrabar_stress,
+            time_bucket_robustness,
         ),
         "clean_curve": {
             "starting_equity": START_EQUITY,
