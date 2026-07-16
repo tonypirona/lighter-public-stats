@@ -390,7 +390,7 @@
       "topic": "Strategy candidate: entry_research_atr975_stop220_h10_trail"
     },
     {
-      "evidence": "both_wait; live L 8/10 / S 10/12 vs shadow L 11/12 / S 11/13; blocker rsi_low_enough; history 7 events, 0 divergences.",
+      "evidence": "both_wait; live L 9/10 / S 10/12 vs shadow L 10/12 / S 11/13; blocker rsi_high_enough; history 7 events, 0 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
@@ -428,7 +428,7 @@
     "entry_preflight_max_book_chase_bp": 3.5,
     "exit_max_slippage_bp": 10.0,
     "intended_entry_notional_usdc": 3844.9973,
-    "max_live_loss_account_pct": 3.5,
+    "max_live_loss_account_pct": 6.6,
     "max_live_loss_bp": 22.0,
     "max_notional_usdc": 8000.0,
     "notional_cap_active": false,
@@ -614,8 +614,8 @@
   "live_status": {
     "available_balance": 128.166578,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T09:19:28Z",
-    "monitor_cycle": 37,
+    "monitor_checked_at_utc": "2026-07-16T10:19:36Z",
+    "monitor_cycle": 5,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -623,15 +623,15 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 128.166578,
-    "watchdog_checked_at_utc": "2026-07-16T08:51:45Z",
-    "watchdog_ok": true
+    "watchdog_checked_at_utc": "",
+    "watchdog_ok": false
   },
   "meta": {
-    "generated_at_utc": "2026-07-16T09:19:38Z",
+    "generated_at_utc": "2026-07-16T10:19:40Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T09:19:28+00:00"
+    "tracker_synced_at_utc": "2026-07-16T10:19:36+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -819,7 +819,7 @@
       "gross_profit": 1.7655,
       "net_pnl": -10.4937,
       "profit_factor": 0.144,
-      "since_utc": "2026-07-15T09:19:38Z",
+      "since_utc": "2026-07-15T10:19:40Z",
       "trade_count": 3,
       "win_rate_pct": 33.33,
       "window": "24h"
@@ -839,7 +839,7 @@
       "gross_profit": 12.7649,
       "net_pnl": -3.9449,
       "profit_factor": 0.7639,
-      "since_utc": "2026-07-09T09:19:38Z",
+      "since_utc": "2026-07-09T10:19:40Z",
       "trade_count": 18,
       "win_rate_pct": 55.56,
       "window": "7d"
@@ -859,7 +859,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 11.5702,
       "profit_factor": 1.2436,
-      "since_utc": "2026-06-16T09:19:38Z",
+      "since_utc": "2026-06-16T10:19:40Z",
       "trade_count": 57,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -1685,28 +1685,29 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00055028,
+    "atr_pct": 0.00043651,
     "blockers": [
       "rsi_low_enough",
+      "block_long_h10_ok",
       "rsi_high_enough",
       "range_large_enough"
     ],
-    "data_end": "2026-07-16T09:17:00Z",
-    "hour_utc": 9,
-    "live_long_gate": "8/10",
-    "live_model": "lighter_tight_block_short_ret240_pos",
+    "data_end": "2026-07-16T10:17:00Z",
+    "hour_utc": 10,
+    "live_long_gate": "9/10",
+    "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07",
     "live_short_gate": "10/12",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
     "name": "entry_research_atr975_stop220_h10_trail",
-    "primary_blocker": "rsi_low_enough",
-    "rsi5": 54.3182,
-    "shadow_long_gate": "11/12",
+    "primary_blocker": "rsi_high_enough",
+    "rsi5": 70.2178,
+    "shadow_long_gate": "10/12",
     "shadow_short_gate": "11/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T09:18:55Z"
+    "updated_at_utc": "2026-07-16T10:19:06Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",

@@ -1,3 +1,7 @@
+param(
+  [int]$IntervalMinutes = 5
+)
+
 $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -8,6 +12,10 @@ if (-not (Test-Path $ScriptPath)) {
   throw "Missing auto publisher script: $ScriptPath"
 }
 
+if ($IntervalMinutes -lt 1) {
+  throw "IntervalMinutes must be 1 or higher."
+}
+
 $Action = New-ScheduledTaskAction `
   -Execute "powershell.exe" `
   -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$ScriptPath`""
@@ -15,7 +23,7 @@ $Action = New-ScheduledTaskAction `
 $Trigger = New-ScheduledTaskTrigger `
   -Once `
   -At (Get-Date).AddMinutes(1) `
-  -RepetitionInterval (New-TimeSpan -Minutes 1)
+  -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes)
 
 $Settings = New-ScheduledTaskSettingsSet `
   -StartWhenAvailable `
