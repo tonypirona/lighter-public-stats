@@ -891,10 +891,11 @@
       const trackerAge = ageMinutes(meta.tracker_synced_at_utc);
       const monitorAge = ageMinutes(live.monitor_checked_at_utc);
       const watchdogAge = ageMinutes(live.watchdog_checked_at_utc);
+      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc);
       if (exportAge > 12) add("red", "Public export stale", `Last export ${timeAgo(meta.generated_at_utc)}.`);
       if (trackerAge > 12) add("red", "Tracker sync stale", `Last tracker sync ${timeAgo(meta.tracker_synced_at_utc)}.`);
       if (!live.monitor_ok || monitorAge > 12) add("red", "Bot monitor stale", `Monitor heartbeat ${timeAgo(live.monitor_checked_at_utc)}.`);
-      if (!live.watchdog_ok || watchdogAge > 12) add("red", "Watchdog stale", `Watchdog heartbeat ${timeAgo(live.watchdog_checked_at_utc)}.`);
+      if (watchdogEnabled && (!live.watchdog_ok || watchdogAge > 12)) add("red", "Watchdog stale", `Watchdog heartbeat ${timeAgo(live.watchdog_checked_at_utc)}.`);
       if (!live.live_enabled) add("red", "Trading disabled", "Live flag is off in the latest public snapshot.");
       if ((model.missing_expected_entries || 0) > 0) add("red", "Missed model trades", `${model.missing_expected_entries} expected entries were not found live.`);
       if ((model.unexpected_live_entries || 0) > 0) add("red", "Unexpected live trades", `${model.unexpected_live_entries} live entries were outside the model.`);
@@ -978,6 +979,7 @@
       const latestBlock = guardActivity.latest_block || {};
       const checkedAt = data.__checked_at || new Date().toISOString();
       const fresh = freshness(meta);
+      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc);
       const box = byId("snapshot");
       box.replaceChildren(
         row("Snapshot age", fresh.label, fresh.tone),
@@ -987,8 +989,8 @@
         row("Tracker sync", formatTime(meta.tracker_synced_at_utc) || "--"),
         row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
         row("Monitor heartbeat", live.monitor_checked_at_utc ? `${formatTime(live.monitor_checked_at_utc)} | ${timeAgo(live.monitor_checked_at_utc)}` : "--", live.monitor_ok ? "" : "red"),
-        row("Watchdog", live.watchdog_ok ? "Running" : "Not running", live.watchdog_ok ? "green" : "red"),
-        row("Watchdog heartbeat", live.watchdog_checked_at_utc ? `${formatTime(live.watchdog_checked_at_utc)} | ${timeAgo(live.watchdog_checked_at_utc)}` : "--", live.watchdog_ok ? "" : "red"),
+        row("Watchdog", watchdogEnabled ? (live.watchdog_ok ? "Running" : "Not running") : "Disabled", watchdogEnabled ? (live.watchdog_ok ? "green" : "red") : ""),
+        row("Watchdog heartbeat", watchdogEnabled ? `${formatTime(live.watchdog_checked_at_utc)} | ${timeAgo(live.watchdog_checked_at_utc)}` : "--", watchdogEnabled && !live.watchdog_ok ? "red" : ""),
         row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
         row("Paper status", live.paper_status || "--"),
         row("Paper action", live.paper_action || "--"),
@@ -1019,8 +1021,10 @@
         ["Public export", meta.generated_at_utc, true, 7, 12],
         ["Tracker sync", meta.tracker_synced_at_utc, true, 7, 12],
         ["Bot monitor", live.monitor_checked_at_utc, live.monitor_ok, 7, 12],
-        ["Watchdog", live.watchdog_checked_at_utc, live.watchdog_ok, 7, 12],
       ];
+      if (live.watchdog_checked_at_utc) {
+        rows.push(["Watchdog", live.watchdog_checked_at_utc, live.watchdog_ok, 7, 12]);
+      }
       for (const [label, stamp, ok, greenMinutes, yellowMinutes] of rows) {
         const status = healthStatus(stamp, ok, greenMinutes, yellowMinutes);
         const tr = document.createElement("tr");
@@ -1522,7 +1526,7 @@
       const checkedAt = new Date().toISOString();
       data.__checked_at = checkedAt;
       setText("subtitle", `Market ${meta.market || "BTCUSDC.P"} | tracker synced ${formatTime(meta.tracker_synced_at_utc)} | exported ${formatTime(meta.generated_at_utc)} | checked ${formatTime(checkedAt)} | ${data.__source} | auto-refresh ${Math.round(REFRESH_INTERVAL_MS / 1000)}s`);
-      const liveOk = (data.live_status || {}).monitor_ok && (data.live_status || {}).watchdog_ok;
+      const liveOk = (data.live_status || {}).monitor_ok;
       byId("liveDot").classList.remove("ok", "warn");
       if (liveOk && fresh.dot) byId("liveDot").classList.add(fresh.dot);
       setText("liveText", liveOk ? `${fresh.label}; bot running in last export` : `${fresh.label}; bot monitor not confirmed`);
