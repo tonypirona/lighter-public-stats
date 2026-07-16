@@ -37,6 +37,8 @@ STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_report
 STRATEGY_LT4_EXECUTION_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_tiny_trail_execution_stress_2026_07_16.json"
 STRATEGY_LT4_INTRABAR_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_intrabar_trail_conservative_check_2026_07_16.json"
 STRATEGY_LT4_TIME_BUCKET_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_time_bucket_robustness_2026_07_16.json"
+STRATEGY_LT4_NET_PRESERVING_REGIME_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_net_preserving_regime_scan_2026_07_16.json"
+STRATEGY_LT4_REGIME_STABILITY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_regime_candidate_stability_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -953,6 +955,49 @@ def strategy_time_bucket_robustness() -> dict[str, Any]:
     }
 
 
+def strategy_net_preserving_regime_scan() -> dict[str, Any]:
+    scan = read_json(STRATEGY_LT4_NET_PRESERVING_REGIME_PATH, {})
+    stability = read_json(STRATEGY_LT4_REGIME_STABILITY_PATH, {})
+    strict = scan.get("strict_candidates") or []
+    watch = scan.get("watch_candidates") or []
+    summaries = stability.get("candidate_summaries") or []
+    if not strict and not watch:
+        return {}
+
+    top = strict[0] if strict else watch[0]
+    stable = [item for item in summaries if item.get("stable")]
+    return {
+        "generated_at_utc": scan.get("generated_at_utc") or "",
+        "stability_generated_at_utc": stability.get("generated_at_utc") or "",
+        "read": scan.get("read") or "",
+        "top_label": top.get("label") or "",
+        "top_strict": bool(top.get("candidate_strict")),
+        "top_watch": bool(top.get("candidate_watch")),
+        "normal_net_delta": round(number(top.get("normal_net_delta")), 4),
+        "normal_pf_delta": round(number(top.get("normal_pf_delta")), 5),
+        "normal_removed": int(number(top.get("normal_removed"))),
+        "conservative_net_delta": round(number(top.get("conservative_net_delta")), 4),
+        "conservative_pf_delta": round(number(top.get("conservative_pf_delta")), 5),
+        "conservative_removed": int(number(top.get("conservative_removed"))),
+        "strict_count": len(strict),
+        "watch_count": len(watch),
+        "stable_count": len(stable),
+        "candidate_summaries": [
+            {
+                "label": item.get("label") or "",
+                "slices_with_removed": int(number(item.get("slices_with_removed"))),
+                "pf_positive_slices": int(number(item.get("pf_positive_slices"))),
+                "net_positive_slices": int(number(item.get("net_positive_slices"))),
+                "net_not_bad_slices": int(number(item.get("net_not_bad_slices"))),
+                "stable": bool(item.get("stable")),
+            }
+            for item in summaries[:8]
+        ],
+        "csv": scan.get("csv") or "",
+        "stability_csv": stability.get("csv") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1123,6 +1168,7 @@ def decision_queue(
     execution_stress: dict[str, Any],
     intrabar_stress: dict[str, Any],
     time_bucket_robustness: dict[str, Any],
+    net_preserving_regime: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
@@ -1268,6 +1314,25 @@ def decision_queue(
             "Watch this bucket in forward data before enabling; it improves PF but gives up historical net."
         )
         add("Historical time-bucket candidate", "watch candidate", evidence, next_step, "watch")
+
+    if net_preserving_regime:
+        label = net_preserving_regime.get("top_label") or "--"
+        stable_count = int(number(net_preserving_regime.get("stable_count")))
+        status = "not promoted" if stable_count == 0 else "watch candidate"
+        priority = "reject" if stable_count == 0 else "watch"
+        evidence = (
+            f"Top net-preserving rule {label}: normal PF +{number(net_preserving_regime.get('normal_pf_delta')):.3f}, "
+            f"net {number(net_preserving_regime.get('normal_net_delta')):.2f}%; conservative PF "
+            f"+{number(net_preserving_regime.get('conservative_pf_delta')):.3f}, "
+            f"net {number(net_preserving_regime.get('conservative_net_delta')):.2f}%. "
+            f"Stable candidates: {stable_count}/{int(number(net_preserving_regime.get('strict_count')))}."
+        )
+        next_step = (
+            "Do not enable these hour/regime blocks live yet; re-test after more forward samples."
+            if stable_count == 0
+            else "Keep shadow-watching before any live rule change."
+        )
+        add("Net-preserving regime scan", status, evidence, next_step, priority)
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
@@ -1648,6 +1713,7 @@ def main() -> None:
     execution_stress = strategy_execution_stress()
     intrabar_stress = strategy_intrabar_stress()
     time_bucket_robustness = strategy_time_bucket_robustness()
+    net_preserving_regime = strategy_net_preserving_regime_scan()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
@@ -1727,6 +1793,7 @@ def main() -> None:
         "execution_stress": execution_stress,
         "intrabar_stress": intrabar_stress,
         "historical_time_filter": time_bucket_robustness,
+        "net_preserving_regime_scan": net_preserving_regime,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
@@ -1740,6 +1807,7 @@ def main() -> None:
             execution_stress,
             intrabar_stress,
             time_bucket_robustness,
+            net_preserving_regime,
         ),
         "clean_curve": {
             "starting_equity": START_EQUITY,
