@@ -54,8 +54,21 @@ $ExpectedLogDir = Join-Path $Root "logs"
 $ExpectedLogPath = Join-Path $ExpectedLogDir "expected_vs_actual_latest.log"
 New-Item -ItemType Directory -Force -Path $ExpectedLogDir | Out-Null
 
+$Model = "entry_research_atr975_stop220_h07_h10_trail12_short35h15"
+$ModelStatePath = Join-Path $Root "..\freqtrade\user_data\live_state\lighter_live_model_state.json"
+$ReportArgs = @("..\freqtrade\lighter_expected_vs_actual_report.py", "--model", $Model, "--hours", "168")
+if (Test-Path -LiteralPath $ModelStatePath) {
+  try {
+    $ModelState = Get-Content -LiteralPath $ModelStatePath -Raw | ConvertFrom-Json
+    if ([string]$ModelState.model -eq $Model -and [string]$ModelState.promoted_at_utc) {
+      $ReportArgs = @("..\freqtrade\lighter_expected_vs_actual_report.py", "--model", $Model, "--since", ([string]$ModelState.promoted_at_utc))
+    }
+  } catch {
+  }
+}
+
 Invoke-AllowExitCodes "lighter_expected_vs_actual_report.py" @(0, 2) {
-  & $Python "..\freqtrade\lighter_expected_vs_actual_report.py" --model "entry_research_atr975_stop220_h07_h10_trail12_short35h15" --hours 168 *> $ExpectedLogPath
+  & $Python @ReportArgs *> $ExpectedLogPath
 }
 Write-Host "Expected-vs-actual refreshed. Details: $ExpectedLogPath"
 
