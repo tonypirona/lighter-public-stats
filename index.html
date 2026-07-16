@@ -714,8 +714,13 @@
     const fmtUsd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
     const fmtNum = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
     const REFRESH_INTERVAL_MS = 10000;
-    const GITHUB_API_REFRESH_MS = 60000;
+    const GITHUB_API_REFRESH_MS = 30000;
     const STATS_SOURCES = [
+      {
+        kind: "github-api",
+        label: "GitHub API live data",
+        url: "https://api.github.com/repos/tonypirona/lighter-public-stats/contents/data/stats.json?ref=main"
+      },
       {
         kind: "json",
         label: "GitHub raw live data",
@@ -725,11 +730,6 @@
         kind: "json",
         label: "Vercel bundled data",
         url: "./data/stats.json"
-      },
-      {
-        kind: "github-api",
-        label: "GitHub API live data",
-        url: "https://api.github.com/repos/tonypirona/lighter-public-stats/contents/data/stats.json?ref=main"
       }
     ];
     const state = {
@@ -990,7 +990,7 @@
         row("Tracker sync", formatTime(meta.tracker_synced_at_utc) || "--"),
         row("Monitor", live.monitor_ok ? "Running" : "Not running", live.monitor_ok ? "green" : "red"),
         row("Monitor heartbeat", live.monitor_checked_at_utc ? `${formatTime(live.monitor_checked_at_utc)} | ${timeAgo(live.monitor_checked_at_utc)}` : "--", live.monitor_ok ? "" : "red"),
-        row("Watchdog", watchdogEnabled ? (live.watchdog_ok ? "Running" : "Not running") : "Disabled", watchdogEnabled ? (live.watchdog_ok ? "green" : "red") : ""),
+        row("Watchdog", watchdogEnabled ? (live.watchdog_ok ? "Running" : "Not running") : "Disabled intentionally", watchdogEnabled ? (live.watchdog_ok ? "green" : "red") : ""),
         row("Watchdog heartbeat", watchdogEnabled ? `${formatTime(live.watchdog_checked_at_utc)} | ${timeAgo(live.watchdog_checked_at_utc)}` : "--", watchdogEnabled && !live.watchdog_ok ? "red" : ""),
         row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
         row("Paper status", live.paper_status || "--"),
