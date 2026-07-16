@@ -892,11 +892,16 @@
       const trackerAge = ageMinutes(meta.tracker_synced_at_utc);
       const monitorAge = ageMinutes(live.monitor_checked_at_utc);
       const watchdogAge = ageMinutes(live.watchdog_checked_at_utc);
-      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc);
-      if (exportAge > 12) add("red", "Public export stale", `Last export ${timeAgo(meta.generated_at_utc)}.`);
-      if (trackerAge > 12) add("red", "Tracker sync stale", `Last tracker sync ${timeAgo(meta.tracker_synced_at_utc)}.`);
-      if (!live.monitor_ok || monitorAge > 12) add("red", "Bot monitor stale", `Monitor heartbeat ${timeAgo(live.monitor_checked_at_utc)}.`);
-      if (watchdogEnabled && (!live.watchdog_ok || watchdogAge > 12)) add("red", "Watchdog stale", `Watchdog heartbeat ${timeAgo(live.watchdog_checked_at_utc)}.`);
+      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc) && !live.watchdog_intentionally_disabled;
+      const delayedMinutes = 18;
+      const staleMinutes = 35;
+      if (exportAge > staleMinutes) add("red", "Public export stale", `Last export ${timeAgo(meta.generated_at_utc)}.`);
+      else if (exportAge > delayedMinutes) add("yellow", "Public export delayed", `Last export ${timeAgo(meta.generated_at_utc)}.`);
+      if (trackerAge > staleMinutes) add("red", "Tracker sync stale", `Last tracker sync ${timeAgo(meta.tracker_synced_at_utc)}.`);
+      else if (trackerAge > delayedMinutes) add("yellow", "Tracker sync delayed", `Last tracker sync ${timeAgo(meta.tracker_synced_at_utc)}.`);
+      if (!live.monitor_ok || monitorAge > staleMinutes) add("red", "Bot monitor stale", `Monitor heartbeat ${timeAgo(live.monitor_checked_at_utc)}.`);
+      else if (monitorAge > delayedMinutes) add("yellow", "Bot monitor delayed", `Monitor heartbeat ${timeAgo(live.monitor_checked_at_utc)}.`);
+      if (watchdogEnabled && (!live.watchdog_ok || watchdogAge > staleMinutes)) add("red", "Watchdog stale", `Watchdog heartbeat ${timeAgo(live.watchdog_checked_at_utc)}.`);
       if (!live.live_enabled) add("red", "Trading disabled", "Live flag is off in the latest public snapshot.");
       if ((model.missing_expected_entries || 0) > 0) add("red", "Missed model trades", `${model.missing_expected_entries} expected entries were not found live.`);
       if ((model.unexpected_live_entries || 0) > 0) add("red", "Unexpected live trades", `${model.unexpected_live_entries} live entries were outside the model.`);
@@ -980,7 +985,7 @@
       const latestBlock = guardActivity.latest_block || {};
       const checkedAt = data.__checked_at || new Date().toISOString();
       const fresh = freshness(meta);
-      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc);
+      const watchdogEnabled = Boolean(live.watchdog_checked_at_utc) && !live.watchdog_intentionally_disabled;
       const box = byId("snapshot");
       box.replaceChildren(
         row("Snapshot age", fresh.label, fresh.tone),
@@ -1019,12 +1024,12 @@
       const checkedAt = data.__checked_at || new Date().toISOString();
       const rows = [
         ["Browser refresh", checkedAt, true, 1, 2],
-        ["Public export", meta.generated_at_utc, true, 7, 12],
-        ["Tracker sync", meta.tracker_synced_at_utc, true, 7, 12],
-        ["Bot monitor", live.monitor_checked_at_utc, live.monitor_ok, 7, 12],
+        ["Public export", meta.generated_at_utc, true, 18, 35],
+        ["Tracker sync", meta.tracker_synced_at_utc, true, 18, 35],
+        ["Bot monitor", live.monitor_checked_at_utc, live.monitor_ok, 18, 35],
       ];
-      if (live.watchdog_checked_at_utc) {
-        rows.push(["Watchdog", live.watchdog_checked_at_utc, live.watchdog_ok, 7, 12]);
+      if (live.watchdog_checked_at_utc && !live.watchdog_intentionally_disabled) {
+        rows.push(["Watchdog", live.watchdog_checked_at_utc, live.watchdog_ok, 18, 35]);
       }
       for (const [label, stamp, ok, greenMinutes, yellowMinutes] of rows) {
         const status = healthStatus(stamp, ok, greenMinutes, yellowMinutes);
