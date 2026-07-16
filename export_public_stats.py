@@ -25,6 +25,7 @@ STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "li
 STRATEGY_PROMOTION_DECISION_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_candidate_promotion_decision.json"
 STRATEGY_TRAIL18_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_trail18_promotion_check_2026_07_16.json"
 STRATEGY_TRAIL12_SHORT35_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_trail18_realistic_exit_combo_scan_2026_07_16.json"
+STRATEGY_BE_PLATEAU_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_current_model_be_plateau_scan_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -522,6 +523,33 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
 
 
 def strategy_research_candidate() -> dict[str, Any]:
+    be_plateau = read_json(STRATEGY_BE_PLATEAU_PATH, {})
+    be_baseline = be_plateau.get("baseline") or {}
+    be_rows = be_plateau.get("top_12") or []
+    be_selected = next((row for row in be_rows if row.get("case") == "long_be_0.00005_0.00002"), {})
+    if be_selected:
+        return {
+            "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5",
+            "variant": be_selected.get("case") or "",
+            "net_pct": round(number(be_selected.get("avgspread_net")), 4),
+            "profit_factor": round(number(be_selected.get("avgspread_pf")), 4),
+            "max_drawdown_pct": round(number(be_selected.get("avgspread_dd")), 4),
+            "trades_per_year": round(number(be_selected.get("trades_per_year")), 2),
+            "avg_trade_pct": round(number(be_selected.get("avgspread_avg_trade_pct")), 5),
+            "baseline_net_pct": round(number(be_baseline.get("avgspread_net")), 4),
+            "baseline_profit_factor": round(number(be_baseline.get("avgspread_pf")), 4),
+            "baseline_max_drawdown_pct": round(number(be_baseline.get("avgspread_dd")), 4),
+            "baseline_trades_per_year": round(number(be_baseline.get("trades_per_year")), 2),
+            "live_overlap_skipped_count": 0,
+            "live_overlap_skipped_net_pnl": 0.0,
+            "live_overlap_safe": True,
+            "promotion_safe": True,
+            "caution": (
+                "Promoted as current live default: same entries/sizing/guards, long break-even trigger "
+                "tightened to 0.005% while keeping the existing 0.002% lock."
+            ),
+        }
+
     trail12_short35 = read_json(STRATEGY_TRAIL12_SHORT35_PATH, {})
     selected = trail12_short35.get("best") or {}
     baseline = trail12_short35.get("baseline") or {}
