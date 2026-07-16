@@ -862,6 +862,7 @@ def decision_queue(
         base_net = number(strategy_research.get("baseline_net_pct"))
         trades_year = number(strategy_research.get("trades_per_year"))
         model_name = strategy_research.get("model") or "strategy candidate"
+        live_model = ((expected.get("live_status") or {}).get("monitor_model") or expected.get("model") or "")
         evidence = (
             f"PF {pf:.2f} vs {base_pf:.2f}, DD {dd:.2f}% vs {base_dd:.2f}%, "
             f"net {net:.2f}% vs {base_net:.2f}%, {trades_year:.0f} trades/year."
@@ -886,18 +887,27 @@ def decision_queue(
                 f"matched trades totaling ${number(overlap.get('net_pnl')):.2f}."
             )
         overlap_net = number(overlap.get("net_pnl")) if overlap else number(strategy_research.get("live_overlap_skipped_net_pnl"))
-        next_step = (
-            "Shadow-test as the safest current improvement; it has not skipped net-positive current-live overlap trades."
-            if overlap_net <= 0
-            else "Keep shadow-testing until live overlap stops skipping net-positive current trades."
-        )
-        add(
-            f"Strategy candidate: {model_name}",
-            "research candidate",
-            evidence,
-            next_step,
-            "watch" if overlap_net > 0 else "candidate",
-        )
+        if str(live_model) == str(model_name):
+            add(
+                f"Active strategy: {model_name}",
+                "live",
+                evidence,
+                "Already running live; keep monitoring fills, slippage, and recent PF before adding another filter.",
+                "ok",
+            )
+        else:
+            next_step = (
+                "Shadow-test as the safest current improvement; it has not skipped net-positive current-live overlap trades."
+                if overlap_net <= 0
+                else "Keep shadow-testing until live overlap stops skipping net-positive current trades."
+            )
+            add(
+                f"Strategy candidate: {model_name}",
+                "research candidate",
+                evidence,
+                next_step,
+                "watch" if overlap_net > 0 else "candidate",
+            )
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
