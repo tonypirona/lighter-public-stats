@@ -27,6 +27,7 @@ STRATEGY_TRAIL18_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lig
 STRATEGY_TRAIL12_SHORT35_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_trail18_realistic_exit_combo_scan_2026_07_16.json"
 STRATEGY_BE_PLATEAU_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_current_model_be_plateau_scan_2026_07_16.json"
 STRATEGY_LBE5_SHORT_EXIT_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lbe5_short_exit_scan_2026_07_16.json"
+STRATEGY_SBE10_NET_PRESERVING_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_sbe10_net_preserving_exit_scan_2026_07_16.json"
 STRATEGY_SBE10_FAST_CUT_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_sbe10_fast_cut_scan_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
@@ -525,6 +526,34 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
 
 
 def strategy_research_candidate() -> dict[str, Any]:
+    net_preserving = read_json(STRATEGY_SBE10_NET_PRESERVING_PATH, {})
+    net_preserving_baseline = net_preserving.get("baseline") or {}
+    net_preserving_rows = net_preserving.get("top_20") or []
+    net_pick = next((row for row in net_preserving_rows if row.get("case") == "long_trail_0.00008_0.00004"), {})
+    if net_pick:
+        return {
+            "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt8",
+            "variant": net_pick.get("case") or "",
+            "net_pct": round(number(net_pick.get("avgspread_net")), 4),
+            "profit_factor": round(number(net_pick.get("avgspread_pf")), 4),
+            "max_drawdown_pct": round(number(net_pick.get("avgspread_dd")), 4),
+            "trades_per_year": round(number(net_pick.get("trades_per_year")), 2),
+            "avg_trade_pct": round(number(net_pick.get("avgspread_avg_trade_pct")), 5),
+            "baseline_net_pct": round(number(net_preserving_baseline.get("avgspread_net")), 4),
+            "baseline_profit_factor": round(number(net_preserving_baseline.get("avgspread_pf")), 4),
+            "baseline_max_drawdown_pct": round(number(net_preserving_baseline.get("avgspread_dd")), 4),
+            "baseline_trades_per_year": round(number(net_preserving_baseline.get("trades_per_year")), 2),
+            "live_overlap_skipped_count": None,
+            "live_overlap_skipped_net_pnl": None,
+            "live_overlap_safe": False,
+            "promotion_safe": False,
+            "caution": (
+                "Research candidate only: same live entries/sizing/guards as SBE10, but long trailing "
+                "activates at 0.008% with 0.004% distance. It preserves net in the full backtest, "
+                "but still needs live-overlap exit checking before promotion."
+            ),
+        }
+
     fast_cut = read_json(STRATEGY_SBE10_FAST_CUT_PATH, {})
     fast_cut_baseline = fast_cut.get("baseline") or {}
     fast_cut_rows = fast_cut.get("top_18") or []
@@ -980,17 +1009,23 @@ def decision_queue(
                 "ok",
             )
         else:
-            next_step = (
-                "Shadow-test as the safest current improvement; it has not skipped net-positive current-live overlap trades."
-                if overlap_net <= 0
-                else "Keep shadow-testing until live overlap stops skipping net-positive current trades."
-            )
+            promotion_safe = bool(strategy_research.get("promotion_safe"))
+            if not promotion_safe:
+                next_step = "Keep as a research/watch candidate until live-overlap exit checking is finished."
+                priority = "watch"
+            else:
+                next_step = (
+                    "Shadow-test as the safest current improvement; it has not skipped net-positive current-live overlap trades."
+                    if overlap_net <= 0
+                    else "Keep shadow-testing until live overlap stops skipping net-positive current trades."
+                )
+                priority = "watch" if overlap_net > 0 else "candidate"
             add(
                 f"Strategy candidate: {model_name}",
                 "research candidate",
                 evidence,
                 next_step,
-                "watch" if overlap_net > 0 else "candidate",
+                priority,
             )
 
     if strategy_shadow:
