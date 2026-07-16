@@ -39,6 +39,8 @@ STRATEGY_LT4_INTRABAR_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_res
 STRATEGY_LT4_TIME_BUCKET_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_time_bucket_robustness_2026_07_16.json"
 STRATEGY_LT4_NET_PRESERVING_REGIME_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_net_preserving_regime_scan_2026_07_16.json"
 STRATEGY_LT4_REGIME_STABILITY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_regime_candidate_stability_2026_07_16.json"
+LIVE_FORWARD_EDGE_DIAGNOSTICS_PATH = LIVE_REPORTS / "lighter_live_forward_edge_diagnostics.json"
+STRATEGY_LIVE_SUGGESTED_FILTER_HISTORY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_live_suggested_filter_historical_check_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -998,6 +1000,93 @@ def strategy_net_preserving_regime_scan() -> dict[str, Any]:
     }
 
 
+def live_forward_edge_diagnostics() -> dict[str, Any]:
+    report = read_json(LIVE_FORWARD_EDGE_DIAGNOSTICS_PATH, {})
+    if not report:
+        return {}
+
+    baseline = report.get("baseline") or {}
+    causal = report.get("top_causal_candidates") or []
+    post_fill = report.get("top_post_fill_diagnostics") or []
+    breakdowns = report.get("breakdowns") or {}
+
+    def compact_candidate(item: dict[str, Any]) -> dict[str, Any]:
+        if not item:
+            return {}
+        threshold = number(item.get("threshold"))
+        return {
+            "scope": item.get("scope") or "",
+            "field": item.get("field") or "",
+            "field_stage": item.get("field_stage") or "",
+            "op": item.get("op") or "",
+            "threshold": round(threshold, 6),
+            "label": f"{item.get('scope') or 'all'} {item.get('field') or '--'} {item.get('op') or ''} {threshold:.6g}",
+            "kept_count": int(number(item.get("kept_count"))),
+            "blocked_count": int(number(item.get("blocked_count"))),
+            "kept_net_pnl": round(number(item.get("kept_net_pnl")), 4),
+            "blocked_net_pnl": round(number(item.get("blocked_net_pnl")), 4),
+            "kept_profit_factor": round(number(item.get("kept_profit_factor")), 4),
+            "pf_delta": round(number(item.get("pf_delta")), 4),
+            "net_delta": round(number(item.get("net_delta")), 4),
+            "causal_at_entry": bool(item.get("causal_at_entry")),
+        }
+
+    def weakest_bucket(name: str, min_count: int) -> dict[str, Any]:
+        rows = breakdowns.get(name) or []
+        scoped = [
+            row for row in rows
+            if int(number(row.get("count"))) >= min_count and number(row.get("net_pnl")) < 0
+        ]
+        if not scoped:
+            return {}
+        item = sorted(scoped, key=lambda row: number(row.get("net_pnl")))[0]
+        return {
+            "label": item.get("label") or "",
+            "count": int(number(item.get("count"))),
+            "net_pnl": round(number(item.get("net_pnl")), 4),
+            "profit_factor": round(number(item.get("profit_factor")), 4),
+            "win_rate_pct": round(number(item.get("win_rate_pct")), 2),
+        }
+
+    return {
+        "generated_at_utc": report.get("generated_at_utc") or "",
+        "read": report.get("read") or "",
+        "baseline_count": int(number(baseline.get("count"))),
+        "baseline_net_pnl": round(number(baseline.get("net_pnl")), 4),
+        "baseline_profit_factor": round(number(baseline.get("profit_factor")), 4),
+        "baseline_win_rate_pct": round(number(baseline.get("win_rate_pct")), 2),
+        "causal_candidate_count": int(number(report.get("causal_candidate_count"))),
+        "post_fill_candidate_count": int(number(report.get("post_fill_candidate_count"))),
+        "top_causal_candidate": compact_candidate(causal[0]) if causal else {},
+        "top_post_fill_diagnostic": compact_candidate(post_fill[0]) if post_fill else {},
+        "weak_hour_bucket": weakest_bucket("hour_bucket_utc", 5),
+        "weak_weekday_bucket": weakest_bucket("weekday_utc", 5),
+    }
+
+
+def live_suggested_filter_historical_check() -> dict[str, Any]:
+    report = read_json(STRATEGY_LIVE_SUGGESTED_FILTER_HISTORY_PATH, {})
+    if not report:
+        return {}
+    candidates = report.get("passing_candidates") or []
+    all_rows = report.get("top_rows") or report.get("all_results") or []
+    top = candidates[0] if candidates else (all_rows[0] if all_rows else {})
+    return {
+        "generated_at_utc": report.get("generated_at_utc") or "",
+        "read": report.get("read") or "",
+        "passing_count": len(candidates),
+        "top_label": top.get("label") or "",
+        "top_passes": bool(top.get("passes")),
+        "normal_net_delta": round(number(top.get("normal_net_delta")), 4),
+        "normal_pf_delta": round(number(top.get("normal_pf_delta")), 4),
+        "normal_removed": int(number(top.get("normal_removed"))),
+        "conservative_net_delta": round(number(top.get("conservative_net_delta")), 4),
+        "conservative_pf_delta": round(number(top.get("conservative_pf_delta")), 4),
+        "conservative_removed": int(number(top.get("conservative_removed"))),
+        "reject_reason": "no passing candidates" if not candidates else "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1169,6 +1258,8 @@ def decision_queue(
     intrabar_stress: dict[str, Any],
     time_bucket_robustness: dict[str, Any],
     net_preserving_regime: dict[str, Any],
+    live_forward_edge: dict[str, Any],
+    live_suggested_history: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
@@ -1333,6 +1424,38 @@ def decision_queue(
             else "Keep shadow-watching before any live rule change."
         )
         add("Net-preserving regime scan", status, evidence, next_step, priority)
+
+    if live_forward_edge:
+        causal = live_forward_edge.get("top_causal_candidate") or {}
+        post_fill = live_forward_edge.get("top_post_fill_diagnostic") or {}
+        hist_passes = int(number(live_suggested_history.get("passing_count"))) if live_suggested_history else 0
+        causal_text = (
+            f"{causal.get('label')}: blocked {int(number(causal.get('blocked_count')))} live trades "
+            f"for ${number(causal.get('blocked_net_pnl')):.2f}, PF delta {number(causal.get('pf_delta')):.3f}"
+            if causal
+            else "No causal live candidate yet"
+        )
+        post_text = (
+            f"; execution clue {post_fill.get('label')} blocked ${number(post_fill.get('blocked_net_pnl')):.2f}"
+            if post_fill
+            else ""
+        )
+        history_text = (
+            f"; historical passing candidates {hist_passes}"
+            if live_suggested_history
+            else "; historical check missing"
+        )
+        add(
+            "Live-forward edge diagnostics",
+            "watch only" if hist_passes == 0 else "candidate review",
+            causal_text + post_text + history_text,
+            (
+                "Do not change live rules yet because historical tests give up too much net."
+                if hist_passes == 0
+                else "Review manually before live promotion."
+            ),
+            "reject" if hist_passes == 0 else "watch",
+        )
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
@@ -1714,6 +1837,8 @@ def main() -> None:
     intrabar_stress = strategy_intrabar_stress()
     time_bucket_robustness = strategy_time_bucket_robustness()
     net_preserving_regime = strategy_net_preserving_regime_scan()
+    live_forward_edge = live_forward_edge_diagnostics()
+    live_suggested_history = live_suggested_filter_historical_check()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
@@ -1794,6 +1919,8 @@ def main() -> None:
         "intrabar_stress": intrabar_stress,
         "historical_time_filter": time_bucket_robustness,
         "net_preserving_regime_scan": net_preserving_regime,
+        "live_forward_edge_diagnostics": live_forward_edge,
+        "live_suggested_filter_historical_check": live_suggested_history,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
@@ -1808,6 +1935,8 @@ def main() -> None:
             intrabar_stress,
             time_bucket_robustness,
             net_preserving_regime,
+            live_forward_edge,
+            live_suggested_history,
         ),
         "clean_curve": {
             "starting_equity": START_EQUITY,
