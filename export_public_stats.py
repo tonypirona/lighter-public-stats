@@ -35,6 +35,7 @@ STRATEGY_LT6_LBE4_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_repor
 STRATEGY_LT6_LBE4_FOLLOWUP_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt6_lbe4_followup_scan_2026_07_16.json"
 STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt4_ld2_live_overlap_summary.json"
 STRATEGY_LT4_EXECUTION_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_tiny_trail_execution_stress_2026_07_16.json"
+STRATEGY_LT4_INTRABAR_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_intrabar_trail_conservative_check_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -864,6 +865,59 @@ def strategy_execution_stress() -> dict[str, Any]:
     }
 
 
+def strategy_intrabar_stress() -> dict[str, Any]:
+    stress = read_json(STRATEGY_LT4_INTRABAR_STRESS_PATH, {})
+    rows = stress.get("rows") or []
+    if not rows:
+        return {}
+
+    def find(alias: str, mode: str) -> dict[str, Any]:
+        return next(
+            (
+                row
+                for row in rows
+                if row.get("model_alias") == alias and row.get("mode") == mode
+            ),
+            {},
+        )
+
+    prev_normal = find("lt6_lbe4", "normal")
+    curr_normal = find("lt4_ld2", "normal")
+    prev_conservative = find("lt6_lbe4", "conservative_samebar")
+    curr_conservative = find("lt4_ld2", "conservative_samebar")
+    if not curr_conservative or not prev_conservative:
+        return {}
+
+    normal_delta = stress.get("normal_lt4_vs_lt6_delta") or {}
+    conservative_delta = stress.get("conservative_lt4_vs_lt6_delta") or {}
+    current_penalty = number(curr_conservative.get("avgspread_net")) - number(curr_normal.get("avgspread_net"))
+    return {
+        "generated_at_utc": stress.get("generated_at_utc") or "",
+        "normal_net_delta": round(number(curr_normal.get("avgspread_net")) - number(prev_normal.get("avgspread_net")), 4),
+        "normal_pf_delta": round(number(curr_normal.get("avgspread_pf")) - number(prev_normal.get("avgspread_pf")), 5),
+        "conservative_net_delta": round(number(curr_conservative.get("avgspread_net")) - number(prev_conservative.get("avgspread_net")), 4),
+        "conservative_pf_delta": round(number(curr_conservative.get("avgspread_pf")) - number(prev_conservative.get("avgspread_pf")), 5),
+        "conservative_dd_delta": round(number(curr_conservative.get("avgspread_dd")) - number(prev_conservative.get("avgspread_dd")), 5),
+        "conservative_two_bp_pf_delta": round(number(curr_conservative.get("twobp_pf")) - number(prev_conservative.get("twobp_pf")), 5),
+        "current_conservative_net": round(number(curr_conservative.get("avgspread_net")), 4),
+        "current_conservative_pf": round(number(curr_conservative.get("avgspread_pf")), 5),
+        "current_conservative_dd": round(number(curr_conservative.get("avgspread_dd")), 4),
+        "current_conservative_trades_per_year": round(number(curr_conservative.get("trades_per_year")), 2),
+        "current_conservative_samebar_trail_exits": int(number(curr_conservative.get("samebar_trail_exits"))),
+        "current_conservative_samebar_breakeven_exits": int(number(curr_conservative.get("samebar_breakeven_exits"))),
+        "current_net_penalty_vs_normal": round(current_penalty, 4),
+        "normal_overlap_worsened_entries": int(number(normal_delta.get("worsened_entries"))),
+        "conservative_overlap_worsened_entries": int(number(conservative_delta.get("worsened_entries"))),
+        "passes": bool(
+            number(curr_conservative.get("avgspread_net")) > number(prev_conservative.get("avgspread_net"))
+            and number(curr_conservative.get("avgspread_pf")) > number(prev_conservative.get("avgspread_pf"))
+            and number(curr_conservative.get("twobp_pf")) > number(prev_conservative.get("twobp_pf"))
+            and number(curr_conservative.get("avgspread_dd")) <= number(prev_conservative.get("avgspread_dd")) + 0.01
+        ),
+        "read": stress.get("read") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1032,6 +1086,7 @@ def decision_queue(
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
     execution_stress: dict[str, Any],
+    intrabar_stress: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
@@ -1148,6 +1203,22 @@ def decision_queue(
             else "Consider reverting to the prior model if live fills worsen."
         )
         add("Tiny-trail execution stress", status, evidence, next_step, priority)
+
+    if intrabar_stress:
+        status = "passed" if intrabar_stress.get("passes") else "watch"
+        priority = "ok" if intrabar_stress.get("passes") else "watch"
+        evidence = (
+            f"Pessimistic same-candle trail: net delta {number(intrabar_stress.get('conservative_net_delta')):.2f}%, "
+            f"PF delta {number(intrabar_stress.get('conservative_pf_delta')):.3f}, "
+            f"DD delta {number(intrabar_stress.get('conservative_dd_delta')):.3f}%. "
+            f"Current conservative PF {number(intrabar_stress.get('current_conservative_pf')):.2f}."
+        )
+        next_step = (
+            "Keep LT4 live; same-candle trail pessimism still leaves it ahead of LT6."
+            if intrabar_stress.get("passes")
+            else "Re-check whether LT4 is too sensitive to intrabar assumptions before promoting further trail tightening."
+        )
+        add("Intrabar trail realism check", status, evidence, next_step, priority)
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
@@ -1526,6 +1597,7 @@ def main() -> None:
     time_filter_rows = time_filter_what_if(published_trades)
     strategy_research = strategy_research_candidate()
     execution_stress = strategy_execution_stress()
+    intrabar_stress = strategy_intrabar_stress()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
@@ -1603,6 +1675,7 @@ def main() -> None:
         "strategy_overlap": strategy_overlap,
         "promotion_candidate": strategy_research,
         "execution_stress": execution_stress,
+        "intrabar_stress": intrabar_stress,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
@@ -1614,6 +1687,7 @@ def main() -> None:
             expected,
             performance_window_rows,
             execution_stress,
+            intrabar_stress,
         ),
         "clean_curve": {
             "starting_equity": START_EQUITY,
