@@ -1282,6 +1282,8 @@
       const missing = model.missing_expected_entries || 0;
       const unexpected = model.unexpected_live_entries || 0;
       const sentNoFill = model.sent_no_fill_entries || 0;
+      const uniqueTrades = model.actual_unique_trades || 0;
+      const duplicateLinks = model.actual_duplicate_trade_links || 0;
       const coverage = expected ? filled / expected * 100 : 0;
       const drift = model.avg_return_delta_bp || 0;
       const period = model.since_utc && model.until_utc
@@ -1294,7 +1296,9 @@
         ["Missed", fmtNum.format(missing), missing ? "model trade not found live" : "none", missing ? "red" : "green"],
         ["Sent no fill", fmtNum.format(sentNoFill), sentNoFill ? "order sent but not filled" : "none", sentNoFill ? "yellow" : "green"],
         ["Unexpected live", fmtNum.format(unexpected), unexpected ? "live trade outside model" : "none", unexpected ? "red" : "green"],
-        ["Actual return PF", model.actual_return_profit_factor ? fmtNum.format(model.actual_return_profit_factor) : "--", "model-match window", (model.actual_return_profit_factor || 0) >= 1 ? "green" : "red"],
+        ["Unique live trades", fmtNum.format(uniqueTrades), duplicateLinks ? `${fmtNum.format(duplicateLinks)} duplicate model link${duplicateLinks === 1 ? "" : "s"} removed` : "no duplicate links", duplicateLinks ? "yellow" : "green"],
+        ["Actual return PF", model.actual_return_profit_factor ? fmtNum.format(model.actual_return_profit_factor) : "--", "unique live trades", (model.actual_return_profit_factor || 0) >= 1 ? "green" : "red"],
+        ["Actual PnL", model.actual_pnl_sum ? fmtUsd.format(model.actual_pnl_sum) : "--", "unique live trades", (model.actual_pnl_sum || 0) >= 0 ? "green" : "red"],
         ["Return drift", `${drift >= 0 ? "+" : ""}${fmtNum.format(drift)} bp avg`, "actual vs model", drift >= 0 ? "green" : "red"],
       ];
       for (const [metric, value, read, tone] of rows) {
