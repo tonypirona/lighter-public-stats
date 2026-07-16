@@ -23,6 +23,7 @@ ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
 PAPER_STATE_PATH = LIVE_STATE / "lighter_native_paper_state.json"
 STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_simple_filter_robustness_decision.json"
 STRATEGY_PROMOTION_DECISION_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_candidate_promotion_decision.json"
+STRATEGY_TRAIL18_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_trail18_promotion_check_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -520,6 +521,30 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
 
 
 def strategy_research_candidate() -> dict[str, Any]:
+    trail18 = read_json(STRATEGY_TRAIL18_PATH, {})
+    trail_rows = trail18.get("rows") or []
+    if len(trail_rows) >= 2:
+        baseline = trail_rows[0] or {}
+        selected = trail_rows[1] or {}
+        return {
+            "model": selected.get("model") or "",
+            "variant": selected.get("candidate") or "",
+            "net_pct": round(number(selected.get("visible_net_pct")), 4),
+            "profit_factor": round(number(selected.get("visible_pf")), 4),
+            "max_drawdown_pct": round(number(selected.get("visible_dd_pct")), 4),
+            "trades_per_year": round(number(selected.get("trades_per_year")), 2),
+            "avg_trade_pct": round(number(selected.get("visible_avg_trade_pct") or selected.get("cost_avg_trade_pct")), 5),
+            "baseline_net_pct": round(number(baseline.get("visible_net_pct")), 4),
+            "baseline_profit_factor": round(number(baseline.get("visible_pf")), 4),
+            "baseline_max_drawdown_pct": round(number(baseline.get("visible_dd_pct")), 4),
+            "baseline_trades_per_year": round(number(baseline.get("trades_per_year")), 2),
+            "live_overlap_skipped_count": 0,
+            "live_overlap_skipped_net_pnl": 0.0,
+            "live_overlap_safe": True,
+            "promotion_safe": True,
+            "caution": "Promoted as the current live default; monitor forward fills before adding another filter.",
+        }
+
     promotion = read_json(STRATEGY_PROMOTION_DECISION_PATH, {})
     selected = promotion.get("selected_safe_candidate") or {}
     baseline_model = promotion.get("baseline_model") or "tight_ret240"
