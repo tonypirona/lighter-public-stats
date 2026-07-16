@@ -413,7 +413,7 @@
     }
   ],
   "execution_guard": {
-    "desired_notional_usdc": 641.8823,
+    "desired_notional_usdc": 638.1901,
     "emergency_exit_slippage_bp": 25.0,
     "entry_max_slippage_bp": 5.0,
     "entry_preflight_candidate_book_chase_bp": 2.5,
@@ -421,7 +421,7 @@
     "entry_preflight_guard_version": "chase_3p5_2026-07-15",
     "entry_preflight_max_book_chase_bp": 3.5,
     "exit_max_slippage_bp": 10.0,
-    "intended_entry_notional_usdc": 641.8823,
+    "intended_entry_notional_usdc": 638.1901,
     "max_live_loss_account_pct": 6.0,
     "max_live_loss_bp": 22.0,
     "max_notional_usdc": 8000.0,
@@ -606,26 +606,26 @@
     ]
   },
   "live_status": {
-    "available_balance": 21.396077,
+    "available_balance": 21.273004,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T07:44:37Z",
-    "monitor_cycle": 403,
+    "monitor_checked_at_utc": "2026-07-16T07:45:30Z",
+    "monitor_cycle": 405,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "possible_live_open_trade",
     "pending_order_count": 0,
     "position_btc_abs": 0.06327,
     "position_side": "long",
-    "total_asset_value": 132.709364,
-    "watchdog_checked_at_utc": "2026-07-16T07:44:16Z",
+    "total_asset_value": 132.582824,
+    "watchdog_checked_at_utc": "2026-07-16T07:45:17Z",
     "watchdog_ok": true
   },
   "meta": {
-    "generated_at_utc": "2026-07-16T07:44:38Z",
+    "generated_at_utc": "2026-07-16T07:45:38Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T07:44:26+00:00"
+    "tracker_synced_at_utc": "2026-07-16T07:45:29+00:00"
   },
   "model_match": {
     "actual_pnl_sum": 8.448376,
@@ -813,7 +813,7 @@
       "gross_profit": 1.7655,
       "net_pnl": -3.0721,
       "profit_factor": 0.365,
-      "since_utc": "2026-07-15T07:44:38Z",
+      "since_utc": "2026-07-15T07:45:38Z",
       "trade_count": 2,
       "win_rate_pct": 50.0,
       "window": "24h"
@@ -833,7 +833,7 @@
       "gross_profit": 12.7649,
       "net_pnl": 3.4767,
       "profit_factor": 1.3743,
-      "since_utc": "2026-07-09T07:44:38Z",
+      "since_utc": "2026-07-09T07:45:38Z",
       "trade_count": 17,
       "win_rate_pct": 58.82,
       "window": "7d"
@@ -853,7 +853,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 18.9917,
       "profit_factor": 1.4738,
-      "since_utc": "2026-06-16T07:44:38Z",
+      "since_utc": "2026-06-16T07:45:38Z",
       "trade_count": 56,
       "win_rate_pct": 67.86,
       "window": "30d"
@@ -1679,13 +1679,13 @@
     "total_public_bot_trades": 55
   },
   "strategy_shadow": {
-    "atr_pct": 0.000765,
+    "atr_pct": 0.00076152,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
-      "relvol1440_under_cap"
+      "range_large_enough"
     ],
-    "data_end": "2026-07-16T07:43:00Z",
+    "data_end": "2026-07-16T07:44:00Z",
     "hour_utc": 7,
     "live_long_gate": "9/10",
     "live_model": "lighter_tight_block_short_ret240_pos",
@@ -1695,12 +1695,12 @@
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
     "name": "entry_research_atr975_stop220_h10_trail",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 12.4224,
+    "rsi5": 22.7748,
     "shadow_long_gate": "11/12",
     "shadow_short_gate": "11/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T07:44:36Z"
+    "updated_at_utc": "2026-07-16T07:45:08Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",
