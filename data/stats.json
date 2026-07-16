@@ -432,7 +432,7 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "both_wait; live L 11/12 / S 11/13 vs shadow L 11/12 / S 11/13; blocker rsi_low_enough; history collecting.",
+      "evidence": "both_wait; live L 11/12 / S 10/13 vs shadow L 11/12 / S 10/13; blocker rsi_low_enough; history collecting.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
@@ -757,8 +757,8 @@
   "live_status": {
     "available_balance": 128.166578,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T22:59:58Z",
-    "monitor_cycle": 906,
+    "monitor_checked_at_utc": "2026-07-16T23:04:52Z",
+    "monitor_cycle": 914,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -824,11 +824,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-16T23:00:00Z",
+    "generated_at_utc": "2026-07-16T23:05:00Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T22:59:56+00:00"
+    "tracker_synced_at_utc": "2026-07-16T23:04:52+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -844,14 +844,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-16T22:59:59+00:00",
+    "generated_at_utc": "2026-07-16T23:04:59+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-16T13:21:46.088879+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-16T22:59:56+00:00"
+    "until_utc": "2026-07-16T23:04:56+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1088,7 +1088,7 @@
       "gross_profit": 0,
       "net_pnl": -12.2592,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-15T23:00:00Z",
+      "since_utc": "2026-07-15T23:05:00Z",
       "trade_count": 2,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -1108,7 +1108,7 @@
       "gross_profit": 12.3073,
       "net_pnl": -4.4025,
       "profit_factor": 0.7365,
-      "since_utc": "2026-07-09T23:00:00Z",
+      "since_utc": "2026-07-09T23:05:00Z",
       "trade_count": 17,
       "win_rate_pct": 52.94,
       "window": "7d"
@@ -1128,7 +1128,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 11.5702,
       "profit_factor": 1.2436,
-      "since_utc": "2026-06-16T23:00:00Z",
+      "since_utc": "2026-06-16T23:05:00Z",
       "trade_count": 57,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -1957,28 +1957,29 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00045186,
+    "atr_pct": 0.00049818,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
-      "range_large_enough"
+      "range_large_enough",
+      "short_hour_filter_ok"
     ],
-    "data_end": "2026-07-16T22:58:00Z",
-    "hour_utc": 22,
+    "data_end": "2026-07-16T23:03:00Z",
+    "hour_utc": 23,
     "live_long_gate": "11/12",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002",
-    "live_short_gate": "11/13",
+    "live_short_gate": "10/13",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
     "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 23.0888,
+    "rsi5": 22.1767,
     "shadow_long_gate": "11/12",
-    "shadow_short_gate": "11/13",
+    "shadow_short_gate": "10/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T22:59:36Z"
+    "updated_at_utc": "2026-07-16T23:04:24Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",
