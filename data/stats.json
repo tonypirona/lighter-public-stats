@@ -390,7 +390,7 @@
       "topic": "Strategy candidate: entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_snp3"
     },
     {
-      "evidence": "both_wait; live L 11/12 / S 10/13 vs shadow L 11/12 / S 10/13; blocker rsi_low_enough; history 7 events, 0 divergences.",
+      "evidence": "both_wait; live L 11/12 / S 11/13 vs shadow L 11/12 / S 11/13; blocker rsi_low_enough; history 7 events, 0 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
@@ -404,10 +404,10 @@
       "topic": "Entry guard"
     },
     {
-      "evidence": "1 missed, 0 unexpected.",
-      "next_step": "Inspect model-match records before trusting new optimization ideas.",
-      "priority": "urgent",
-      "status": "review now",
+      "evidence": "0 missed and 0 unexpected live entries in latest model-match report.",
+      "next_step": "Keep monitoring.",
+      "priority": "ok",
+      "status": "healthy",
       "topic": "Model/live match"
     },
     {
@@ -614,8 +614,8 @@
   "live_status": {
     "available_balance": 128.166578,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T12:29:54Z",
-    "monitor_cycle": 13,
+    "monitor_checked_at_utc": "2026-07-16T12:33:58Z",
+    "monitor_cycle": 19,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -627,34 +627,34 @@
     "watchdog_ok": false
   },
   "meta": {
-    "generated_at_utc": "2026-07-16T12:30:01Z",
+    "generated_at_utc": "2026-07-16T12:34:02Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T12:29:54+00:00"
+    "tracker_synced_at_utc": "2026-07-16T12:33:57+00:00"
   },
   "model_match": {
-    "actual_duplicate_trade_links": 1,
-    "actual_pnl_profit_factor": 0.763919,
-    "actual_pnl_sum": -3.944865,
-    "actual_return_pct_sum": 0.152252,
-    "actual_return_profit_factor": 1.280114,
-    "actual_unique_trades": 18,
-    "avg_return_delta_bp": -3.2601,
+    "actual_duplicate_trade_links": 0,
+    "actual_pnl_profit_factor": null,
+    "actual_pnl_sum": 0,
+    "actual_return_pct_sum": 0,
+    "actual_return_profit_factor": null,
+    "actual_unique_trades": 0,
+    "avg_return_delta_bp": 0.0,
     "blocked_expected_entries": 0,
-    "closed_bot_trades": 18,
+    "closed_bot_trades": 0,
     "current_paper_action": "WAIT",
     "current_paper_status": "flat_no_pending_signal",
-    "expected_model_trades": 22,
-    "filled_expected_entries": 21,
-    "generated_at_utc": "2026-07-16T12:30:00+00:00",
-    "missing_expected_entries": 1,
-    "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_snp3",
-    "return_delta_pct_sum": -0.619428,
+    "expected_model_trades": 0,
+    "filled_expected_entries": 0,
+    "generated_at_utc": "2026-07-16T12:34:01+00:00",
+    "missing_expected_entries": 0,
+    "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10",
+    "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
-    "since_utc": "2026-07-09T12:29:57+00:00",
+    "since_utc": "2026-07-16T12:21:16.411032+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-16T12:29:57+00:00"
+    "until_utc": "2026-07-16T12:33:57+00:00"
   },
   "performance_breakdowns": {
     "exit_reason": [
@@ -822,7 +822,7 @@
       "gross_profit": 1.7655,
       "net_pnl": -10.4937,
       "profit_factor": 0.144,
-      "since_utc": "2026-07-15T12:30:01Z",
+      "since_utc": "2026-07-15T12:34:02Z",
       "trade_count": 3,
       "win_rate_pct": 33.33,
       "window": "24h"
@@ -842,7 +842,7 @@
       "gross_profit": 12.7649,
       "net_pnl": -3.9449,
       "profit_factor": 0.7639,
-      "since_utc": "2026-07-09T12:30:01Z",
+      "since_utc": "2026-07-09T12:34:02Z",
       "trade_count": 18,
       "win_rate_pct": 55.56,
       "window": "7d"
@@ -862,7 +862,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 11.5702,
       "profit_factor": 1.2436,
-      "since_utc": "2026-06-16T12:30:01Z",
+      "since_utc": "2026-06-16T12:34:02Z",
       "trade_count": 57,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -894,7 +894,7 @@
     "baseline_net_pct": 101.5055,
     "baseline_profit_factor": 4.3562,
     "baseline_trades_per_year": 1011.2,
-    "caution": "Promoted as current live default: same entries/sizing/guards, long BE at 0.005%, short BE at 0.010%, and short no-progress exit after 3 bars without 0.005% favorable move.",
+    "caution": "Research candidate only: same entries/sizing/guards, long BE at 0.005%, short BE at 0.010%, and short no-progress exit after 3 bars without 0.005% favorable move.",
     "live_overlap_safe": true,
     "live_overlap_skipped_count": 0,
     "live_overlap_skipped_net_pnl": 0.0,
@@ -1688,29 +1688,28 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00050894,
+    "atr_pct": 0.00050731,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
-      "range_large_enough",
-      "short_ret240_positive_block_ok"
+      "range_large_enough"
     ],
-    "data_end": "2026-07-16T12:28:00Z",
+    "data_end": "2026-07-16T12:32:00Z",
     "hour_utc": 12,
     "live_long_gate": "11/12",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005",
-    "live_short_gate": "10/13",
+    "live_short_gate": "11/13",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
     "name": "entry_research_atr975_stop220_h10_trail",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 62.4434,
+    "rsi5": 39.5241,
     "shadow_long_gate": "11/12",
-    "shadow_short_gate": "10/13",
+    "shadow_short_gate": "11/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T12:29:49Z"
+    "updated_at_utc": "2026-07-16T12:33:52Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",
