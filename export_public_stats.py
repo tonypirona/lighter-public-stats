@@ -1263,6 +1263,9 @@ def main() -> None:
     max_notional = number(order_config.get("max_notional_usdc"))
     desired_notional = available_balance * target_leverage if target_leverage > 0 else 0.0
     intended_notional = min(desired_notional, max_notional) if max_notional > 0 else desired_notional
+    watchdog_stage = str(watchdog.get("stage") or "")
+    watchdog_running = bool(watchdog.get("ok") is True and watchdog_stage not in {"check_only", "watchdog_stopped"})
+    watchdog_checked_at = public_time(watchdog.get("checked_at_utc")) if watchdog_running else ""
 
     recent = []
     for trade in reversed(published_trades[-30:]):
@@ -1345,9 +1348,9 @@ def main() -> None:
         },
         "live_status": {
             "monitor_ok": bool((heartbeat.get("ok") is True) or (live_status.get("monitor_ok") is True)),
-            "watchdog_ok": bool((watchdog.get("ok") is True) or (live_status.get("watchdog_ok") is True)),
+            "watchdog_ok": watchdog_running,
             "monitor_checked_at_utc": public_time(heartbeat.get("checked_at_utc")),
-            "watchdog_checked_at_utc": public_time(watchdog.get("checked_at_utc")),
+            "watchdog_checked_at_utc": watchdog_checked_at,
             "monitor_cycle": int(number(heartbeat.get("cycle"))),
             "live_enabled": bool((account.get("secret_summary") or {}).get("live_enabled") or live_status.get("live_enabled")),
             "paper_status": live_status.get("paper_status") or expected.get("current_paper_status") or "",
