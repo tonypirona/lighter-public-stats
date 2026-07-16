@@ -34,6 +34,7 @@ STRATEGY_LT8_POST_PROMOTION_PATH = FREQTRADE_ROOT / "user_data" / "backtest_resu
 STRATEGY_LT6_LBE4_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt6_lbe4_live_overlap_summary.json"
 STRATEGY_LT6_LBE4_FOLLOWUP_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt6_lbe4_followup_scan_2026_07_16.json"
 STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt4_ld2_live_overlap_summary.json"
+STRATEGY_LT4_EXECUTION_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_tiny_trail_execution_stress_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -835,6 +836,34 @@ def strategy_research_candidate() -> dict[str, Any]:
     }
 
 
+def strategy_execution_stress() -> dict[str, Any]:
+    stress = read_json(STRATEGY_LT4_EXECUTION_STRESS_PATH, {})
+    rows = stress.get("scenario_deltas") or []
+    if not rows:
+        return {}
+    base = next((row for row in rows if row.get("scenario") == "base_avgspread"), rows[0])
+    harsh = next((row for row in rows if row.get("scenario") == "long_trail_plus_1bp"), rows[-1])
+    overlap = stress.get("overlap_delta") or {}
+    return {
+        "generated_at_utc": stress.get("generated_at_utc") or "",
+        "comparison": stress.get("comparison") or "",
+        "base_net_delta": round(number(base.get("net_delta")), 4),
+        "base_pf_delta": round(number(base.get("pf_delta")), 5),
+        "harsh_scenario": harsh.get("scenario") or "",
+        "harsh_net_delta": round(number(harsh.get("net_delta")), 4),
+        "harsh_pf_delta": round(number(harsh.get("pf_delta")), 5),
+        "harsh_two_bp_pf_delta": round(number(harsh.get("two_bp_pf_delta")), 5),
+        "overlap_delta_return_pct_sum": round(number(overlap.get("delta_return_pct_sum")), 6),
+        "overlap_worsened_entries": int(number(overlap.get("worsened_entries"))),
+        "passes": bool(
+            number(harsh.get("net_delta")) > 0
+            and number(harsh.get("pf_delta")) > 0
+            and number(harsh.get("two_bp_pf_delta")) > 0
+        ),
+        "read": stress.get("read") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1002,6 +1031,7 @@ def decision_queue(
     current_guard: dict[str, Any],
     expected: dict[str, Any],
     windows: list[dict[str, Any]],
+    execution_stress: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
@@ -1102,6 +1132,22 @@ def decision_queue(
                 next_step,
                 priority,
             )
+
+    if execution_stress:
+        status = "passed" if execution_stress.get("passes") else "watch"
+        priority = "ok" if execution_stress.get("passes") else "watch"
+        evidence = (
+            f"Base net delta {number(execution_stress.get('base_net_delta')):.2f}%, "
+            f"base PF delta {number(execution_stress.get('base_pf_delta')):.3f}; "
+            f"harsh trail +1bp net delta {number(execution_stress.get('harsh_net_delta')):.2f}%, "
+            f"PF delta {number(execution_stress.get('harsh_pf_delta')):.3f}."
+        )
+        next_step = (
+            "Keep LT4 live, but verify real fills do not erase the tiny-trail edge."
+            if execution_stress.get("passes")
+            else "Consider reverting to the prior model if live fills worsen."
+        )
+        add("Tiny-trail execution stress", status, evidence, next_step, priority)
 
     if strategy_shadow:
         status = str(strategy_shadow.get("status") or "unknown")
@@ -1479,6 +1525,7 @@ def main() -> None:
     risk_hotspot_rows = risk_hotspots(published_trades, curve_points, performance_breakdown_rows)
     time_filter_rows = time_filter_what_if(published_trades)
     strategy_research = strategy_research_candidate()
+    execution_stress = strategy_execution_stress()
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
@@ -1553,6 +1600,7 @@ def main() -> None:
         "strategy_shadow_activity": shadow_activity,
         "strategy_overlap": strategy_overlap,
         "promotion_candidate": strategy_research,
+        "execution_stress": execution_stress,
         "decision_queue": decision_queue(
             published_trades,
             time_filter_rows,
@@ -1563,6 +1611,7 @@ def main() -> None:
             current_guard,
             expected,
             performance_window_rows,
+            execution_stress,
         ),
         "clean_curve": {
             "starting_equity": START_EQUITY,

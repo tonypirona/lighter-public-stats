@@ -390,6 +390,13 @@
       "topic": "Active strategy: entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2"
     },
     {
+      "evidence": "Base net delta 2.14%, base PF delta 0.057; harsh trail +1bp net delta 1.55%, PF delta 0.038.",
+      "next_step": "Keep LT4 live, but verify real fills do not erase the tiny-trail edge.",
+      "priority": "ok",
+      "status": "passed",
+      "topic": "Tiny-trail execution stress"
+    },
+    {
       "evidence": "both_wait; live L 11/12 / S 9/13 vs shadow L 11/12 / S 9/13; blocker rsi_low_enough; history 7 events, 0 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
@@ -573,6 +580,20 @@
       }
     ]
   },
+  "execution_stress": {
+    "base_net_delta": 2.1428,
+    "base_pf_delta": 0.05737,
+    "comparison": "LT4/LD2 current live vs LT6/LBE4 previous live",
+    "generated_at_utc": "2026-07-16T13:27:09+00:00",
+    "harsh_net_delta": 1.548,
+    "harsh_pf_delta": 0.03797,
+    "harsh_scenario": "long_trail_plus_1bp",
+    "harsh_two_bp_pf_delta": 0.0385,
+    "overlap_delta_return_pct_sum": 1.041479,
+    "overlap_worsened_entries": 3,
+    "passes": true,
+    "read": "Positive deltas mean LT4/LD2 still beats LT6/LBE4 under that extra penalty. Penalties are applied on top of the average visible-spread model."
+  },
   "guard_activity": {
     "latest_block": {
       "book_chase_bp": 6.6867,
@@ -614,8 +635,8 @@
   "live_status": {
     "available_balance": 128.166578,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T13:24:57Z",
-    "monitor_cycle": 5,
+    "monitor_checked_at_utc": "2026-07-16T13:29:42Z",
+    "monitor_cycle": 12,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -627,11 +648,11 @@
     "watchdog_ok": false
   },
   "meta": {
-    "generated_at_utc": "2026-07-16T13:25:00Z",
+    "generated_at_utc": "2026-07-16T13:29:49Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T13:24:57+00:00"
+    "tracker_synced_at_utc": "2026-07-16T13:29:41+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -647,14 +668,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-16T13:25:00+00:00",
+    "generated_at_utc": "2026-07-16T13:29:49+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-16T13:21:46.088879+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-16T13:24:56+00:00"
+    "until_utc": "2026-07-16T13:29:45+00:00"
   },
   "performance_breakdowns": {
     "exit_reason": [
@@ -822,7 +843,7 @@
       "gross_profit": 1.7655,
       "net_pnl": -10.4937,
       "profit_factor": 0.144,
-      "since_utc": "2026-07-15T13:25:00Z",
+      "since_utc": "2026-07-15T13:29:49Z",
       "trade_count": 3,
       "win_rate_pct": 33.33,
       "window": "24h"
@@ -842,7 +863,7 @@
       "gross_profit": 12.7649,
       "net_pnl": -3.9449,
       "profit_factor": 0.7639,
-      "since_utc": "2026-07-09T13:25:00Z",
+      "since_utc": "2026-07-09T13:29:49Z",
       "trade_count": 18,
       "win_rate_pct": 55.56,
       "window": "7d"
@@ -862,7 +883,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 11.5702,
       "profit_factor": 1.2436,
-      "since_utc": "2026-06-16T13:25:00Z",
+      "since_utc": "2026-06-16T13:29:49Z",
       "trade_count": 57,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -1691,7 +1712,7 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00063562,
+    "atr_pct": 0.00057447,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
@@ -1699,7 +1720,7 @@
       "short_hour_filter_ok",
       "short_ret240_positive_block_ok"
     ],
-    "data_end": "2026-07-16T13:23:00Z",
+    "data_end": "2026-07-16T13:28:00Z",
     "hour_utc": 13,
     "live_long_gate": "11/12",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002",
@@ -1709,12 +1730,12 @@
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
     "name": "entry_research_atr975_stop220_h10_trail",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 90.5304,
+    "rsi5": 64.5284,
     "shadow_long_gate": "11/12",
     "shadow_short_gate": "9/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T13:24:52Z"
+    "updated_at_utc": "2026-07-16T13:29:37Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",
