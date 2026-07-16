@@ -1540,7 +1540,7 @@ def main() -> None:
     intended_notional = min(desired_notional, max_notional) if max_notional > 0 else desired_notional
     watchdog_stage = str(watchdog.get("stage") or "")
     watchdog_disabled_stages = {"check_only", "watchdog_stopped"}
-    watchdog_intentionally_disabled = watchdog_stage in watchdog_disabled_stages
+    watchdog_intentionally_disabled = not watchdog or watchdog_stage in watchdog_disabled_stages
     watchdog_running = bool(watchdog.get("ok") is True and not watchdog_intentionally_disabled)
     watchdog_checked_at = public_time(watchdog.get("checked_at_utc")) if watchdog_running else ""
 
