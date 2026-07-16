@@ -32,6 +32,8 @@ STRATEGY_SBE10_FAST_CUT_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results"
 STRATEGY_LT8_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt8_live_overlap_summary.json"
 STRATEGY_LT8_POST_PROMOTION_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt8_post_promotion_scan_2026_07_16.json"
 STRATEGY_LT6_LBE4_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt6_lbe4_live_overlap_summary.json"
+STRATEGY_LT6_LBE4_FOLLOWUP_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt6_lbe4_followup_scan_2026_07_16.json"
+STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH = FREQTRADE_ROOT / "user_data" / "live_reports" / "lighter_lt4_ld2_live_overlap_summary.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
 STRATEGY_OVERLAP_PATH = LIVE_REPORTS / "lighter_quality_guard_live_overlap_summary.json"
@@ -529,6 +531,38 @@ def time_filter_what_if(trades: list[dict[str, Any]]) -> dict[str, list[dict[str
 
 
 def strategy_research_candidate() -> dict[str, Any]:
+    lt6_followup = read_json(STRATEGY_LT6_LBE4_FOLLOWUP_PATH, {})
+    lt4_overlap = read_json(STRATEGY_LT4_LD2_LIVE_OVERLAP_PATH, {})
+    lt6_followup_baseline = lt6_followup.get("baseline") or {}
+    lt4_pick = lt6_followup.get("best_candidate") or {}
+    if lt4_pick and lt4_pick.get("case") == "long_trail_0.00004_0.00002":
+        overlap_safe = bool(lt4_overlap.get("promotion_safe"))
+        return {
+            "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2",
+            "variant": lt4_pick.get("case") or "",
+            "net_pct": round(number(lt4_pick.get("avgspread_net")), 4),
+            "profit_factor": round(number(lt4_pick.get("avgspread_pf")), 4),
+            "max_drawdown_pct": round(number(lt4_pick.get("avgspread_dd")), 4),
+            "trades_per_year": round(number(lt4_pick.get("trades_per_year")), 2),
+            "avg_trade_pct": round(number(lt4_pick.get("avgspread_avg_trade_pct")), 5),
+            "baseline_net_pct": round(number(lt6_followup_baseline.get("avgspread_net")), 4),
+            "baseline_profit_factor": round(number(lt6_followup_baseline.get("avgspread_pf")), 4),
+            "baseline_max_drawdown_pct": round(number(lt6_followup_baseline.get("avgspread_dd")), 4),
+            "baseline_trades_per_year": round(number(lt6_followup_baseline.get("trades_per_year")), 2),
+            "live_overlap_entries": int(number(lt4_overlap.get("common_entries"))),
+            "live_overlap_actual_matches": int(number(lt4_overlap.get("actual_overlap_count"))),
+            "live_overlap_delta_return_pct_sum": round(number(lt4_overlap.get("actual_overlap_delta_return_pct_sum")), 6),
+            "live_overlap_delta_bp_avg": round(number(lt4_overlap.get("actual_overlap_delta_bp_avg")), 4),
+            "live_overlap_skipped_count": int(number(lt4_overlap.get("current_only_entries"))),
+            "live_overlap_safe": overlap_safe,
+            "promotion_safe": overlap_safe,
+            "caution": (
+                "Promoted candidate: same entries/sizing/guards as LT6/LBE4, but long trailing activates at 0.004% "
+                "with 0.002% distance. Follow-up full-period scan improved net/PF/2bp stress PF without increasing "
+                "drawdown, and live-overlap was positive."
+            ),
+        }
+
     lt8_post = read_json(STRATEGY_LT8_POST_PROMOTION_PATH, {})
     lt6_overlap = read_json(STRATEGY_LT6_LBE4_LIVE_OVERLAP_PATH, {})
     lt8_post_baseline = lt8_post.get("baseline") or {}
