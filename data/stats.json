@@ -418,6 +418,13 @@
       "topic": "Net-preserving regime scan"
     },
     {
+      "evidence": "Practical short_np_3_0.00005: normal net +0.47%, PF +0.076; conservative net +0.63%, PF +0.063. Top paper long_trail_0.000035_0.000015 is micro-trail.",
+      "next_step": "Shadow-test the short no-progress exit before any live switch; leave the micro-trail tweak unpromoted.",
+      "priority": "candidate",
+      "status": "shadow candidate",
+      "topic": "LT4/LD2 exit improvement"
+    },
+    {
       "evidence": "all rsi5 <= 5.48298: blocked 6 live trades for $-13.41, PF delta 0.536; execution clue long entry_slippage_bp >= 0.36 blocked $-17.50; historical passing candidates 0",
       "next_step": "Do not change live rules yet because historical tests give up too much net.",
       "priority": "reject",
@@ -425,11 +432,11 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "both_wait; live L 11/12 / S 11/13 vs shadow L 11/12 / S 11/13; blocker rsi_low_enough; history 7 events, 0 divergences.",
+      "evidence": "both_wait; live L 11/12 / S 10/13 vs shadow L 11/12 / S 10/13; blocker rsi_low_enough; history collecting.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
-      "topic": "Strategy shadow: entry_research_atr975_stop220_h10_trail"
+      "topic": "Strategy shadow: entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3"
     },
     {
       "evidence": "3 signals since chase_3p5_2026-07-15.",
@@ -635,9 +642,9 @@
         "avg_block_chase_bp": 0.0,
         "block_rate_pct": 0.0,
         "blocked_entries": 0,
-        "entry_records": 3,
+        "entry_records": 2,
         "max_block_chase_bp": 0.0,
-        "sent_entries": 3,
+        "sent_entries": 2,
         "window": "24h"
       },
       {
@@ -750,8 +757,8 @@
   "live_status": {
     "available_balance": 128.166578,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-16T16:34:56Z",
-    "monitor_cycle": 280,
+    "monitor_checked_at_utc": "2026-07-16T16:39:00Z",
+    "monitor_cycle": 286,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -778,12 +785,50 @@
     "top_label": "block long RSI5 <= 5.48",
     "top_passes": false
   },
+  "lt4_ld2_exit_net_guard_scan": {
+    "baseline_model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2",
+    "candidate_ok_count": 34,
+    "csv": "C:\\Users\\tntod\\Documents\\testing creation\\freqtrade\\user_data\\backtest_results\\lighter_lt4_ld2_exit_net_guard_scan_2026_07_16.csv",
+    "generated_at_utc": "2026-07-16T14:41:45+00:00",
+    "practical_candidate": {
+      "candidate_ok": true,
+      "case": "short_np_3_0.00005",
+      "conservative_dd_delta": 0.0,
+      "conservative_net_delta": 0.6268,
+      "conservative_pf_delta": 0.06305,
+      "conservative_trades": 1644,
+      "conservative_twobp_pf_delta": 0.03143,
+      "normal_dd_delta": 0.0,
+      "normal_net_delta": 0.4693,
+      "normal_pf_delta": 0.07638,
+      "normal_twobp_pf_delta": 0.03646,
+      "score": 5.30805,
+      "trades": 1512
+    },
+    "read": "Exit-only LT4/LD2 scan. Top paper result is a microscopic long-trail tweak, so it is not auto-promoted. Practical candidate is the short no-progress exit.",
+    "selection_note": "Current live LT4/LD2 exit-only scan. Promotion requires avg-spread net, PF, avg trade, 2bp PF, and drawdown to be no worse in both normal and conservative same-bar modes.",
+    "top_paper_candidate": {
+      "candidate_ok": true,
+      "case": "long_trail_0.000035_0.000015",
+      "conservative_dd_delta": -0.0015,
+      "conservative_net_delta": 1.647,
+      "conservative_pf_delta": 0.1095,
+      "conservative_trades": 1647,
+      "conservative_twobp_pf_delta": 0.06224,
+      "normal_dd_delta": 0.0,
+      "normal_net_delta": 0.733,
+      "normal_pf_delta": 0.11386,
+      "normal_twobp_pf_delta": 0.06089,
+      "score": 9.1132,
+      "trades": 1513
+    }
+  },
   "meta": {
-    "generated_at_utc": "2026-07-16T16:35:01Z",
+    "generated_at_utc": "2026-07-16T16:39:03Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-16T16:34:56+00:00"
+    "tracker_synced_at_utc": "2026-07-16T16:38:49+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1029,23 +1074,23 @@
   },
   "performance_windows": [
     {
-      "avg_execution_cost_bp": -5.5574,
-      "avg_slippage_bp": -6.0404,
-      "avg_trade_pnl": -3.4979,
-      "avg_trade_return_pct": -0.08215,
-      "clean_25x_max_drawdown": 8.8665,
+      "avg_execution_cost_bp": -3.3537,
+      "avg_slippage_bp": -3.7463,
+      "avg_trade_pnl": -6.1296,
+      "avg_trade_return_pct": -0.1487,
+      "clean_25x_max_drawdown": 8.7331,
       "clean_25x_max_drawdown_pct": 8.73,
-      "clean_25x_net_pct": -7.34,
-      "clean_leveraged_max_drawdown": 8.8665,
+      "clean_25x_net_pct": -8.73,
+      "clean_leveraged_max_drawdown": 8.7331,
       "clean_leveraged_max_drawdown_pct": 8.73,
-      "clean_leveraged_net_pct": -7.34,
+      "clean_leveraged_net_pct": -8.73,
       "gross_loss": -12.2592,
-      "gross_profit": 1.7655,
-      "net_pnl": -10.4937,
-      "profit_factor": 0.144,
-      "since_utc": "2026-07-15T16:35:01Z",
-      "trade_count": 3,
-      "win_rate_pct": 33.33,
+      "gross_profit": 0,
+      "net_pnl": -12.2592,
+      "profit_factor": 0.0,
+      "since_utc": "2026-07-15T16:39:03Z",
+      "trade_count": 2,
+      "win_rate_pct": 0.0,
       "window": "24h"
     },
     {
@@ -1063,7 +1108,7 @@
       "gross_profit": 12.7649,
       "net_pnl": -3.9449,
       "profit_factor": 0.7639,
-      "since_utc": "2026-07-09T16:35:01Z",
+      "since_utc": "2026-07-09T16:39:03Z",
       "trade_count": 18,
       "win_rate_pct": 55.56,
       "window": "7d"
@@ -1083,7 +1128,7 @@
       "gross_profit": 59.0726,
       "net_pnl": 11.5702,
       "profit_factor": 1.2436,
-      "since_utc": "2026-06-16T16:35:01Z",
+      "since_utc": "2026-06-16T16:39:03Z",
       "trade_count": 57,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -1912,28 +1957,29 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00093975,
+    "atr_pct": 0.00089824,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
+      "relvol1440_under_cap",
       "short_ret240_positive_block_ok"
     ],
-    "data_end": "2026-07-16T16:33:00Z",
+    "data_end": "2026-07-16T16:37:00Z",
     "hour_utc": 16,
     "live_long_gate": "11/12",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002",
-    "live_short_gate": "11/13",
+    "live_short_gate": "10/13",
     "live_status": "flat_no_pending_signal",
     "live_would_enter_on_latest_candle": false,
-    "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
-    "name": "entry_research_atr975_stop220_h10_trail",
+    "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
+    "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 52.7414,
+    "rsi5": 33.1458,
     "shadow_long_gate": "11/12",
-    "shadow_short_gate": "11/13",
+    "shadow_short_gate": "10/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-16T16:34:50Z"
+    "updated_at_utc": "2026-07-16T16:38:59Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-16T07:42:29Z",

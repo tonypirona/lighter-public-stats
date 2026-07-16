@@ -39,6 +39,7 @@ STRATEGY_LT4_INTRABAR_STRESS_PATH = FREQTRADE_ROOT / "user_data" / "backtest_res
 STRATEGY_LT4_TIME_BUCKET_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_time_bucket_robustness_2026_07_16.json"
 STRATEGY_LT4_NET_PRESERVING_REGIME_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_net_preserving_regime_scan_2026_07_16.json"
 STRATEGY_LT4_REGIME_STABILITY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_regime_candidate_stability_2026_07_16.json"
+STRATEGY_LT4_LD2_EXIT_NET_GUARD_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_ld2_exit_net_guard_scan_2026_07_16.json"
 LIVE_FORWARD_EDGE_DIAGNOSTICS_PATH = LIVE_REPORTS / "lighter_live_forward_edge_diagnostics.json"
 STRATEGY_LIVE_SUGGESTED_FILTER_HISTORY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_live_suggested_filter_historical_check_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
@@ -1087,6 +1088,50 @@ def live_suggested_filter_historical_check() -> dict[str, Any]:
     }
 
 
+def strategy_lt4_ld2_exit_net_guard_scan() -> dict[str, Any]:
+    report = read_json(STRATEGY_LT4_LD2_EXIT_NET_GUARD_PATH, {})
+    if not report:
+        return {}
+    top = report.get("best_candidate") or {}
+    rows = report.get("top_20") or []
+    practical = next((row for row in rows if str(row.get("case") or "").startswith("short_np_3_0.00005")), {})
+    if not practical:
+        practical = next((row for row in rows if str(row.get("case") or "").startswith("short_np")), {})
+
+    def compact(row: dict[str, Any]) -> dict[str, Any]:
+        if not row:
+            return {}
+        return {
+            "case": row.get("case") or "",
+            "candidate_ok": bool(row.get("candidate_ok")),
+            "score": round(number(row.get("score")), 5),
+            "normal_net_delta": round(number(row.get("normal_net_delta")), 4),
+            "normal_pf_delta": round(number(row.get("normal_pf_delta")), 5),
+            "normal_dd_delta": round(number(row.get("normal_dd_delta")), 5),
+            "normal_twobp_pf_delta": round(number(row.get("normal_twobp_pf_delta")), 5),
+            "conservative_net_delta": round(number(row.get("conservative_net_delta")), 4),
+            "conservative_pf_delta": round(number(row.get("conservative_pf_delta")), 5),
+            "conservative_dd_delta": round(number(row.get("conservative_dd_delta")), 5),
+            "conservative_twobp_pf_delta": round(number(row.get("conservative_twobp_pf_delta")), 5),
+            "trades": int(number(row.get("trades"))),
+            "conservative_trades": int(number(row.get("conservative_trades"))),
+        }
+
+    return {
+        "generated_at_utc": report.get("generated_at_utc") or "",
+        "baseline_model": report.get("baseline_model") or "",
+        "selection_note": report.get("selection_note") or "",
+        "candidate_ok_count": int(number(report.get("candidate_ok_count"))),
+        "top_paper_candidate": compact(top),
+        "practical_candidate": compact(practical),
+        "read": (
+            "Exit-only LT4/LD2 scan. Top paper result is a microscopic long-trail tweak, "
+            "so it is not auto-promoted. Practical candidate is the short no-progress exit."
+        ),
+        "csv": report.get("csv") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1094,6 +1139,7 @@ def strategy_shadow_status() -> dict[str, Any]:
         shadows = []
     selected = None
     for preferred_name in (
+        "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
         "entry_research_atr975_stop220_h10_trail",
         "entry_research_atr975_stop220_h10_h16_h23_trail20",
         "entry_research_atr975_long_stop220",
@@ -1258,6 +1304,7 @@ def decision_queue(
     intrabar_stress: dict[str, Any],
     time_bucket_robustness: dict[str, Any],
     net_preserving_regime: dict[str, Any],
+    lt4_ld2_exit_scan: dict[str, Any],
     live_forward_edge: dict[str, Any],
     live_suggested_history: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -1424,6 +1471,25 @@ def decision_queue(
             else "Keep shadow-watching before any live rule change."
         )
         add("Net-preserving regime scan", status, evidence, next_step, priority)
+
+    if lt4_ld2_exit_scan:
+        practical = lt4_ld2_exit_scan.get("practical_candidate") or {}
+        paper = lt4_ld2_exit_scan.get("top_paper_candidate") or {}
+        evidence = (
+            f"Practical {practical.get('case', '--')}: normal net "
+            f"{number(practical.get('normal_net_delta')):+.2f}%, PF "
+            f"{number(practical.get('normal_pf_delta')):+.3f}; conservative net "
+            f"{number(practical.get('conservative_net_delta')):+.2f}%, PF "
+            f"{number(practical.get('conservative_pf_delta')):+.3f}. "
+            f"Top paper {paper.get('case', '--')} is micro-trail."
+        )
+        add(
+            "LT4/LD2 exit improvement",
+            "shadow candidate",
+            evidence,
+            "Shadow-test the short no-progress exit before any live switch; leave the micro-trail tweak unpromoted.",
+            "candidate" if practical.get("candidate_ok") else "watch",
+        )
 
     if live_forward_edge:
         causal = live_forward_edge.get("top_causal_candidate") or {}
@@ -1837,6 +1903,7 @@ def main() -> None:
     intrabar_stress = strategy_intrabar_stress()
     time_bucket_robustness = strategy_time_bucket_robustness()
     net_preserving_regime = strategy_net_preserving_regime_scan()
+    lt4_ld2_exit_scan = strategy_lt4_ld2_exit_net_guard_scan()
     live_forward_edge = live_forward_edge_diagnostics()
     live_suggested_history = live_suggested_filter_historical_check()
     strategy_shadow = strategy_shadow_status()
@@ -1919,6 +1986,7 @@ def main() -> None:
         "intrabar_stress": intrabar_stress,
         "historical_time_filter": time_bucket_robustness,
         "net_preserving_regime_scan": net_preserving_regime,
+        "lt4_ld2_exit_net_guard_scan": lt4_ld2_exit_scan,
         "live_forward_edge_diagnostics": live_forward_edge,
         "live_suggested_filter_historical_check": live_suggested_history,
         "decision_queue": decision_queue(
@@ -1935,6 +2003,7 @@ def main() -> None:
             intrabar_stress,
             time_bucket_robustness,
             net_preserving_regime,
+            lt4_ld2_exit_scan,
             live_forward_edge,
             live_suggested_history,
         ),
