@@ -385,11 +385,11 @@
     "blocked_entries": 0,
     "closed_trades": 6,
     "effective_at_utc": "2026-07-15T13:48:37Z",
-    "entry_records": 6,
+    "entry_records": 7,
     "max_block_chase_bp": 0.0,
     "net_pnl": -8.2707,
     "profit_factor": 0.4555,
-    "sent_entries": 6,
+    "sent_entries": 7,
     "version": "chase_3p5_2026-07-15"
   },
   "decision_queue": [
@@ -450,15 +450,15 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "both_wait; live L 11/12 / S 8/13 vs shadow L 11/12 / S 8/13; blocker rsi_low_enough; history 5 events, 0 divergences.",
+      "evidence": "both_wait; live L 11/12 / S 11/13 vs shadow L 11/12 / S 11/13; blocker rsi_low_enough; history 8 events, 0 divergences.",
       "next_step": "Compare shadow divergences with real fills before switching live.",
       "priority": "watch",
       "status": "tracking",
       "topic": "Strategy shadow: entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3"
     },
     {
-      "evidence": "6 signals since chase_3p5_2026-07-15.",
-      "next_step": "Need 14 more post-guard signals before changing guard thresholds.",
+      "evidence": "7 signals since chase_3p5_2026-07-15.",
+      "next_step": "Need 13 more post-guard signals before changing guard thresholds.",
       "priority": "watch",
       "status": "collecting",
       "topic": "Entry guard"
@@ -479,7 +479,7 @@
     }
   ],
   "execution_guard": {
-    "desired_notional_usdc": 3911.6863,
+    "desired_notional_usdc": 581.3135,
     "emergency_exit_slippage_bp": 25.0,
     "entry_max_slippage_bp": 5.0,
     "entry_preflight_candidate_book_chase_bp": 2.5,
@@ -487,7 +487,7 @@
     "entry_preflight_guard_version": "chase_3p5_2026-07-15",
     "entry_preflight_max_book_chase_bp": 3.5,
     "exit_max_slippage_bp": 10.0,
-    "intended_entry_notional_usdc": 3911.6863,
+    "intended_entry_notional_usdc": 581.3135,
     "max_live_loss_account_pct": 6.6,
     "max_live_loss_bp": 22.0,
     "max_notional_usdc": 8000.0,
@@ -660,27 +660,27 @@
         "avg_block_chase_bp": 0.0,
         "block_rate_pct": 0.0,
         "blocked_entries": 0,
-        "entry_records": 3,
+        "entry_records": 4,
         "max_block_chase_bp": 0.0,
-        "sent_entries": 3,
+        "sent_entries": 4,
         "window": "24h"
       },
       {
         "avg_block_chase_bp": 7.7978,
-        "block_rate_pct": 9.52,
+        "block_rate_pct": 9.09,
         "blocked_entries": 2,
-        "entry_records": 21,
+        "entry_records": 22,
         "max_block_chase_bp": 8.9089,
-        "sent_entries": 19,
+        "sent_entries": 20,
         "window": "7d"
       },
       {
         "avg_block_chase_bp": 6.946,
-        "block_rate_pct": 6.85,
+        "block_rate_pct": 6.76,
         "blocked_entries": 5,
-        "entry_records": 73,
+        "entry_records": 74,
         "max_block_chase_bp": 8.9089,
-        "sent_entries": 68,
+        "sent_entries": 69,
         "window": "all"
       }
     ]
@@ -773,17 +773,17 @@
     "weak_weekday_bucket": {}
   },
   "live_status": {
-    "available_balance": 130.389545,
+    "available_balance": 19.377118,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-17T13:04:59Z",
-    "monitor_cycle": 2278,
+    "monitor_checked_at_utc": "2026-07-17T13:09:56Z",
+    "monitor_cycle": 2286,
     "monitor_ok": true,
-    "paper_action": "WAIT",
-    "paper_status": "flat_no_pending_signal",
+    "paper_action": "HOLD_OPEN",
+    "paper_status": "possible_live_open_trade",
     "pending_order_count": 0,
-    "position_btc_abs": 0.0,
-    "position_side": "flat",
-    "total_asset_value": 130.389545,
+    "position_btc_abs": 0.06217,
+    "position_side": "long",
+    "total_asset_value": 126.410665,
     "watchdog_checked_at_utc": "",
     "watchdog_enabled": false,
     "watchdog_intentionally_disabled": true,
@@ -842,11 +842,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-17T13:05:00Z",
+    "generated_at_utc": "2026-07-17T13:10:00Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-17T13:04:55+00:00"
+    "tracker_synced_at_utc": "2026-07-17T13:09:52+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -858,18 +858,18 @@
     "avg_return_delta_bp": -2.3208,
     "blocked_expected_entries": 0,
     "closed_bot_trades": 3,
-    "current_paper_action": "WAIT",
-    "current_paper_status": "flat_no_pending_signal",
-    "expected_model_trades": 3,
-    "filled_expected_entries": 3,
-    "generated_at_utc": "2026-07-17T13:05:00+00:00",
+    "current_paper_action": "HOLD_OPEN",
+    "current_paper_status": "possible_live_open_trade",
+    "expected_model_trades": 5,
+    "filled_expected_entries": 5,
+    "generated_at_utc": "2026-07-17T13:10:00+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2",
     "return_delta_pct_sum": -0.069624,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-16T13:21:46.088879+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-17T13:04:57+00:00"
+    "until_utc": "2026-07-17T13:09:57+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1106,7 +1106,7 @@
       "gross_profit": 5.1526,
       "net_pnl": 2.223,
       "profit_factor": 1.7588,
-      "since_utc": "2026-07-16T13:05:00Z",
+      "since_utc": "2026-07-16T13:10:00Z",
       "trade_count": 3,
       "win_rate_pct": 66.67,
       "window": "24h"
@@ -1126,7 +1126,7 @@
       "gross_profit": 15.4142,
       "net_pnl": -4.2252,
       "profit_factor": 0.7849,
-      "since_utc": "2026-07-10T13:05:00Z",
+      "since_utc": "2026-07-10T13:10:00Z",
       "trade_count": 19,
       "win_rate_pct": 52.63,
       "window": "7d"
@@ -1146,7 +1146,7 @@
       "gross_profit": 64.2252,
       "net_pnl": 13.7931,
       "profit_factor": 1.2735,
-      "since_utc": "2026-06-17T13:05:00Z",
+      "since_utc": "2026-06-17T13:10:00Z",
       "trade_count": 60,
       "win_rate_pct": 66.67,
       "window": "30d"
@@ -1975,203 +1975,200 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00060207,
+    "atr_pct": 0.00070539,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough",
-      "range_large_enough",
-      "short_hour_filter_ok",
-      "relvol60_band_block_ok",
-      "short_ret240_positive_block_ok"
+      "short_hour_filter_ok"
     ],
-    "data_end": "2026-07-17T13:03:00Z",
+    "data_end": "2026-07-17T13:08:00Z",
     "hour_utc": 13,
     "live_long_gate": "11/12",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002",
-    "live_short_gate": "8/13",
-    "live_status": "flat_no_pending_signal",
+    "live_short_gate": "11/13",
+    "live_status": "possible_live_open_trade",
     "live_would_enter_on_latest_candle": false,
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
     "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
     "primary_blocker": "rsi_low_enough",
-    "rsi5": 9.3635,
+    "rsi5": 18.7856,
     "shadow_long_gate": "11/12",
-    "shadow_short_gate": "8/13",
+    "shadow_short_gate": "11/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-17T13:04:34Z"
+    "updated_at_utc": "2026-07-17T13:09:32Z"
   },
   "strategy_shadow_activity": {
-    "latest_event_utc": "2026-07-17T05:47:25Z",
+    "latest_event_utc": "2026-07-17T13:08:18Z",
     "models": [
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12
+          "both_would_enter": 15
         },
         "divergences": 0,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975",
         "name": "entry_research_atr975",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12
+          "both_would_enter": 15
         },
         "divergences": 0,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220",
         "name": "entry_research_atr975_long_stop220",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 5,
+        "both_would_enter": 8,
         "by_status": {
-          "both_would_enter": 5
+          "both_would_enter": 8
         },
         "divergences": 0,
-        "events": 5,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 8,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_relvol1440_gte1",
         "name": "entry_research_atr975_stop220_h07_h10_relvol1_trail",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 5,
+        "both_would_enter": 8,
         "by_status": {
-          "both_would_enter": 5
+          "both_would_enter": 8
         },
         "divergences": 0,
-        "events": 5,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 8,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07",
         "name": "entry_research_atr975_stop220_h07_h10_trail",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 5,
+        "both_would_enter": 8,
         "by_status": {
-          "both_would_enter": 5
+          "both_would_enter": 8
         },
         "divergences": 0,
-        "events": 5,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 8,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
         "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 8,
+        "both_would_enter": 11,
         "by_status": {
-          "both_would_enter": 8,
+          "both_would_enter": 11,
           "live_only_signal": 4
         },
         "divergences": 4,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 4,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_h16_h23_fasttrail20_5",
         "name": "entry_research_atr975_stop220_h10_h16_h23_trail20",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12
+          "both_would_enter": 15
         },
         "divergences": 0,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6",
         "name": "entry_research_atr975_stop220_h10_trail",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 40,
+        "both_would_enter": 43,
         "by_status": {
-          "both_would_enter": 40
+          "both_would_enter": 43
         },
         "divergences": 0,
-        "events": 40,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 43,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.5_lrm0.90_srm0.95",
         "name": "entry_research_best",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12
+          "both_would_enter": 15
         },
         "divergences": 0,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_block_long_h10",
         "name": "entry_research_block_long_h10",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12,
+          "both_would_enter": 15,
           "live_only_signal": 3
         },
         "divergences": 3,
-        "events": 15,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 18,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 3,
         "model": "entry_research_best_h16_atr_q975",
         "name": "entry_research_h16_atr_guard",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12
+          "both_would_enter": 15
         },
         "divergences": 0,
-        "events": 12,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 15,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 0,
         "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95",
         "name": "entry_research_net_best",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 8,
+        "both_would_enter": 11,
         "by_status": {
-          "both_would_enter": 8,
+          "both_would_enter": 11,
           "live_only_signal": 7
         },
         "divergences": 7,
-        "events": 15,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 18,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 7,
         "model": "entry_research_best_h23_h16_atr_q975",
         "name": "entry_research_quality_guard",
         "shadow_only": 0
       },
       {
-        "both_would_enter": 12,
+        "both_would_enter": 15,
         "by_status": {
-          "both_would_enter": 12,
+          "both_would_enter": 15,
           "live_only_signal": 3
         },
         "divergences": 3,
-        "events": 15,
-        "latest_event_utc": "2026-07-17T05:47:25Z",
+        "events": 18,
+        "latest_event_utc": "2026-07-17T13:08:18Z",
         "live_only": 3,
         "model": "tight_ret240_long_stop240_trail_tight_h16_atr150",
         "name": "relaxed_quality_atr150",
@@ -2181,103 +2178,103 @@
     "recent_events": [
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "relaxed_quality_atr150",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_quality_guard",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_h16_atr_guard",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_block_long_h10",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_atr975_stop220_h10_h16_h23_trail20",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_atr975_stop220_h07_h10_relvol1_trail",
         "status": "both_would_enter"
       },
       {
         "closest_side": "long",
-        "data_end": "2026-07-17T05:46:00Z",
-        "logged_at_utc": "2026-07-17T05:47:25Z",
+        "data_end": "2026-07-17T13:07:00Z",
+        "logged_at_utc": "2026-07-17T13:08:18Z",
         "primary_blocker": "",
-        "range_pct": 0.00142766,
-        "relvol_median_1440": 5.8575,
-        "ret240_pct": -1.2621,
-        "rsi5": 6.1815,
+        "range_pct": 0.00109249,
+        "relvol_median_1440": 3.5403,
+        "ret240_pct": -0.178,
+        "rsi5": 2.1379,
         "shadow_name": "entry_research_atr975_stop220_h07_h10_trail",
         "status": "both_would_enter"
       }
     ],
     "since_utc": "2026-07-09T23:21:33Z",
-    "total_events": 172
+    "total_events": 211
   },
   "summary": {
     "avg_execution_cost_bp": -1.2833,
