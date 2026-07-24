@@ -879,8 +879,8 @@
   "live_status": {
     "available_balance": 185.324727,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-24T15:57:04Z",
-    "monitor_cycle": 32,
+    "monitor_checked_at_utc": "2026-07-24T16:02:06Z",
+    "monitor_cycle": 42,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -888,7 +888,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 185.324727,
-    "watchdog_checked_at_utc": "2026-07-24T15:57:04Z",
+    "watchdog_checked_at_utc": "2026-07-24T16:02:06Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -946,11 +946,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-24T15:57:11Z",
+    "generated_at_utc": "2026-07-24T16:02:11Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-24T15:56:58+00:00"
+    "tracker_synced_at_utc": "2026-07-24T16:02:00+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -966,14 +966,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-24T15:57:08+00:00",
+    "generated_at_utc": "2026-07-24T16:02:08+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-24T15:40:21.896794+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-24T15:57:04+00:00"
+    "until_utc": "2026-07-24T16:02:04+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1210,7 +1210,7 @@
       "gross_profit": 0.4941,
       "net_pnl": -4.1755,
       "profit_factor": 0.1058,
-      "since_utc": "2026-07-23T15:57:11Z",
+      "since_utc": "2026-07-23T16:02:11Z",
       "trade_count": 4,
       "win_rate_pct": 25.0,
       "window": "24h"
@@ -1230,7 +1230,7 @@
       "gross_profit": 11.5618,
       "net_pnl": -3.7304,
       "profit_factor": 0.7561,
-      "since_utc": "2026-07-17T15:57:11Z",
+      "since_utc": "2026-07-17T16:02:11Z",
       "trade_count": 13,
       "win_rate_pct": 30.77,
       "window": "7d"
@@ -1250,7 +1250,7 @@
       "gross_profit": 71.8247,
       "net_pnl": 2.8663,
       "profit_factor": 1.0416,
-      "since_utc": "2026-06-24T15:57:11Z",
+      "since_utc": "2026-06-24T16:02:11Z",
       "trade_count": 69,
       "win_rate_pct": 60.87,
       "window": "30d"
@@ -2103,13 +2103,13 @@
     "total_public_bot_trades": 57
   },
   "strategy_shadow": {
-    "atr_pct": 0.00098253,
+    "atr_pct": 0.00092134,
     "blockers": [
       "rsi_low_enough",
       "rsi_high_enough"
     ],
-    "data_end": "2026-07-24T15:55:00Z",
-    "hour_utc": 15,
+    "data_end": "2026-07-24T16:00:00Z",
+    "hour_utc": 16,
     "live_long_gate": "12/13",
     "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_block_rsi2_ret30m3_pvol12_st30p50_rg15",
     "live_short_gate": "11/12",
@@ -2118,12 +2118,12 @@
     "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
     "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
     "primary_blocker": "rsi_high_enough",
-    "rsi5": 57.0751,
+    "rsi5": 27.9988,
     "shadow_long_gate": "11/12",
     "shadow_short_gate": "12/13",
     "shadow_would_enter_on_latest_candle": false,
     "status": "both_wait",
-    "updated_at_utc": "2026-07-24T15:56:49Z"
+    "updated_at_utc": "2026-07-24T16:02:02Z"
   },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-24T13:10:07Z",
