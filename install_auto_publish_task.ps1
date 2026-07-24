@@ -7,9 +7,13 @@ $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TaskName = "Lighter Public Stats Publisher"
 $ScriptPath = Join-Path $Root "auto_publish_public_stats.ps1"
+$HiddenLauncherPath = Join-Path $Root "run_auto_publish_hidden.vbs"
 
 if (-not (Test-Path $ScriptPath)) {
   throw "Missing auto publisher script: $ScriptPath"
+}
+if (-not (Test-Path $HiddenLauncherPath)) {
+  throw "Missing hidden launcher: $HiddenLauncherPath"
 }
 
 if ($IntervalMinutes -lt 1) {
@@ -17,8 +21,8 @@ if ($IntervalMinutes -lt 1) {
 }
 
 $Action = New-ScheduledTaskAction `
-  -Execute "powershell.exe" `
-  -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$ScriptPath`""
+  -Execute "wscript.exe" `
+  -Argument "`"$HiddenLauncherPath`""
 
 $Trigger = New-ScheduledTaskTrigger `
   -Once `
