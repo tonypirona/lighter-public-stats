@@ -54,8 +54,17 @@ $ExpectedLogDir = Join-Path $Root "logs"
 $ExpectedLogPath = Join-Path $ExpectedLogDir "expected_vs_actual_latest.log"
 New-Item -ItemType Directory -Force -Path $ExpectedLogDir | Out-Null
 
-$Model = "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2"
 $ModelStatePath = Join-Path $Root "..\freqtrade\user_data\live_state\lighter_live_model_state.json"
+$Model = "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12"
+if (Test-Path -LiteralPath $ModelStatePath) {
+  try {
+    $ModelState = Get-Content -LiteralPath $ModelStatePath -Raw | ConvertFrom-Json
+    if ([string]$ModelState.model) {
+      $Model = [string]$ModelState.model
+    }
+  } catch {
+  }
+}
 $ReportArgs = @("..\freqtrade\lighter_expected_vs_actual_report.py", "--model", $Model, "--hours", "168")
 if (Test-Path -LiteralPath $ModelStatePath) {
   try {

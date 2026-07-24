@@ -36,7 +36,7 @@ Register-ScheduledTask `
   -Action $Action `
   -Trigger $Trigger `
   -Settings $Settings `
-  -Description "Publishes sanitized Lighter BTC bot public stats every minute." `
+  -Description "Publishes sanitized Lighter BTC bot public stats every $IntervalMinutes minute(s)." `
   -Force | Out-Null
 
 Get-ScheduledTaskInfo -TaskName $TaskName | Format-List LastRunTime,NextRunTime,LastTaskResult,NumberOfMissedRuns
