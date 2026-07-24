@@ -21,6 +21,7 @@ WATCHDOG_PATH = LIVE_STATE / "lighter_live_watchdog_status.json"
 EXPECTED_PATH = LIVE_REPORTS / "lighter_expected_vs_actual_summary.json"
 ORDER_CONFIG_PATH = LIVE_STATE / "lighter_order_config.json"
 PAPER_STATE_PATH = LIVE_STATE / "lighter_native_paper_state.json"
+MODEL_STATE_PATH = LIVE_STATE / "lighter_live_model_state.json"
 STRATEGY_RESEARCH_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_simple_filter_robustness_decision.json"
 STRATEGY_PROMOTION_DECISION_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_candidate_promotion_decision.json"
 STRATEGY_TRAIL18_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_trail18_promotion_check_2026_07_16.json"
@@ -41,6 +42,7 @@ STRATEGY_LT4_NET_PRESERVING_REGIME_PATH = FREQTRADE_ROOT / "user_data" / "backte
 STRATEGY_LT4_REGIME_STABILITY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_regime_candidate_stability_2026_07_16.json"
 STRATEGY_LT4_LD2_EXIT_NET_GUARD_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_lt4_ld2_exit_net_guard_scan_2026_07_16.json"
 LIVE_FORWARD_EDGE_DIAGNOSTICS_PATH = LIVE_REPORTS / "lighter_live_forward_edge_diagnostics.json"
+LIVE_SHADOW_EXIT_REPLAY_PATH = LIVE_REPORTS / "lighter_live_shadow_exit_replay.json"
 STRATEGY_LIVE_SUGGESTED_FILTER_HISTORY_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_live_suggested_filter_historical_check_2026_07_16.json"
 STRATEGY_RELAXED_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_decision.json"
 STRATEGY_RELAXED_CSV_PATH = FREQTRADE_ROOT / "user_data" / "backtest_results" / "lighter_relaxed_quality_focused_scan.csv"
@@ -152,6 +154,23 @@ def trade_return_pct(trade: dict[str, Any]) -> float:
 
 def should_publish_trade(trade: dict[str, Any]) -> bool:
     if str(trade.get("source", "")).lower() != "bot":
+        return False
+    if str(trade.get("status", "")).lower() != "closed":
+        return False
+    if trade.get("excluded") is True:
+        return False
+    if abs(number(trade.get("qty"))) < DUST_QTY:
+        return False
+    notes = str(trade.get("notes", "")).lower()
+    tags = str(trade.get("tags", "")).lower()
+    if "bug-related" in notes or "incident" in tags:
+        return False
+    return True
+
+
+def should_count_current_model_trade(trade: dict[str, Any]) -> bool:
+    source = str(trade.get("source", "")).lower()
+    if source not in {"bot", "mixed"}:
         return False
     if str(trade.get("status", "")).lower() != "closed":
         return False
@@ -292,6 +311,61 @@ def compact_trade_stats(label: str, trades: list[dict[str, Any]]) -> dict[str, A
         "avg_trade_pnl": round(avg(pnls), 4),
         "avg_return_pct": round(avg(returns), 5),
         "avg_execution_cost_bp": round(avg(execution_costs), 4),
+    }
+
+
+def current_model_slice(raw_trades: list[dict[str, Any]], model_state: dict[str, Any]) -> dict[str, Any]:
+    promoted_at = parse_time(model_state.get("promoted_at_utc"))
+    if promoted_at.year == 1:
+        return {
+            "model": model_state.get("model") or "",
+            "promoted_at_utc": "",
+            "trade_count": 0,
+            "note": "No current-model promotion timestamp found.",
+        }
+
+    trades = sorted(
+        [
+            trade for trade in raw_trades
+            if isinstance(trade, dict)
+            and should_count_current_model_trade(trade)
+            and parse_time(trade.get("closedAt") or trade.get("openedAt")) >= promoted_at
+        ],
+        key=lambda item: parse_time(item.get("closedAt") or item.get("openedAt")),
+    )
+    pnls = [number(trade.get("pnl")) for trade in trades]
+    returns = [trade_return_pct(trade) for trade in trades]
+    wins = [pnl for pnl in pnls if pnl > 0]
+    losses = [pnl for pnl in pnls if pnl < 0]
+    spreads = [number(trade.get("spreadBp"), math.nan) for trade in trades if trade.get("spreadBp") not in ("", None)]
+    slippages = [number(trade.get("slippageBp"), math.nan) for trade in trades if trade.get("slippageBp") not in ("", None)]
+    execution_costs = [
+        number(trade.get("executionCostBp"), math.nan)
+        for trade in trades
+        if trade.get("executionCostBp") not in ("", None)
+    ]
+    curve_points, ending_equity = clean_curve(trades)
+    dd_dollar, dd_pct = max_drawdown(curve_points)
+    source_counts = count_by(trades, "source")
+    return {
+        "model": model_state.get("model") or "",
+        "promoted_at_utc": public_time(promoted_at),
+        "trade_count": len(trades),
+        "net_pnl": round(sum(pnls), 4),
+        "profit_factor": round(profit_factor(pnls), 4),
+        "win_rate_pct": round(len(wins) / len(trades) * 100.0, 2) if trades else 0.0,
+        "avg_trade_pnl": round(avg(pnls), 4),
+        "avg_trade_return_pct": round(avg(returns), 5),
+        "gross_profit": round(sum(wins), 4),
+        "gross_loss": round(sum(losses), 4),
+        "clean_leveraged_net_pct": round((ending_equity / START_EQUITY - 1.0) * 100.0, 2),
+        "clean_leveraged_max_drawdown": round(dd_dollar, 4),
+        "clean_leveraged_max_drawdown_pct": round(dd_pct, 2),
+        "avg_spread_bp": round(avg(spreads), 4),
+        "avg_slippage_bp": round(avg(slippages), 4),
+        "avg_execution_cost_bp": round(avg(execution_costs), 4),
+        "source_counts": source_counts,
+        "note": "Counts bot and native-bracket mixed trades since this exact model was promoted.",
     }
 
 
@@ -1132,6 +1206,31 @@ def strategy_lt4_ld2_exit_net_guard_scan() -> dict[str, Any]:
     }
 
 
+def live_shadow_exit_replay() -> dict[str, Any]:
+    report = read_json(LIVE_SHADOW_EXIT_REPLAY_PATH, {})
+    if not report:
+        return {}
+    summary = report.get("summary") or {}
+    changed = report.get("changed_rows") or []
+    return {
+        "generated_at_utc": report.get("generated_at_utc") or "",
+        "read": report.get("read") or "",
+        "current_model": report.get("current_model") or "",
+        "candidate_model": report.get("candidate_model") or "",
+        "trade_count": int(number(summary.get("trade_count"))),
+        "short_count": int(number(summary.get("short_count"))),
+        "changed_count": int(number(summary.get("changed_count"))),
+        "changed_short_count": int(number(summary.get("changed_short_count"))),
+        "candidate_better_count": int(number(summary.get("candidate_better_count"))),
+        "candidate_worse_count": int(number(summary.get("candidate_worse_count"))),
+        "return_delta_pct_sum": round(number(summary.get("return_delta_pct_sum")), 6),
+        "estimated_pnl_delta_usdc": round(number(summary.get("estimated_pnl_delta_usdc")), 6),
+        "skipped_count": int(number(report.get("skipped_count"))),
+        "changed_rows": changed[:5],
+        "csv": report.get("csv") or "",
+    }
+
+
 def strategy_shadow_status() -> dict[str, Any]:
     state = read_json(PAPER_STATE_PATH, {})
     shadows = state.get("entry_shadows")
@@ -1846,6 +1945,7 @@ def main() -> None:
     watchdog = read_json(WATCHDOG_PATH, {})
     expected = read_json(EXPECTED_PATH, {})
     order_config = read_json(ORDER_CONFIG_PATH, {})
+    model_state = read_json(MODEL_STATE_PATH, {})
     ledger_rows = read_jsonl(LEDGER_PATH)
 
     raw_trades = tracker.get("trades") or []
@@ -1909,6 +2009,7 @@ def main() -> None:
     strategy_shadow = strategy_shadow_status()
     shadow_activity = strategy_shadow_activity()
     strategy_overlap = strategy_overlap_status()
+    current_model = current_model_slice(raw_trades, model_state)
 
     latest_account = account.get("account") or tracker.get("account_status") or {}
     position = account.get("btc_position") or tracker.get("bot_open_position") or {}
@@ -2035,6 +2136,7 @@ def main() -> None:
             "pending_order_count": int(number(latest_account.get("pending_order_count"))),
         },
         "model_match": compact_expected(expected),
+        "current_model_slice": current_model,
         "execution_guard": {
             "sizing_mode": order_config.get("sizing_mode", ""),
             "entry_preflight_guard_version": order_config.get("entry_preflight_guard_version", ""),

@@ -410,6 +410,22 @@
     </section>
 
     <section class="panel">
+      <h2>Current Model Slice</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody id="currentModelRows"></tbody>
+        </table>
+      </div>
+      <div class="notice">This section starts from the latest promoted model timestamp and can include native-bracket bot trades marked as mixed. It is the cleaner view for judging the current setup.</div>
+    </section>
+
+    <section class="panel">
       <h2>Strategy Candidate</h2>
       <div class="table-wrap">
         <table>
@@ -1259,6 +1275,34 @@
       }
     }
 
+    function renderCurrentModelSlice(slice) {
+      const tbody = byId("currentModelRows");
+      tbody.replaceChildren();
+      slice = slice || {};
+      const sourceCounts = slice.source_counts || {};
+      const sourceText = Object.entries(sourceCounts)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(" / ") || "--";
+      const rows = [
+        ["Model", slice.model || "--", ""],
+        ["Promoted", slice.promoted_at_utc ? formatTime(slice.promoted_at_utc) : "--", ""],
+        ["Trades", fmtNum.format(slice.trade_count || 0), ""],
+        ["Net / PF", `${fmtUsd.format(slice.net_pnl || 0)} / ${fmtNum.format(slice.profit_factor || 0)}`, classFor(slice.net_pnl || 0)],
+        ["Win rate", `${fmtNum.format(slice.win_rate_pct || 0)}%`, ""],
+        ["Avg trade", `${fmtUsd.format(slice.avg_trade_pnl || 0)} / ${fmtNum.format(slice.avg_trade_return_pct || 0)}%`, classFor(slice.avg_trade_pnl || 0)],
+        ["Clean 30x", `${(slice.clean_leveraged_net_pct || 0) >= 0 ? "+" : ""}${fmtNum.format(slice.clean_leveraged_net_pct || 0)}%`, classFor(slice.clean_leveraged_net_pct || 0)],
+        ["Max DD", `${fmtUsd.format(slice.clean_leveraged_max_drawdown || 0)} / ${fmtNum.format(slice.clean_leveraged_max_drawdown_pct || 0)}%`, ""],
+        ["Avg execution", `${fmtNum.format(slice.avg_spread_bp || 0)} bp spread / ${fmtNum.format(slice.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(slice.avg_execution_cost_bp || 0)} bp cost`, ""],
+        ["Sources", sourceText, ""],
+      ];
+      for (const item of rows) {
+        const tr = document.createElement("tr");
+        appendCell(tr, item[0]);
+        appendCell(tr, item[1], item[2]);
+        tbody.append(tr);
+      }
+    }
+
     function renderPerformanceWindows(windows) {
       const tbody = byId("performanceWindowRows");
       tbody.replaceChildren();
@@ -1560,6 +1604,7 @@
       renderHealth(data);
       renderSourceDiagnostics(data);
       renderModelMatch(data.model_match || {});
+      renderCurrentModelSlice(data.current_model_slice || {});
       renderPromotionCandidate(data.promotion_candidate || {});
       renderPerformanceWindows(data.performance_windows || []);
       renderPerformanceBreakdowns(data.performance_breakdowns || {});
