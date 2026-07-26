@@ -878,8 +878,8 @@
   "live_status": {
     "available_balance": 183.913764,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-26T20:27:32Z",
-    "monitor_cycle": 26,
+    "monitor_checked_at_utc": "2026-07-26T20:32:33Z",
+    "monitor_cycle": 34,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -887,7 +887,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 183.913764,
-    "watchdog_checked_at_utc": "2026-07-26T20:27:32Z",
+    "watchdog_checked_at_utc": "2026-07-26T20:32:33Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -945,11 +945,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-26T20:27:34Z",
+    "generated_at_utc": "2026-07-26T20:32:36Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-26T20:26:27+00:00"
+    "tracker_synced_at_utc": "2026-07-26T20:31:42+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -965,14 +965,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 1,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-26T20:27:10+00:00",
+    "generated_at_utc": "2026-07-26T20:32:12+00:00",
     "missing_expected_entries": 1,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-25T13:14:35.865770+00:00",
     "unexpected_live_entries": 0,
-    "until_utc": "2026-07-26T20:27:04+00:00"
+    "until_utc": "2026-07-26T20:32:05+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1209,7 +1209,7 @@
       "gross_profit": 0,
       "net_pnl": 0,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-25T20:27:34Z",
+      "since_utc": "2026-07-25T20:32:35Z",
       "trade_count": 0,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -1229,7 +1229,7 @@
       "gross_profit": 11.5618,
       "net_pnl": 1.366,
       "profit_factor": 1.134,
-      "since_utc": "2026-07-19T20:27:34Z",
+      "since_utc": "2026-07-19T20:32:35Z",
       "trade_count": 10,
       "win_rate_pct": 40.0,
       "window": "7d"
@@ -1249,7 +1249,7 @@
       "gross_profit": 68.5085,
       "net_pnl": 2.9073,
       "profit_factor": 1.0443,
-      "since_utc": "2026-06-26T20:27:34Z",
+      "since_utc": "2026-06-26T20:32:35Z",
       "trade_count": 68,
       "win_rate_pct": 60.29,
       "window": "30d"
