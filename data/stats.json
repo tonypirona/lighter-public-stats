@@ -904,8 +904,8 @@
   "live_status": {
     "available_balance": 183.609235,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-28T22:57:00Z",
-    "monitor_cycle": 31,
+    "monitor_checked_at_utc": "2026-07-28T22:58:13Z",
+    "monitor_cycle": 34,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -913,7 +913,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 183.609235,
-    "watchdog_checked_at_utc": "2026-07-28T22:57:00Z",
+    "watchdog_checked_at_utc": "2026-07-28T22:58:13Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -971,7 +971,7 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-28T22:57:08Z",
+    "generated_at_utc": "2026-07-28T22:58:22Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
@@ -1245,7 +1245,7 @@
       "gross_profit": 0,
       "net_pnl": -0.3505,
       "profit_factor": 0.0,
-      "since_utc": "2026-07-27T22:57:08Z",
+      "since_utc": "2026-07-27T22:58:22Z",
       "trade_count": 1,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -1265,7 +1265,7 @@
       "gross_profit": 2.0231,
       "net_pnl": -16.3848,
       "profit_factor": 0.1099,
-      "since_utc": "2026-07-21T22:57:08Z",
+      "since_utc": "2026-07-21T22:58:22Z",
       "trade_count": 11,
       "win_rate_pct": 27.27,
       "window": "7d"
@@ -1285,7 +1285,7 @@
       "gross_profit": 63.3853,
       "net_pnl": -7.2628,
       "profit_factor": 0.8972,
-      "since_utc": "2026-06-28T22:57:08Z",
+      "since_utc": "2026-06-28T22:58:22Z",
       "trade_count": 66,
       "win_rate_pct": 57.58,
       "window": "30d"
@@ -2431,6 +2431,2260 @@
     ],
     "since_utc": "2026-07-09T23:21:33Z",
     "total_events": 772
+  },
+  "strategy_views": {
+    "channel_v3": {
+      "clean_curve": {
+        "ending_equity": 100.0,
+        "leverage": 30.0,
+        "max_drawdown": 0.0,
+        "max_drawdown_pct": 0.0,
+        "net_pct": 0.0,
+        "notional_cap": 8000.0,
+        "points": [
+          {
+            "equity": 100.0,
+            "pnl": 0.0,
+            "return_pct": 0.0,
+            "time": ""
+          }
+        ],
+        "starting_equity": 100.0
+      },
+      "label": "Strategy 2 - Channel V3",
+      "recent_trades": [],
+      "summary": {
+        "avg_execution_cost_bp": 0.0,
+        "avg_slippage_bp": 0.0,
+        "avg_spread_bp": 0.0,
+        "avg_trade_pnl": 0.0,
+        "avg_trade_return_pct": 0.0,
+        "gross_loss": 0,
+        "gross_profit": 0,
+        "net_pnl": 0,
+        "profit_factor": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      }
+    },
+    "combined": {
+      "clean_curve": {
+        "ending_equity": 112.707,
+        "leverage": 30.0,
+        "max_drawdown": 36.3843,
+        "max_drawdown_pct": 24.4,
+        "net_pct": 12.71,
+        "notional_cap": 8000.0,
+        "points": [
+          {
+            "equity": 100.0,
+            "pnl": 0.0,
+            "return_pct": 0.0,
+            "time": ""
+          },
+          {
+            "equity": 99.9708,
+            "pnl": -0.0292,
+            "return_pct": -0.00097,
+            "time": "2026-06-21T18:05:00Z"
+          },
+          {
+            "equity": 100.2387,
+            "pnl": 0.2679,
+            "return_pct": 0.00893,
+            "time": "2026-06-22T20:28:00Z"
+          },
+          {
+            "equity": 104.9676,
+            "pnl": 4.7288,
+            "return_pct": 0.15725,
+            "time": "2026-06-22T22:33:00Z"
+          },
+          {
+            "equity": 99.1697,
+            "pnl": -5.7978,
+            "return_pct": -0.18412,
+            "time": "2026-06-24T13:07:00Z"
+          },
+          {
+            "equity": 96.6738,
+            "pnl": -2.496,
+            "return_pct": -0.0839,
+            "time": "2026-06-24T15:47:00Z"
+          },
+          {
+            "equity": 90.7026,
+            "pnl": -5.9712,
+            "return_pct": -0.20589,
+            "time": "2026-06-25T23:50:00Z"
+          },
+          {
+            "equity": 94.8115,
+            "pnl": 4.1089,
+            "return_pct": 0.151,
+            "time": "2026-06-26T18:33:00Z"
+          },
+          {
+            "equity": 92.6721,
+            "pnl": -2.1394,
+            "return_pct": -0.07522,
+            "time": "2026-06-27T04:59:00Z"
+          },
+          {
+            "equity": 93.0679,
+            "pnl": 0.3958,
+            "return_pct": 0.01424,
+            "time": "2026-06-27T19:24:00Z"
+          },
+          {
+            "equity": 97.5785,
+            "pnl": 4.5106,
+            "return_pct": 0.16155,
+            "time": "2026-06-27T22:19:00Z"
+          },
+          {
+            "equity": 97.8369,
+            "pnl": 0.2584,
+            "return_pct": 0.00883,
+            "time": "2026-06-28T02:26:00Z"
+          },
+          {
+            "equity": 99.1144,
+            "pnl": 1.2775,
+            "return_pct": 0.04353,
+            "time": "2026-06-28T05:09:00Z"
+          },
+          {
+            "equity": 96.5421,
+            "pnl": -2.5723,
+            "return_pct": -0.08651,
+            "time": "2026-06-28T05:28:00Z"
+          },
+          {
+            "equity": 94.29,
+            "pnl": -2.2522,
+            "return_pct": -0.07776,
+            "time": "2026-06-29T00:05:00Z"
+          },
+          {
+            "equity": 100.0139,
+            "pnl": 5.7239,
+            "return_pct": 0.20235,
+            "time": "2026-06-29T02:16:00Z"
+          },
+          {
+            "equity": 103.2216,
+            "pnl": 3.2078,
+            "return_pct": 0.10691,
+            "time": "2026-06-29T05:08:00Z"
+          },
+          {
+            "equity": 103.6973,
+            "pnl": 0.4757,
+            "return_pct": 0.01536,
+            "time": "2026-06-29T12:41:00Z"
+          },
+          {
+            "equity": 105.3769,
+            "pnl": 1.6796,
+            "return_pct": 0.05399,
+            "time": "2026-06-29T23:26:00Z"
+          },
+          {
+            "equity": 98.3727,
+            "pnl": -7.0042,
+            "return_pct": -0.22156,
+            "time": "2026-06-30T00:31:00Z"
+          },
+          {
+            "equity": 106.0136,
+            "pnl": 7.6409,
+            "return_pct": 0.25891,
+            "time": "2026-06-30T00:34:00Z"
+          },
+          {
+            "equity": 107.543,
+            "pnl": 1.5293,
+            "return_pct": 0.04809,
+            "time": "2026-06-30T11:35:00Z"
+          },
+          {
+            "equity": 110.1422,
+            "pnl": 2.5992,
+            "return_pct": 0.08056,
+            "time": "2026-07-01T00:55:00Z"
+          },
+          {
+            "equity": 113.3098,
+            "pnl": 3.1676,
+            "return_pct": 0.09586,
+            "time": "2026-07-02T22:54:00Z"
+          },
+          {
+            "equity": 115.4193,
+            "pnl": 2.1095,
+            "return_pct": 0.06206,
+            "time": "2026-07-03T02:33:00Z"
+          },
+          {
+            "equity": 114.6458,
+            "pnl": -0.7734,
+            "return_pct": -0.02234,
+            "time": "2026-07-04T05:23:00Z"
+          },
+          {
+            "equity": 119.1945,
+            "pnl": 4.5486,
+            "return_pct": 0.13225,
+            "time": "2026-07-04T09:07:00Z"
+          },
+          {
+            "equity": 124.0931,
+            "pnl": 4.8986,
+            "return_pct": 0.13699,
+            "time": "2026-07-05T21:14:00Z"
+          },
+          {
+            "equity": 122.3925,
+            "pnl": -1.7006,
+            "return_pct": -0.04568,
+            "time": "2026-07-06T03:26:00Z"
+          },
+          {
+            "equity": 123.531,
+            "pnl": 1.1386,
+            "return_pct": 0.03101,
+            "time": "2026-07-06T05:34:00Z"
+          },
+          {
+            "equity": 127.0851,
+            "pnl": 3.554,
+            "return_pct": 0.0959,
+            "time": "2026-07-06T07:06:00Z"
+          },
+          {
+            "equity": 127.9459,
+            "pnl": 0.8608,
+            "return_pct": 0.02258,
+            "time": "2026-07-06T08:39:00Z"
+          },
+          {
+            "equity": 110.7877,
+            "pnl": -17.1582,
+            "return_pct": -0.44702,
+            "time": "2026-07-06T12:03:00Z"
+          },
+          {
+            "equity": 112.9869,
+            "pnl": 2.1992,
+            "return_pct": 0.06617,
+            "time": "2026-07-06T12:06:00Z"
+          },
+          {
+            "equity": 113.34,
+            "pnl": 0.3531,
+            "return_pct": 0.01042,
+            "time": "2026-07-06T12:49:00Z"
+          },
+          {
+            "equity": 113.8091,
+            "pnl": 0.4691,
+            "return_pct": 0.0138,
+            "time": "2026-07-07T04:55:00Z"
+          },
+          {
+            "equity": 115.4672,
+            "pnl": 1.658,
+            "return_pct": 0.04856,
+            "time": "2026-07-07T21:27:00Z"
+          },
+          {
+            "equity": 124.8423,
+            "pnl": 9.3751,
+            "return_pct": 0.27064,
+            "time": "2026-07-08T08:20:00Z"
+          },
+          {
+            "equity": 125.2551,
+            "pnl": 0.4128,
+            "return_pct": 0.01102,
+            "time": "2026-07-08T09:40:00Z"
+          },
+          {
+            "equity": 126.806,
+            "pnl": 1.551,
+            "return_pct": 0.04127,
+            "time": "2026-07-08T18:38:00Z"
+          },
+          {
+            "equity": 127.8767,
+            "pnl": 1.0707,
+            "return_pct": 0.02815,
+            "time": "2026-07-09T21:33:00Z"
+          },
+          {
+            "equity": 132.6709,
+            "pnl": 4.7942,
+            "return_pct": 0.12497,
+            "time": "2026-07-09T23:23:00Z"
+          },
+          {
+            "equity": 131.9353,
+            "pnl": -0.7356,
+            "return_pct": -0.01848,
+            "time": "2026-07-10T20:08:00Z"
+          },
+          {
+            "equity": 129.9842,
+            "pnl": -1.9511,
+            "return_pct": -0.0493,
+            "time": "2026-07-11T15:40:00Z"
+          },
+          {
+            "equity": 132.525,
+            "pnl": 2.5408,
+            "return_pct": 0.06516,
+            "time": "2026-07-11T23:28:00Z"
+          },
+          {
+            "equity": 132.7365,
+            "pnl": 0.2116,
+            "return_pct": 0.00532,
+            "time": "2026-07-12T05:22:00Z"
+          },
+          {
+            "equity": 132.6246,
+            "pnl": -0.112,
+            "return_pct": -0.00281,
+            "time": "2026-07-12T09:20:00Z"
+          },
+          {
+            "equity": 134.6752,
+            "pnl": 2.0506,
+            "return_pct": 0.05154,
+            "time": "2026-07-12T09:25:00Z"
+          },
+          {
+            "equity": 136.4043,
+            "pnl": 1.7292,
+            "return_pct": 0.0428,
+            "time": "2026-07-12T17:57:00Z"
+          },
+          {
+            "equity": 146.8639,
+            "pnl": 10.4595,
+            "return_pct": 0.2556,
+            "time": "2026-07-13T00:43:00Z"
+          },
+          {
+            "equity": 146.7098,
+            "pnl": -0.1541,
+            "return_pct": -0.0035,
+            "time": "2026-07-13T10:44:00Z"
+          },
+          {
+            "equity": 145.9568,
+            "pnl": -0.753,
+            "return_pct": -0.01711,
+            "time": "2026-07-13T16:23:00Z"
+          },
+          {
+            "equity": 146.6449,
+            "pnl": 0.6882,
+            "return_pct": 0.01572,
+            "time": "2026-07-14T03:15:00Z"
+          },
+          {
+            "equity": 149.0913,
+            "pnl": 2.4464,
+            "return_pct": 0.05561,
+            "time": "2026-07-14T09:41:00Z"
+          },
+          {
+            "equity": 142.1609,
+            "pnl": -6.9305,
+            "return_pct": -0.15495,
+            "time": "2026-07-15T07:28:00Z"
+          },
+          {
+            "equity": 144.333,
+            "pnl": 2.1722,
+            "return_pct": 0.05093,
+            "time": "2026-07-15T16:39:00Z"
+          },
+          {
+            "equity": 139.3606,
+            "pnl": -4.9724,
+            "return_pct": -0.11484,
+            "time": "2026-07-16T00:27:00Z"
+          },
+          {
+            "equity": 131.7284,
+            "pnl": -7.6323,
+            "return_pct": -0.18255,
+            "time": "2026-07-16T07:51:00Z"
+          },
+          {
+            "equity": 128.7171,
+            "pnl": -3.0113,
+            "return_pct": -0.0762,
+            "time": "2026-07-16T23:24:00Z"
+          },
+          {
+            "equity": 131.4098,
+            "pnl": 2.6928,
+            "return_pct": 0.06973,
+            "time": "2026-07-16T23:27:00Z"
+          },
+          {
+            "equity": 134.0128,
+            "pnl": 2.603,
+            "return_pct": 0.06603,
+            "time": "2026-07-17T05:49:00Z"
+          },
+          {
+            "equity": 123.939,
+            "pnl": -10.0738,
+            "return_pct": -0.25057,
+            "time": "2026-07-17T13:12:00Z"
+          },
+          {
+            "equity": 123.5553,
+            "pnl": -0.3837,
+            "return_pct": -0.01032,
+            "time": "2026-07-18T13:32:00Z"
+          },
+          {
+            "equity": 118.8308,
+            "pnl": -4.7245,
+            "return_pct": -0.12746,
+            "time": "2026-07-19T03:34:00Z"
+          },
+          {
+            "equity": 117.4361,
+            "pnl": -1.3947,
+            "return_pct": -0.03912,
+            "time": "2026-07-19T05:35:00Z"
+          },
+          {
+            "equity": 117.2505,
+            "pnl": -0.1856,
+            "return_pct": -0.00527,
+            "time": "2026-07-19T09:22:00Z"
+          },
+          {
+            "equity": 122.3983,
+            "pnl": 5.1479,
+            "return_pct": 0.14635,
+            "time": "2026-07-20T00:55:00Z"
+          },
+          {
+            "equity": 122.0303,
+            "pnl": -0.3681,
+            "return_pct": -0.01002,
+            "time": "2026-07-20T08:37:00Z"
+          },
+          {
+            "equity": 122.77,
+            "pnl": 0.7397,
+            "return_pct": 0.02021,
+            "time": "2026-07-21T21:09:00Z"
+          },
+          {
+            "equity": 122.5671,
+            "pnl": -0.2029,
+            "return_pct": -0.00551,
+            "time": "2026-07-22T09:36:00Z"
+          },
+          {
+            "equity": 123.4774,
+            "pnl": 0.9103,
+            "return_pct": 0.02476,
+            "time": "2026-07-22T12:10:00Z"
+          },
+          {
+            "equity": 121.1531,
+            "pnl": -2.3242,
+            "return_pct": -0.06274,
+            "time": "2026-07-22T21:38:00Z"
+          },
+          {
+            "equity": 120.565,
+            "pnl": -0.5881,
+            "return_pct": -0.01618,
+            "time": "2026-07-24T08:58:00Z"
+          },
+          {
+            "equity": 118.7534,
+            "pnl": -1.8117,
+            "return_pct": -0.05009,
+            "time": "2026-07-24T09:09:00Z"
+          },
+          {
+            "equity": 118.2873,
+            "pnl": -0.4661,
+            "return_pct": -0.01308,
+            "time": "2026-07-24T09:17:00Z"
+          },
+          {
+            "equity": 113.4567,
+            "pnl": -4.8307,
+            "return_pct": -0.13613,
+            "time": "2026-07-24T13:07:00Z"
+          },
+          {
+            "equity": 113.76,
+            "pnl": 0.3033,
+            "return_pct": 0.00891,
+            "time": "2026-07-24T13:11:00Z"
+          },
+          {
+            "equity": 112.8938,
+            "pnl": -0.8661,
+            "return_pct": -0.02538,
+            "time": "2026-07-24T19:10:00Z"
+          },
+          {
+            "equity": 112.922,
+            "pnl": 0.0282,
+            "return_pct": 0.00083,
+            "time": "2026-07-27T22:02:00Z"
+          },
+          {
+            "equity": 112.707,
+            "pnl": -0.2151,
+            "return_pct": -0.00635,
+            "time": "2026-07-28T17:12:00Z"
+          }
+        ],
+        "starting_equity": 100.0
+      },
+      "label": "Total",
+      "recent_trades": [
+        {
+          "closed_at": "2026-07-28T17:12:00Z",
+          "entry": 63805.7,
+          "execution_cost_bp": 0.0,
+          "exit": 63801.65,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5520.47,
+          "opened_at": "2026-07-28T17:12:00Z",
+          "order_type": "mixed",
+          "pnl": -0.3505,
+          "qty": 0.08652,
+          "return_pct": -0.00635,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0,
+          "spread_bp": 0.0,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-27T22:02:00Z",
+          "entry": 64666.26,
+          "execution_cost_bp": 0.0,
+          "exit": 64666.8,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5517.97,
+          "opened_at": "2026-07-27T22:02:00Z",
+          "order_type": "mixed",
+          "pnl": 0.0459,
+          "qty": 0.08533,
+          "return_pct": 0.00083,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0,
+          "spread_bp": 0.0,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T19:10:00Z",
+          "entry": 64130.6,
+          "execution_cost_bp": 2.6242,
+          "exit": 64114.32,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5559.48,
+          "opened_at": "2026-07-24T19:08:00Z",
+          "order_type": "mixed",
+          "pnl": -1.411,
+          "qty": 0.08669,
+          "return_pct": -0.02538,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.9458,
+          "spread_bp": 0.6784,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T13:11:00Z",
+          "entry": 64395.0,
+          "execution_cost_bp": -0.3708,
+          "exit": 64400.74,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5543.77,
+          "opened_at": "2026-07-24T13:09:00Z",
+          "order_type": "mixed",
+          "pnl": 0.4941,
+          "qty": 0.08609,
+          "return_pct": 0.00891,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -0.8756,
+          "spread_bp": 0.5048,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T13:07:00Z",
+          "entry": 64498.3,
+          "execution_cost_bp": 13.6658,
+          "exit": 64410.5,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5775.18,
+          "opened_at": "2026-07-24T13:06:00Z",
+          "order_type": "mixed",
+          "pnl": -7.8616,
+          "qty": 0.08954,
+          "return_pct": -0.13613,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 13.6504,
+          "spread_bp": 0.0154,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T09:17:00Z",
+          "entry": 65021.8,
+          "execution_cost_bp": 4.6463,
+          "exit": 65013.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5804.5,
+          "opened_at": "2026-07-24T09:15:00Z",
+          "order_type": "mixed",
+          "pnl": -0.7594,
+          "qty": 0.08927,
+          "return_pct": -0.01308,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 4.6309,
+          "spread_bp": 0.0154,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T09:09:00Z",
+          "entry": 65124.99,
+          "execution_cost_bp": 6.1553,
+          "exit": 65092.37,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5893.81,
+          "opened_at": "2026-07-24T09:07:00Z",
+          "order_type": "mixed",
+          "pnl": -2.9521,
+          "qty": 0.0905,
+          "return_pct": -0.05009,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 5.9172,
+          "spread_bp": 0.2381,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T08:58:00Z",
+          "entry": 65301.87,
+          "execution_cost_bp": 2.0241,
+          "exit": 65291.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5921.57,
+          "opened_at": "2026-07-24T08:56:00Z",
+          "order_type": "mixed",
+          "pnl": -0.9581,
+          "qty": 0.09068,
+          "return_pct": -0.01618,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.7102,
+          "spread_bp": 0.3139,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T21:38:00Z",
+          "entry": 65982.4,
+          "execution_cost_bp": 4.0233,
+          "exit": 66023.8,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 6032.11,
+          "opened_at": "2026-07-22T21:36:00Z",
+          "order_type": "mixed",
+          "pnl": -3.7848,
+          "qty": 0.09142,
+          "return_pct": -0.06274,
+          "role": "taker -> taker",
+          "side": "short",
+          "slippage_bp": 3.4855,
+          "spread_bp": 0.5378,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T12:10:00Z",
+          "entry": 65843.8,
+          "execution_cost_bp": 1.6107,
+          "exit": 65860.1,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5991.13,
+          "opened_at": "2026-07-22T12:08:00Z",
+          "order_type": "mixed",
+          "pnl": 1.4831,
+          "qty": 0.09099,
+          "return_pct": 0.02476,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.9729,
+          "spread_bp": 0.6378,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T09:36:00Z",
+          "entry": 65853.18,
+          "execution_cost_bp": 1.5457,
+          "exit": 65849.55,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5999.22,
+          "opened_at": "2026-07-22T09:34:00Z",
+          "order_type": "market",
+          "pnl": -0.3305,
+          "qty": 0.0911,
+          "return_pct": -0.00551,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.1433,
+          "spread_bp": 0.4024,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-21T21:09:00Z",
+          "entry": 66318.5,
+          "execution_cost_bp": 1.877,
+          "exit": 66331.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5963.36,
+          "opened_at": "2026-07-21T21:01:00Z",
+          "order_type": "market",
+          "pnl": 1.2049,
+          "qty": 0.08992,
+          "return_pct": 0.02021,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.3719,
+          "spread_bp": 0.5051,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-20T08:37:00Z",
+          "entry": 63850.2,
+          "execution_cost_bp": 2.1012,
+          "exit": 63843.8,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5962.97,
+          "opened_at": "2026-07-20T08:37:00Z",
+          "order_type": "mixed",
+          "pnl": -0.5977,
+          "qty": 0.09339,
+          "return_pct": -0.01002,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.0988,
+          "spread_bp": 1.0024,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-20T00:55:00Z",
+          "entry": 64450.88,
+          "execution_cost_bp": -6.7019,
+          "exit": 64545.2,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5725.82,
+          "opened_at": "2026-07-20T00:52:00Z",
+          "order_type": "market",
+          "pnl": 8.3797,
+          "qty": 0.08884,
+          "return_pct": 0.14635,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -6.7794,
+          "spread_bp": 0.0775,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T09:22:00Z",
+          "entry": 64535.4,
+          "execution_cost_bp": -1.0689,
+          "exit": 64532.0,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3426.83,
+          "opened_at": "2026-07-19T09:20:00Z",
+          "order_type": "market",
+          "pnl": -0.1805,
+          "qty": 0.0531,
+          "return_pct": -0.00527,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -1.1773,
+          "spread_bp": 0.1084,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T05:35:00Z",
+          "entry": 64666.2,
+          "execution_cost_bp": 3.7047,
+          "exit": 64640.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3468.69,
+          "opened_at": "2026-07-19T05:33:00Z",
+          "order_type": "market",
+          "pnl": -1.3571,
+          "qty": 0.05364,
+          "return_pct": -0.03912,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.4032,
+          "spread_bp": 0.3015,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T03:34:00Z",
+          "entry": 64719.1,
+          "execution_cost_bp": 3.1391,
+          "exit": 64636.61,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3606.15,
+          "opened_at": "2026-07-19T03:07:00Z",
+          "order_type": "market",
+          "pnl": -4.5964,
+          "qty": 0.05572,
+          "return_pct": -0.12746,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 2.861,
+          "spread_bp": 0.2781,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-18T13:32:00Z",
+          "entry": 64048.42,
+          "execution_cost_bp": -0.2248,
+          "exit": 64041.81,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3617.45,
+          "opened_at": "2026-07-18T13:11:00Z",
+          "order_type": "market",
+          "pnl": -0.3733,
+          "qty": 0.05648,
+          "return_pct": -0.01032,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -0.2638,
+          "spread_bp": 0.039,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-17T13:12:00Z",
+          "entry": 62897.1,
+          "execution_cost_bp": 0.3084,
+          "exit": 62739.5,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3910.31,
+          "opened_at": "2026-07-17T13:06:00Z",
+          "order_type": "market",
+          "pnl": -9.798,
+          "qty": 0.06217,
+          "return_pct": -0.25057,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0857,
+          "spread_bp": 0.2227,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-17T05:49:00Z",
+          "entry": 62831.6,
+          "execution_cost_bp": -0.8642,
+          "exit": 62873.09,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3835.24,
+          "opened_at": "2026-07-17T05:47:00Z",
+          "order_type": "market",
+          "pnl": 2.5323,
+          "qty": 0.06104,
+          "return_pct": 0.06603,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -1.3176,
+          "spread_bp": 0.4534,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T23:27:00Z",
+          "entry": 63741.27,
+          "execution_cost_bp": 2.1107,
+          "exit": 63785.72,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3757.55,
+          "opened_at": "2026-07-16T23:25:00Z",
+          "order_type": "market",
+          "pnl": 2.6203,
+          "qty": 0.05895,
+          "return_pct": 0.06973,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.8754,
+          "spread_bp": 0.2353,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T23:24:00Z",
+          "entry": 63779.8,
+          "execution_cost_bp": 1.7569,
+          "exit": 63731.2,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3844.65,
+          "opened_at": "2026-07-16T23:22:00Z",
+          "order_type": "market",
+          "pnl": -2.9296,
+          "qty": 0.06028,
+          "return_pct": -0.0762,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.7413,
+          "spread_bp": 0.0156,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T07:51:00Z",
+          "entry": 64254.9,
+          "execution_cost_bp": -7.8306,
+          "exit": 64137.6,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 4065.41,
+          "opened_at": "2026-07-16T07:37:00Z",
+          "order_type": "market",
+          "pnl": -7.4216,
+          "qty": 0.06327,
+          "return_pct": -0.18255,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -8.4533,
+          "spread_bp": 0.6227,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T00:27:00Z",
+          "entry": 64619.8,
+          "execution_cost_bp": 1.1233,
+          "exit": 64545.59,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 4212.56,
+          "opened_at": "2026-07-16T00:25:00Z",
+          "order_type": "market",
+          "pnl": -4.8376,
+          "qty": 0.06519,
+          "return_pct": -0.11484,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.9607,
+          "spread_bp": 0.1626,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-15T16:39:00Z",
+          "entry": 64792.3,
+          "execution_cost_bp": -9.965,
+          "exit": 64825.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3466.39,
+          "opened_at": "2026-07-15T16:37:00Z",
+          "order_type": "market",
+          "pnl": 1.7655,
+          "qty": 0.0535,
+          "return_pct": 0.05093,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -10.6285,
+          "spread_bp": 0.6635,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-15T07:28:00Z",
+          "entry": 64602.0,
+          "execution_cost_bp": 3.4555,
+          "exit": 64501.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1861.83,
+          "opened_at": "2026-07-15T07:26:00Z",
+          "order_type": "market",
+          "pnl": -2.8849,
+          "qty": 0.02882,
+          "return_pct": -0.15495,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.285,
+          "spread_bp": 0.1705,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-14T09:41:00Z",
+          "entry": 62508.74,
+          "execution_cost_bp": 2.5493,
+          "exit": 62543.5,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1835.88,
+          "opened_at": "2026-07-14T09:38:00Z",
+          "order_type": "market",
+          "pnl": 1.0209,
+          "qty": 0.02937,
+          "return_pct": 0.05561,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 2.1495,
+          "spread_bp": 0.3998,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-14T03:15:00Z",
+          "entry": 62353.2,
+          "execution_cost_bp": 1.0825,
+          "exit": 62363.0,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1828.82,
+          "opened_at": "2026-07-14T03:13:00Z",
+          "order_type": "market",
+          "pnl": 0.2874,
+          "qty": 0.02933,
+          "return_pct": 0.01572,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.5933,
+          "spread_bp": 0.4892,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-13T16:23:00Z",
+          "entry": 62304.09,
+          "execution_cost_bp": 4.6086,
+          "exit": 62293.43,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1836.72,
+          "opened_at": "2026-07-13T16:21:00Z",
+          "order_type": "market",
+          "pnl": -0.3142,
+          "qty": 0.02948,
+          "return_pct": -0.01711,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.798,
+          "spread_bp": 0.8106,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-13T10:44:00Z",
+          "entry": 62910.9,
+          "execution_cost_bp": 1.6452,
+          "exit": 62908.7,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1838.26,
+          "opened_at": "2026-07-13T10:42:00Z",
+          "order_type": "market",
+          "pnl": -0.0643,
+          "qty": 0.02922,
+          "return_pct": -0.0035,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.1922,
+          "spread_bp": 0.453,
+          "status": "closed",
+          "strategy_key": "qg1"
+        }
+      ],
+      "summary": {
+        "avg_execution_cost_bp": -0.4927,
+        "avg_slippage_bp": -0.8281,
+        "avg_spread_bp": 0.3637,
+        "avg_trade_pnl": -0.1254,
+        "avg_trade_return_pct": 0.00701,
+        "gross_loss": -85.7429,
+        "gross_profit": 75.8329,
+        "net_pnl": -9.91,
+        "profit_factor": 0.8844,
+        "trade_count": 79,
+        "win_rate_pct": 56.96
+      }
+    },
+    "qg1": {
+      "clean_curve": {
+        "ending_equity": 112.707,
+        "leverage": 30.0,
+        "max_drawdown": 36.3843,
+        "max_drawdown_pct": 24.4,
+        "net_pct": 12.71,
+        "notional_cap": 8000.0,
+        "points": [
+          {
+            "equity": 100.0,
+            "pnl": 0.0,
+            "return_pct": 0.0,
+            "time": ""
+          },
+          {
+            "equity": 99.9708,
+            "pnl": -0.0292,
+            "return_pct": -0.00097,
+            "time": "2026-06-21T18:05:00Z"
+          },
+          {
+            "equity": 100.2387,
+            "pnl": 0.2679,
+            "return_pct": 0.00893,
+            "time": "2026-06-22T20:28:00Z"
+          },
+          {
+            "equity": 104.9676,
+            "pnl": 4.7288,
+            "return_pct": 0.15725,
+            "time": "2026-06-22T22:33:00Z"
+          },
+          {
+            "equity": 99.1697,
+            "pnl": -5.7978,
+            "return_pct": -0.18412,
+            "time": "2026-06-24T13:07:00Z"
+          },
+          {
+            "equity": 96.6738,
+            "pnl": -2.496,
+            "return_pct": -0.0839,
+            "time": "2026-06-24T15:47:00Z"
+          },
+          {
+            "equity": 90.7026,
+            "pnl": -5.9712,
+            "return_pct": -0.20589,
+            "time": "2026-06-25T23:50:00Z"
+          },
+          {
+            "equity": 94.8115,
+            "pnl": 4.1089,
+            "return_pct": 0.151,
+            "time": "2026-06-26T18:33:00Z"
+          },
+          {
+            "equity": 92.6721,
+            "pnl": -2.1394,
+            "return_pct": -0.07522,
+            "time": "2026-06-27T04:59:00Z"
+          },
+          {
+            "equity": 93.0679,
+            "pnl": 0.3958,
+            "return_pct": 0.01424,
+            "time": "2026-06-27T19:24:00Z"
+          },
+          {
+            "equity": 97.5785,
+            "pnl": 4.5106,
+            "return_pct": 0.16155,
+            "time": "2026-06-27T22:19:00Z"
+          },
+          {
+            "equity": 97.8369,
+            "pnl": 0.2584,
+            "return_pct": 0.00883,
+            "time": "2026-06-28T02:26:00Z"
+          },
+          {
+            "equity": 99.1144,
+            "pnl": 1.2775,
+            "return_pct": 0.04353,
+            "time": "2026-06-28T05:09:00Z"
+          },
+          {
+            "equity": 96.5421,
+            "pnl": -2.5723,
+            "return_pct": -0.08651,
+            "time": "2026-06-28T05:28:00Z"
+          },
+          {
+            "equity": 94.29,
+            "pnl": -2.2522,
+            "return_pct": -0.07776,
+            "time": "2026-06-29T00:05:00Z"
+          },
+          {
+            "equity": 100.0139,
+            "pnl": 5.7239,
+            "return_pct": 0.20235,
+            "time": "2026-06-29T02:16:00Z"
+          },
+          {
+            "equity": 103.2216,
+            "pnl": 3.2078,
+            "return_pct": 0.10691,
+            "time": "2026-06-29T05:08:00Z"
+          },
+          {
+            "equity": 103.6973,
+            "pnl": 0.4757,
+            "return_pct": 0.01536,
+            "time": "2026-06-29T12:41:00Z"
+          },
+          {
+            "equity": 105.3769,
+            "pnl": 1.6796,
+            "return_pct": 0.05399,
+            "time": "2026-06-29T23:26:00Z"
+          },
+          {
+            "equity": 98.3727,
+            "pnl": -7.0042,
+            "return_pct": -0.22156,
+            "time": "2026-06-30T00:31:00Z"
+          },
+          {
+            "equity": 106.0136,
+            "pnl": 7.6409,
+            "return_pct": 0.25891,
+            "time": "2026-06-30T00:34:00Z"
+          },
+          {
+            "equity": 107.543,
+            "pnl": 1.5293,
+            "return_pct": 0.04809,
+            "time": "2026-06-30T11:35:00Z"
+          },
+          {
+            "equity": 110.1422,
+            "pnl": 2.5992,
+            "return_pct": 0.08056,
+            "time": "2026-07-01T00:55:00Z"
+          },
+          {
+            "equity": 113.3098,
+            "pnl": 3.1676,
+            "return_pct": 0.09586,
+            "time": "2026-07-02T22:54:00Z"
+          },
+          {
+            "equity": 115.4193,
+            "pnl": 2.1095,
+            "return_pct": 0.06206,
+            "time": "2026-07-03T02:33:00Z"
+          },
+          {
+            "equity": 114.6458,
+            "pnl": -0.7734,
+            "return_pct": -0.02234,
+            "time": "2026-07-04T05:23:00Z"
+          },
+          {
+            "equity": 119.1945,
+            "pnl": 4.5486,
+            "return_pct": 0.13225,
+            "time": "2026-07-04T09:07:00Z"
+          },
+          {
+            "equity": 124.0931,
+            "pnl": 4.8986,
+            "return_pct": 0.13699,
+            "time": "2026-07-05T21:14:00Z"
+          },
+          {
+            "equity": 122.3925,
+            "pnl": -1.7006,
+            "return_pct": -0.04568,
+            "time": "2026-07-06T03:26:00Z"
+          },
+          {
+            "equity": 123.531,
+            "pnl": 1.1386,
+            "return_pct": 0.03101,
+            "time": "2026-07-06T05:34:00Z"
+          },
+          {
+            "equity": 127.0851,
+            "pnl": 3.554,
+            "return_pct": 0.0959,
+            "time": "2026-07-06T07:06:00Z"
+          },
+          {
+            "equity": 127.9459,
+            "pnl": 0.8608,
+            "return_pct": 0.02258,
+            "time": "2026-07-06T08:39:00Z"
+          },
+          {
+            "equity": 110.7877,
+            "pnl": -17.1582,
+            "return_pct": -0.44702,
+            "time": "2026-07-06T12:03:00Z"
+          },
+          {
+            "equity": 112.9869,
+            "pnl": 2.1992,
+            "return_pct": 0.06617,
+            "time": "2026-07-06T12:06:00Z"
+          },
+          {
+            "equity": 113.34,
+            "pnl": 0.3531,
+            "return_pct": 0.01042,
+            "time": "2026-07-06T12:49:00Z"
+          },
+          {
+            "equity": 113.8091,
+            "pnl": 0.4691,
+            "return_pct": 0.0138,
+            "time": "2026-07-07T04:55:00Z"
+          },
+          {
+            "equity": 115.4672,
+            "pnl": 1.658,
+            "return_pct": 0.04856,
+            "time": "2026-07-07T21:27:00Z"
+          },
+          {
+            "equity": 124.8423,
+            "pnl": 9.3751,
+            "return_pct": 0.27064,
+            "time": "2026-07-08T08:20:00Z"
+          },
+          {
+            "equity": 125.2551,
+            "pnl": 0.4128,
+            "return_pct": 0.01102,
+            "time": "2026-07-08T09:40:00Z"
+          },
+          {
+            "equity": 126.806,
+            "pnl": 1.551,
+            "return_pct": 0.04127,
+            "time": "2026-07-08T18:38:00Z"
+          },
+          {
+            "equity": 127.8767,
+            "pnl": 1.0707,
+            "return_pct": 0.02815,
+            "time": "2026-07-09T21:33:00Z"
+          },
+          {
+            "equity": 132.6709,
+            "pnl": 4.7942,
+            "return_pct": 0.12497,
+            "time": "2026-07-09T23:23:00Z"
+          },
+          {
+            "equity": 131.9353,
+            "pnl": -0.7356,
+            "return_pct": -0.01848,
+            "time": "2026-07-10T20:08:00Z"
+          },
+          {
+            "equity": 129.9842,
+            "pnl": -1.9511,
+            "return_pct": -0.0493,
+            "time": "2026-07-11T15:40:00Z"
+          },
+          {
+            "equity": 132.525,
+            "pnl": 2.5408,
+            "return_pct": 0.06516,
+            "time": "2026-07-11T23:28:00Z"
+          },
+          {
+            "equity": 132.7365,
+            "pnl": 0.2116,
+            "return_pct": 0.00532,
+            "time": "2026-07-12T05:22:00Z"
+          },
+          {
+            "equity": 132.6246,
+            "pnl": -0.112,
+            "return_pct": -0.00281,
+            "time": "2026-07-12T09:20:00Z"
+          },
+          {
+            "equity": 134.6752,
+            "pnl": 2.0506,
+            "return_pct": 0.05154,
+            "time": "2026-07-12T09:25:00Z"
+          },
+          {
+            "equity": 136.4043,
+            "pnl": 1.7292,
+            "return_pct": 0.0428,
+            "time": "2026-07-12T17:57:00Z"
+          },
+          {
+            "equity": 146.8639,
+            "pnl": 10.4595,
+            "return_pct": 0.2556,
+            "time": "2026-07-13T00:43:00Z"
+          },
+          {
+            "equity": 146.7098,
+            "pnl": -0.1541,
+            "return_pct": -0.0035,
+            "time": "2026-07-13T10:44:00Z"
+          },
+          {
+            "equity": 145.9568,
+            "pnl": -0.753,
+            "return_pct": -0.01711,
+            "time": "2026-07-13T16:23:00Z"
+          },
+          {
+            "equity": 146.6449,
+            "pnl": 0.6882,
+            "return_pct": 0.01572,
+            "time": "2026-07-14T03:15:00Z"
+          },
+          {
+            "equity": 149.0913,
+            "pnl": 2.4464,
+            "return_pct": 0.05561,
+            "time": "2026-07-14T09:41:00Z"
+          },
+          {
+            "equity": 142.1609,
+            "pnl": -6.9305,
+            "return_pct": -0.15495,
+            "time": "2026-07-15T07:28:00Z"
+          },
+          {
+            "equity": 144.333,
+            "pnl": 2.1722,
+            "return_pct": 0.05093,
+            "time": "2026-07-15T16:39:00Z"
+          },
+          {
+            "equity": 139.3606,
+            "pnl": -4.9724,
+            "return_pct": -0.11484,
+            "time": "2026-07-16T00:27:00Z"
+          },
+          {
+            "equity": 131.7284,
+            "pnl": -7.6323,
+            "return_pct": -0.18255,
+            "time": "2026-07-16T07:51:00Z"
+          },
+          {
+            "equity": 128.7171,
+            "pnl": -3.0113,
+            "return_pct": -0.0762,
+            "time": "2026-07-16T23:24:00Z"
+          },
+          {
+            "equity": 131.4098,
+            "pnl": 2.6928,
+            "return_pct": 0.06973,
+            "time": "2026-07-16T23:27:00Z"
+          },
+          {
+            "equity": 134.0128,
+            "pnl": 2.603,
+            "return_pct": 0.06603,
+            "time": "2026-07-17T05:49:00Z"
+          },
+          {
+            "equity": 123.939,
+            "pnl": -10.0738,
+            "return_pct": -0.25057,
+            "time": "2026-07-17T13:12:00Z"
+          },
+          {
+            "equity": 123.5553,
+            "pnl": -0.3837,
+            "return_pct": -0.01032,
+            "time": "2026-07-18T13:32:00Z"
+          },
+          {
+            "equity": 118.8308,
+            "pnl": -4.7245,
+            "return_pct": -0.12746,
+            "time": "2026-07-19T03:34:00Z"
+          },
+          {
+            "equity": 117.4361,
+            "pnl": -1.3947,
+            "return_pct": -0.03912,
+            "time": "2026-07-19T05:35:00Z"
+          },
+          {
+            "equity": 117.2505,
+            "pnl": -0.1856,
+            "return_pct": -0.00527,
+            "time": "2026-07-19T09:22:00Z"
+          },
+          {
+            "equity": 122.3983,
+            "pnl": 5.1479,
+            "return_pct": 0.14635,
+            "time": "2026-07-20T00:55:00Z"
+          },
+          {
+            "equity": 122.0303,
+            "pnl": -0.3681,
+            "return_pct": -0.01002,
+            "time": "2026-07-20T08:37:00Z"
+          },
+          {
+            "equity": 122.77,
+            "pnl": 0.7397,
+            "return_pct": 0.02021,
+            "time": "2026-07-21T21:09:00Z"
+          },
+          {
+            "equity": 122.5671,
+            "pnl": -0.2029,
+            "return_pct": -0.00551,
+            "time": "2026-07-22T09:36:00Z"
+          },
+          {
+            "equity": 123.4774,
+            "pnl": 0.9103,
+            "return_pct": 0.02476,
+            "time": "2026-07-22T12:10:00Z"
+          },
+          {
+            "equity": 121.1531,
+            "pnl": -2.3242,
+            "return_pct": -0.06274,
+            "time": "2026-07-22T21:38:00Z"
+          },
+          {
+            "equity": 120.565,
+            "pnl": -0.5881,
+            "return_pct": -0.01618,
+            "time": "2026-07-24T08:58:00Z"
+          },
+          {
+            "equity": 118.7534,
+            "pnl": -1.8117,
+            "return_pct": -0.05009,
+            "time": "2026-07-24T09:09:00Z"
+          },
+          {
+            "equity": 118.2873,
+            "pnl": -0.4661,
+            "return_pct": -0.01308,
+            "time": "2026-07-24T09:17:00Z"
+          },
+          {
+            "equity": 113.4567,
+            "pnl": -4.8307,
+            "return_pct": -0.13613,
+            "time": "2026-07-24T13:07:00Z"
+          },
+          {
+            "equity": 113.76,
+            "pnl": 0.3033,
+            "return_pct": 0.00891,
+            "time": "2026-07-24T13:11:00Z"
+          },
+          {
+            "equity": 112.8938,
+            "pnl": -0.8661,
+            "return_pct": -0.02538,
+            "time": "2026-07-24T19:10:00Z"
+          },
+          {
+            "equity": 112.922,
+            "pnl": 0.0282,
+            "return_pct": 0.00083,
+            "time": "2026-07-27T22:02:00Z"
+          },
+          {
+            "equity": 112.707,
+            "pnl": -0.2151,
+            "return_pct": -0.00635,
+            "time": "2026-07-28T17:12:00Z"
+          }
+        ],
+        "starting_equity": 100.0
+      },
+      "label": "Strategy 1 - QG1",
+      "recent_trades": [
+        {
+          "closed_at": "2026-07-28T17:12:00Z",
+          "entry": 63805.7,
+          "execution_cost_bp": 0.0,
+          "exit": 63801.65,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5520.47,
+          "opened_at": "2026-07-28T17:12:00Z",
+          "order_type": "mixed",
+          "pnl": -0.3505,
+          "qty": 0.08652,
+          "return_pct": -0.00635,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0,
+          "spread_bp": 0.0,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-27T22:02:00Z",
+          "entry": 64666.26,
+          "execution_cost_bp": 0.0,
+          "exit": 64666.8,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5517.97,
+          "opened_at": "2026-07-27T22:02:00Z",
+          "order_type": "mixed",
+          "pnl": 0.0459,
+          "qty": 0.08533,
+          "return_pct": 0.00083,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0,
+          "spread_bp": 0.0,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T19:10:00Z",
+          "entry": 64130.6,
+          "execution_cost_bp": 2.6242,
+          "exit": 64114.32,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5559.48,
+          "opened_at": "2026-07-24T19:08:00Z",
+          "order_type": "mixed",
+          "pnl": -1.411,
+          "qty": 0.08669,
+          "return_pct": -0.02538,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.9458,
+          "spread_bp": 0.6784,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T13:11:00Z",
+          "entry": 64395.0,
+          "execution_cost_bp": -0.3708,
+          "exit": 64400.74,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5543.77,
+          "opened_at": "2026-07-24T13:09:00Z",
+          "order_type": "mixed",
+          "pnl": 0.4941,
+          "qty": 0.08609,
+          "return_pct": 0.00891,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -0.8756,
+          "spread_bp": 0.5048,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T13:07:00Z",
+          "entry": 64498.3,
+          "execution_cost_bp": 13.6658,
+          "exit": 64410.5,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5775.18,
+          "opened_at": "2026-07-24T13:06:00Z",
+          "order_type": "mixed",
+          "pnl": -7.8616,
+          "qty": 0.08954,
+          "return_pct": -0.13613,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 13.6504,
+          "spread_bp": 0.0154,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T09:17:00Z",
+          "entry": 65021.8,
+          "execution_cost_bp": 4.6463,
+          "exit": 65013.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5804.5,
+          "opened_at": "2026-07-24T09:15:00Z",
+          "order_type": "mixed",
+          "pnl": -0.7594,
+          "qty": 0.08927,
+          "return_pct": -0.01308,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 4.6309,
+          "spread_bp": 0.0154,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T09:09:00Z",
+          "entry": 65124.99,
+          "execution_cost_bp": 6.1553,
+          "exit": 65092.37,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5893.81,
+          "opened_at": "2026-07-24T09:07:00Z",
+          "order_type": "mixed",
+          "pnl": -2.9521,
+          "qty": 0.0905,
+          "return_pct": -0.05009,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 5.9172,
+          "spread_bp": 0.2381,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-24T08:58:00Z",
+          "entry": 65301.87,
+          "execution_cost_bp": 2.0241,
+          "exit": 65291.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5921.57,
+          "opened_at": "2026-07-24T08:56:00Z",
+          "order_type": "mixed",
+          "pnl": -0.9581,
+          "qty": 0.09068,
+          "return_pct": -0.01618,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.7102,
+          "spread_bp": 0.3139,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T21:38:00Z",
+          "entry": 65982.4,
+          "execution_cost_bp": 4.0233,
+          "exit": 66023.8,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 6032.11,
+          "opened_at": "2026-07-22T21:36:00Z",
+          "order_type": "mixed",
+          "pnl": -3.7848,
+          "qty": 0.09142,
+          "return_pct": -0.06274,
+          "role": "taker -> taker",
+          "side": "short",
+          "slippage_bp": 3.4855,
+          "spread_bp": 0.5378,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T12:10:00Z",
+          "entry": 65843.8,
+          "execution_cost_bp": 1.6107,
+          "exit": 65860.1,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5991.13,
+          "opened_at": "2026-07-22T12:08:00Z",
+          "order_type": "mixed",
+          "pnl": 1.4831,
+          "qty": 0.09099,
+          "return_pct": 0.02476,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.9729,
+          "spread_bp": 0.6378,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-22T09:36:00Z",
+          "entry": 65853.18,
+          "execution_cost_bp": 1.5457,
+          "exit": 65849.55,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5999.22,
+          "opened_at": "2026-07-22T09:34:00Z",
+          "order_type": "market",
+          "pnl": -0.3305,
+          "qty": 0.0911,
+          "return_pct": -0.00551,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.1433,
+          "spread_bp": 0.4024,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-21T21:09:00Z",
+          "entry": 66318.5,
+          "execution_cost_bp": 1.877,
+          "exit": 66331.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5963.36,
+          "opened_at": "2026-07-21T21:01:00Z",
+          "order_type": "market",
+          "pnl": 1.2049,
+          "qty": 0.08992,
+          "return_pct": 0.02021,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.3719,
+          "spread_bp": 0.5051,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-20T08:37:00Z",
+          "entry": 63850.2,
+          "execution_cost_bp": 2.1012,
+          "exit": 63843.8,
+          "exit_reason": "stop",
+          "market": "BTCUSDC.P",
+          "notional": 5962.97,
+          "opened_at": "2026-07-20T08:37:00Z",
+          "order_type": "mixed",
+          "pnl": -0.5977,
+          "qty": 0.09339,
+          "return_pct": -0.01002,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.0988,
+          "spread_bp": 1.0024,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-20T00:55:00Z",
+          "entry": 64450.88,
+          "execution_cost_bp": -6.7019,
+          "exit": 64545.2,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5725.82,
+          "opened_at": "2026-07-20T00:52:00Z",
+          "order_type": "market",
+          "pnl": 8.3797,
+          "qty": 0.08884,
+          "return_pct": 0.14635,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -6.7794,
+          "spread_bp": 0.0775,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T09:22:00Z",
+          "entry": 64535.4,
+          "execution_cost_bp": -1.0689,
+          "exit": 64532.0,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3426.83,
+          "opened_at": "2026-07-19T09:20:00Z",
+          "order_type": "market",
+          "pnl": -0.1805,
+          "qty": 0.0531,
+          "return_pct": -0.00527,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -1.1773,
+          "spread_bp": 0.1084,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T05:35:00Z",
+          "entry": 64666.2,
+          "execution_cost_bp": 3.7047,
+          "exit": 64640.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3468.69,
+          "opened_at": "2026-07-19T05:33:00Z",
+          "order_type": "market",
+          "pnl": -1.3571,
+          "qty": 0.05364,
+          "return_pct": -0.03912,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.4032,
+          "spread_bp": 0.3015,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-19T03:34:00Z",
+          "entry": 64719.1,
+          "execution_cost_bp": 3.1391,
+          "exit": 64636.61,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3606.15,
+          "opened_at": "2026-07-19T03:07:00Z",
+          "order_type": "market",
+          "pnl": -4.5964,
+          "qty": 0.05572,
+          "return_pct": -0.12746,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 2.861,
+          "spread_bp": 0.2781,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-18T13:32:00Z",
+          "entry": 64048.42,
+          "execution_cost_bp": -0.2248,
+          "exit": 64041.81,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3617.45,
+          "opened_at": "2026-07-18T13:11:00Z",
+          "order_type": "market",
+          "pnl": -0.3733,
+          "qty": 0.05648,
+          "return_pct": -0.01032,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -0.2638,
+          "spread_bp": 0.039,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-17T13:12:00Z",
+          "entry": 62897.1,
+          "execution_cost_bp": 0.3084,
+          "exit": 62739.5,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3910.31,
+          "opened_at": "2026-07-17T13:06:00Z",
+          "order_type": "market",
+          "pnl": -9.798,
+          "qty": 0.06217,
+          "return_pct": -0.25057,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.0857,
+          "spread_bp": 0.2227,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-17T05:49:00Z",
+          "entry": 62831.6,
+          "execution_cost_bp": -0.8642,
+          "exit": 62873.09,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3835.24,
+          "opened_at": "2026-07-17T05:47:00Z",
+          "order_type": "market",
+          "pnl": 2.5323,
+          "qty": 0.06104,
+          "return_pct": 0.06603,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -1.3176,
+          "spread_bp": 0.4534,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T23:27:00Z",
+          "entry": 63741.27,
+          "execution_cost_bp": 2.1107,
+          "exit": 63785.72,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3757.55,
+          "opened_at": "2026-07-16T23:25:00Z",
+          "order_type": "market",
+          "pnl": 2.6203,
+          "qty": 0.05895,
+          "return_pct": 0.06973,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.8754,
+          "spread_bp": 0.2353,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T23:24:00Z",
+          "entry": 63779.8,
+          "execution_cost_bp": 1.7569,
+          "exit": 63731.2,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3844.65,
+          "opened_at": "2026-07-16T23:22:00Z",
+          "order_type": "market",
+          "pnl": -2.9296,
+          "qty": 0.06028,
+          "return_pct": -0.0762,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.7413,
+          "spread_bp": 0.0156,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T07:51:00Z",
+          "entry": 64254.9,
+          "execution_cost_bp": -7.8306,
+          "exit": 64137.6,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 4065.41,
+          "opened_at": "2026-07-16T07:37:00Z",
+          "order_type": "market",
+          "pnl": -7.4216,
+          "qty": 0.06327,
+          "return_pct": -0.18255,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -8.4533,
+          "spread_bp": 0.6227,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-16T00:27:00Z",
+          "entry": 64619.8,
+          "execution_cost_bp": 1.1233,
+          "exit": 64545.59,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 4212.56,
+          "opened_at": "2026-07-16T00:25:00Z",
+          "order_type": "market",
+          "pnl": -4.8376,
+          "qty": 0.06519,
+          "return_pct": -0.11484,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.9607,
+          "spread_bp": 0.1626,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-15T16:39:00Z",
+          "entry": 64792.3,
+          "execution_cost_bp": -9.965,
+          "exit": 64825.3,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 3466.39,
+          "opened_at": "2026-07-15T16:37:00Z",
+          "order_type": "market",
+          "pnl": 1.7655,
+          "qty": 0.0535,
+          "return_pct": 0.05093,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -10.6285,
+          "spread_bp": 0.6635,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-15T07:28:00Z",
+          "entry": 64602.0,
+          "execution_cost_bp": 3.4555,
+          "exit": 64501.9,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1861.83,
+          "opened_at": "2026-07-15T07:26:00Z",
+          "order_type": "market",
+          "pnl": -2.8849,
+          "qty": 0.02882,
+          "return_pct": -0.15495,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.285,
+          "spread_bp": 0.1705,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-14T09:41:00Z",
+          "entry": 62508.74,
+          "execution_cost_bp": 2.5493,
+          "exit": 62543.5,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1835.88,
+          "opened_at": "2026-07-14T09:38:00Z",
+          "order_type": "market",
+          "pnl": 1.0209,
+          "qty": 0.02937,
+          "return_pct": 0.05561,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 2.1495,
+          "spread_bp": 0.3998,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-14T03:15:00Z",
+          "entry": 62353.2,
+          "execution_cost_bp": 1.0825,
+          "exit": 62363.0,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1828.82,
+          "opened_at": "2026-07-14T03:13:00Z",
+          "order_type": "market",
+          "pnl": 0.2874,
+          "qty": 0.02933,
+          "return_pct": 0.01572,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 0.5933,
+          "spread_bp": 0.4892,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-13T16:23:00Z",
+          "entry": 62304.09,
+          "execution_cost_bp": 4.6086,
+          "exit": 62293.43,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1836.72,
+          "opened_at": "2026-07-13T16:21:00Z",
+          "order_type": "market",
+          "pnl": -0.3142,
+          "qty": 0.02948,
+          "return_pct": -0.01711,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 3.798,
+          "spread_bp": 0.8106,
+          "status": "closed",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-13T10:44:00Z",
+          "entry": 62910.9,
+          "execution_cost_bp": 1.6452,
+          "exit": 62908.7,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1838.26,
+          "opened_at": "2026-07-13T10:42:00Z",
+          "order_type": "market",
+          "pnl": -0.0643,
+          "qty": 0.02922,
+          "return_pct": -0.0035,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 1.1922,
+          "spread_bp": 0.453,
+          "status": "closed",
+          "strategy_key": "qg1"
+        }
+      ],
+      "summary": {
+        "avg_execution_cost_bp": -0.4927,
+        "avg_slippage_bp": -0.8281,
+        "avg_spread_bp": 0.3637,
+        "avg_trade_pnl": -0.1254,
+        "avg_trade_return_pct": 0.00701,
+        "gross_loss": -85.7429,
+        "gross_profit": 75.8329,
+        "net_pnl": -9.91,
+        "profit_factor": 0.8844,
+        "trade_count": 79,
+        "win_rate_pct": 56.96
+      }
+    }
   },
   "summary": {
     "avg_execution_cost_bp": -0.4927,
