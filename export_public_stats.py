@@ -228,6 +228,96 @@ def clean_curve(trades: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], flo
     return points, equity
 
 
+def strategy_key_for_trade(trade: dict[str, Any]) -> str:
+    explicit = str(trade.get("strategyKey") or trade.get("strategy_key") or "").lower()
+    if explicit in {"qg1", "channel_v3"}:
+        return explicit
+    strategy_text = str(trade.get("strategy") or "").lower()
+    if "channel" in strategy_text or "strategy 2" in strategy_text:
+        return "channel_v3"
+    return "qg1"
+
+
+def recent_public_trades(trades: list[dict[str, Any]], limit: int = 30) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for trade in reversed(trades[-limit:]):
+        rows.append(
+            {
+                "opened_at": public_time(trade.get("openedAt")),
+                "closed_at": public_time(trade.get("closedAt")),
+                "market": trade.get("market", "BTCUSDC.P"),
+                "strategy_key": strategy_key_for_trade(trade),
+                "strategy_key": strategy_key_for_trade(trade),
+                "side": str(trade.get("side", "")).lower(),
+                "status": trade.get("status", ""),
+                "order_type": trade.get("orderType") or trade.get("entryOrderType") or "",
+                "role": f"{trade.get('entryRole', '')} -> {trade.get('exitRole', '')}".strip(),
+                "entry": round(number(trade.get("entry")), 2),
+                "exit": round(number(trade.get("exit")), 2),
+                "qty": round(number(trade.get("qty")), 6),
+                "notional": round(number(trade.get("notional")), 2),
+                "pnl": round(number(trade.get("pnl")), 4),
+                "return_pct": round(trade_return_pct(trade), 5),
+                "spread_bp": round(number(trade.get("spreadBp")), 4),
+                "slippage_bp": round(number(trade.get("slippageBp")), 4),
+                "execution_cost_bp": round(number(trade.get("executionCostBp")), 4),
+                "exit_reason": trade.get("exitReason", ""),
+            }
+        )
+    return rows
+
+
+def public_strategy_view(label: str, trades: list[dict[str, Any]]) -> dict[str, Any]:
+    pnls = [number(trade.get("pnl")) for trade in trades]
+    returns = [trade_return_pct(trade) for trade in trades]
+    wins = [pnl for pnl in pnls if pnl > 0]
+    losses = [pnl for pnl in pnls if pnl < 0]
+    spreads = [
+        number(trade.get("spreadBp"), math.nan)
+        for trade in trades
+        if trade.get("spreadBp") not in ("", None)
+    ]
+    slippages = [
+        number(trade.get("slippageBp"), math.nan)
+        for trade in trades
+        if trade.get("slippageBp") not in ("", None)
+    ]
+    execution_costs = [
+        number(trade.get("executionCostBp"), math.nan)
+        for trade in trades
+        if trade.get("executionCostBp") not in ("", None)
+    ]
+    points, ending_equity = clean_curve(trades)
+    dd_dollar, dd_pct = max_drawdown(points)
+    return {
+        "label": label,
+        "summary": {
+            "trade_count": len(trades),
+            "net_pnl": round(sum(pnls), 4),
+            "win_rate_pct": round(len(wins) / len(trades) * 100.0, 2) if trades else 0.0,
+            "profit_factor": round(profit_factor(pnls), 4),
+            "avg_trade_pnl": round(avg(pnls), 4),
+            "avg_trade_return_pct": round(avg(returns), 5),
+            "gross_profit": round(sum(wins), 4),
+            "gross_loss": round(sum(losses), 4),
+            "avg_spread_bp": round(avg(spreads), 4),
+            "avg_slippage_bp": round(avg(slippages), 4),
+            "avg_execution_cost_bp": round(avg(execution_costs), 4),
+        },
+        "clean_curve": {
+            "starting_equity": START_EQUITY,
+            "leverage": CLEAN_LEVERAGE,
+            "notional_cap": NOTIONAL_CAP,
+            "ending_equity": round(ending_equity, 4),
+            "net_pct": round((ending_equity / START_EQUITY - 1.0) * 100.0, 2),
+            "max_drawdown": round(dd_dollar, 4),
+            "max_drawdown_pct": round(dd_pct, 2),
+            "points": points,
+        },
+        "recent_trades": recent_public_trades(trades),
+    }
+
+
 def avg(values: list[float]) -> float:
     values = [value for value in values if not math.isnan(value) and not math.isinf(value)]
     return sum(values) / len(values) if values else 0.0
@@ -2053,6 +2143,19 @@ def main() -> None:
     losses = [pnl for pnl in pnls if pnl < 0]
     net_pnl = sum(pnls)
     current_guard = current_guard_stats(published_trades, ledger_rows, order_config)
+    qg1_trades = [
+        trade for trade in published_trades
+        if strategy_key_for_trade(trade) == "qg1"
+    ]
+    channel_trades = [
+        trade for trade in published_trades
+        if strategy_key_for_trade(trade) == "channel_v3"
+    ]
+    strategy_views = {
+        "combined": public_strategy_view("Total", published_trades),
+        "qg1": public_strategy_view("Strategy 1 - QG1", qg1_trades),
+        "channel_v3": public_strategy_view("Strategy 2 - Channel V3", channel_trades),
+    }
 
     payload = {
         "meta": {
@@ -2075,6 +2178,7 @@ def main() -> None:
             "avg_slippage_bp": round(avg(slippages), 4),
             "avg_execution_cost_bp": round(avg(execution_costs), 4),
         },
+        "strategy_views": strategy_views,
         "performance_windows": performance_window_rows,
         "performance_breakdowns": performance_breakdown_rows,
         "risk_hotspots": risk_hotspot_rows,

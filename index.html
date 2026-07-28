@@ -78,6 +78,39 @@
       white-space: nowrap;
     }
 
+    .strategy-switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 14px;
+      overflow-x: auto;
+    }
+
+    .strategy-switch button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 13px;
+      background: var(--panel);
+      color: var(--muted);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .strategy-switch button.active {
+      border-color: rgba(96, 165, 250, 0.72);
+      background: rgba(96, 165, 250, 0.14);
+      color: var(--text);
+    }
+
+    .strategy-scope {
+      margin-left: auto;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
     .dot {
       width: 9px;
       height: 9px;
@@ -303,6 +336,13 @@
       </div>
       <div class="pill"><span class="dot" id="liveDot"></span><span id="liveText">Checking bot status</span></div>
     </header>
+
+    <nav class="strategy-switch" aria-label="Strategy results">
+      <button type="button" data-strategy-view="combined" class="active">Total</button>
+      <button type="button" data-strategy-view="qg1">Strategy 1</button>
+      <button type="button" data-strategy-view="channel_v3">Strategy 2</button>
+      <span class="strategy-scope" id="strategyScope">Both strategies</span>
+    </nav>
 
     <section class="grid cards">
       <div class="card"><div class="label">Clean 30x Curve</div><div class="value" id="cleanNet">--</div><div class="muted" id="cleanEquity">--</div></div>
@@ -753,7 +793,9 @@
       refreshTimer: null,
       refreshInFlight: false,
       lastGithubApiAt: 0,
-      lastGithubApiSnapshot: null
+      lastGithubApiSnapshot: null,
+      selectedStrategy: localStorage.getItem("lighterPublicStats.strategyView") || "combined",
+      lastData: null
     };
 
     function byId(id) {
@@ -773,6 +815,43 @@
       el.textContent = `${value >= 0 ? "+" : ""}${fmtNum.format(value)}${suffix}`;
       el.classList.remove("green", "red");
       el.classList.add(classFor(value));
+    }
+
+    function setStrategyView(view) {
+      state.selectedStrategy = ["qg1", "channel_v3"].includes(view) ? view : "combined";
+      localStorage.setItem("lighterPublicStats.strategyView", state.selectedStrategy);
+      document.querySelectorAll("[data-strategy-view]").forEach(button => {
+        button.classList.toggle("active", button.dataset.strategyView === state.selectedStrategy);
+      });
+      if (state.lastData) renderSelectedStrategy(state.lastData);
+    }
+
+    function renderSelectedStrategy(data) {
+      const fallback = {
+        label: "Total",
+        summary: data.summary || {},
+        clean_curve: data.clean_curve || {},
+        recent_trades: data.recent_trades || []
+      };
+      const view = (data.strategy_views || {})[state.selectedStrategy] || fallback;
+      const summary = view.summary || {};
+      const curve = view.clean_curve || {};
+      state.points = curve.points || [];
+      setText("strategyScope", view.label || "Total");
+      setSigned("cleanNet", curve.net_pct || 0, "%");
+      setText("cleanEquity", `${fmtUsd.format(curve.starting_equity || 100)} -> ${fmtUsd.format(curve.ending_equity || 0)} at ${curve.leverage || 30}x`);
+      setText("netPnl", fmtUsd.format(summary.net_pnl || 0));
+      setText("tradeCount", `${summary.trade_count || 0} public bot trades`);
+      setText("pf", fmtNum.format(summary.profit_factor || 0));
+      setText("avgTrade", `${fmtUsd.format(summary.avg_trade_pnl || 0)} / ${fmtNum.format(summary.avg_trade_return_pct || 0)}% avg`);
+      setText("winRate", `${fmtNum.format(summary.win_rate_pct || 0)}%`);
+      setText("gross", `${fmtUsd.format(summary.gross_profit || 0)} gross profit / ${fmtUsd.format(summary.gross_loss || 0)} gross loss`);
+      setText("maxDd", fmtUsd.format(curve.max_drawdown || 0));
+      setText("maxDdPct", `${fmtNum.format(curve.max_drawdown_pct || 0)}%`);
+      setText("execution", `${fmtNum.format(summary.avg_spread_bp || 0)} bp spread`);
+      setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
+      renderTrades(view.recent_trades || []);
+      renderChart(state.points);
     }
 
     function formatTime(iso) {
@@ -1571,11 +1650,9 @@
 
     async function load() {
       const data = await fetchStats();
-      const summary = data.summary || {};
-      const curve = data.clean_curve || {};
       const meta = data.meta || {};
       const fresh = freshness(meta);
-      state.points = curve.points || [];
+      state.lastData = data;
 
       const checkedAt = new Date().toISOString();
       data.__checked_at = checkedAt;
@@ -1585,18 +1662,7 @@
       if (liveOk && fresh.dot) byId("liveDot").classList.add(fresh.dot);
       setText("liveText", liveOk ? `${fresh.label}; bot running in last export` : `${fresh.label}; bot monitor not confirmed`);
 
-      setSigned("cleanNet", curve.net_pct || 0, "%");
-      setText("cleanEquity", `${fmtUsd.format(curve.starting_equity || 100)} -> ${fmtUsd.format(curve.ending_equity || 0)} at ${curve.leverage || 25}x`);
-      setText("netPnl", fmtUsd.format(summary.net_pnl || 0));
-      setText("tradeCount", `${summary.trade_count || 0} public bot trades`);
-      setText("pf", fmtNum.format(summary.profit_factor || 0));
-      setText("avgTrade", `${fmtUsd.format(summary.avg_trade_pnl || 0)} / ${fmtNum.format(summary.avg_trade_return_pct || 0)}% avg`);
-      setText("winRate", `${fmtNum.format(summary.win_rate_pct || 0)}%`);
-      setText("gross", `${fmtUsd.format(summary.gross_profit || 0)} gross profit / ${fmtUsd.format(summary.gross_loss || 0)} gross loss`);
-      setText("maxDd", fmtUsd.format(curve.max_drawdown || 0));
-      setText("maxDdPct", `${fmtNum.format(curve.max_drawdown_pct || 0)}%`);
-      setText("execution", `${fmtNum.format(summary.avg_spread_bp || 0)} bp spread`);
-      setText("slippage", `${fmtNum.format(summary.avg_slippage_bp || 0)} bp slippage / ${fmtNum.format(summary.avg_execution_cost_bp || 0)} bp cost`);
+      renderSelectedStrategy(data);
 
       renderAlerts(data);
       renderDecisionQueue(data.decision_queue || []);
@@ -1613,8 +1679,6 @@
       renderExecutionQuality(data.execution_quality || {});
       renderGuardActivity(data.guard_activity || {});
       renderCurrentGuard(data.current_guard_stats || {});
-      renderTrades(data.recent_trades || []);
-      renderChart(state.points);
     }
 
     function scheduleRefresh(delay = REFRESH_INTERVAL_MS) {
@@ -1643,6 +1707,10 @@
       if (!document.hidden) {
         refreshNow();
       }
+    });
+    document.querySelectorAll("[data-strategy-view]").forEach(button => {
+      button.addEventListener("click", () => setStrategyView(button.dataset.strategyView || "combined"));
+      button.classList.toggle("active", button.dataset.strategyView === state.selectedStrategy);
     });
     refreshNow();
   </script>
