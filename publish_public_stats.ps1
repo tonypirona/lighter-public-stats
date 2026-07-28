@@ -93,7 +93,7 @@ if ($LASTEXITCODE -ne 0) {
 if ($StatsOnly) {
   git add data/stats.json
 } else {
-  git add index.html README.md vercel.json package.json .gitignore export_public_stats.py validate_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 install_auto_publish_task.ps1 data/stats.json
+  git add index.html README.md vercel.json vercel-ignore-build.sh package.json .gitignore export_public_stats.py validate_public_stats.py publish_public_stats.ps1 auto_publish_public_stats.ps1 install_auto_publish_task.ps1 data/stats.json
 }
 
 git diff --cached --quiet

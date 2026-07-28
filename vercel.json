@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
+  "ignoreCommand": "sh ./vercel-ignore-build.sh",
   "headers": [
     {
       "source": "/(.*)",
