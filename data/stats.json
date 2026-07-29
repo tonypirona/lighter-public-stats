@@ -519,15 +519,15 @@
     "avg_entry_book_chase_bp": -1.0503,
     "avg_slippage_bp": 1.1573,
     "avg_trade_pnl": -2.407,
-    "block_rate_pct": 9.09,
+    "block_rate_pct": 8.33,
     "blocked_entries": 1,
     "closed_trades": 9,
     "effective_at_utc": "2026-07-24T09:25:00Z",
-    "entry_records": 11,
+    "entry_records": 12,
     "max_block_chase_bp": 6.1576,
     "net_pnl": -21.6634,
     "profit_factor": 0.1758,
-    "sent_entries": 10,
+    "sent_entries": 11,
     "version": "chase_2p5_live_execution_2026-07-24"
   },
   "current_model_slice": {
@@ -610,14 +610,21 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "11 signals since chase_2p5_live_execution_2026-07-24.",
-      "next_step": "Need 9 more post-guard signals before changing guard thresholds.",
+      "evidence": "both_wait; live L 12/16 / S 10/13 vs shadow L 10/12 / S 10/13; blocker rsi_low_enough; history 54 events, 3 divergences.",
+      "next_step": "Compare shadow divergences with real fills before switching live.",
+      "priority": "watch",
+      "status": "tracking",
+      "topic": "Strategy shadow: entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3"
+    },
+    {
+      "evidence": "12 signals since chase_2p5_live_execution_2026-07-24.",
+      "next_step": "Need 8 more post-guard signals before changing guard thresholds.",
       "priority": "watch",
       "status": "collecting",
       "topic": "Entry guard"
     },
     {
-      "evidence": "0 missed, 3 unexpected.",
+      "evidence": "0 missed, 4 unexpected.",
       "next_step": "Inspect model-match records before trusting new optimization ideas.",
       "priority": "urgent",
       "status": "review now",
@@ -632,7 +639,7 @@
     }
   ],
   "execution_guard": {
-    "desired_notional_usdc": 5131.4693,
+    "desired_notional_usdc": 977.6926,
     "emergency_exit_slippage_bp": 25.0,
     "entry_max_slippage_bp": 5.0,
     "entry_preflight_candidate_book_chase_bp": 2.5,
@@ -640,7 +647,7 @@
     "entry_preflight_guard_version": "chase_2p5_live_execution_2026-07-24",
     "entry_preflight_max_book_chase_bp": 2.5,
     "exit_max_slippage_bp": 10.0,
-    "intended_entry_notional_usdc": 5131.4693,
+    "intended_entry_notional_usdc": 977.6926,
     "max_live_loss_account_pct": 6.6,
     "max_live_loss_bp": 22.0,
     "max_notional_usdc": 8000.0,
@@ -813,27 +820,27 @@
         "avg_block_chase_bp": 0.0,
         "block_rate_pct": 0.0,
         "blocked_entries": 0,
-        "entry_records": 5,
+        "entry_records": 6,
         "max_block_chase_bp": 0.0,
-        "sent_entries": 5,
+        "sent_entries": 6,
         "window": "24h"
       },
       {
         "avg_block_chase_bp": 6.1576,
-        "block_rate_pct": 6.67,
+        "block_rate_pct": 6.25,
         "blocked_entries": 1,
-        "entry_records": 15,
+        "entry_records": 16,
         "max_block_chase_bp": 6.1576,
-        "sent_entries": 14,
+        "sent_entries": 15,
         "window": "7d"
       },
       {
         "avg_block_chase_bp": 11.7371,
-        "block_rate_pct": 8.82,
+        "block_rate_pct": 8.74,
         "blocked_entries": 9,
-        "entry_records": 102,
+        "entry_records": 103,
         "max_block_chase_bp": 52.6915,
-        "sent_entries": 93,
+        "sent_entries": 94,
         "window": "all"
       }
     ]
@@ -926,18 +933,18 @@
     "weak_weekday_bucket": {}
   },
   "live_status": {
-    "available_balance": 171.048978,
+    "available_balance": 32.589753,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-29T19:07:02Z",
-    "monitor_cycle": 1095,
+    "monitor_checked_at_utc": "2026-07-29T19:11:59Z",
+    "monitor_cycle": 1108,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
-    "pending_order_count": 0,
-    "position_btc_abs": 0.0,
-    "position_side": "flat",
-    "total_asset_value": 171.048978,
-    "watchdog_checked_at_utc": "2026-07-29T19:07:02Z",
+    "pending_order_count": 2,
+    "position_btc_abs": 0.07994,
+    "position_side": "long",
+    "total_asset_value": 173.297784,
+    "watchdog_checked_at_utc": "2026-07-29T19:11:59Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -995,11 +1002,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-29T19:07:06Z",
+    "generated_at_utc": "2026-07-29T19:12:06Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-29T19:06:13+00:00"
+    "tracker_synced_at_utc": "2026-07-29T19:10:23+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1015,14 +1022,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-29T19:07:06+00:00",
+    "generated_at_utc": "2026-07-29T19:12:06+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
-    "unexpected_live_entries": 3,
-    "until_utc": "2026-07-29T19:07:03+00:00"
+    "unexpected_live_entries": 4,
+    "until_utc": "2026-07-29T19:12:03+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1269,7 +1276,7 @@
       "gross_profit": 4.0801,
       "net_pnl": -12.5803,
       "profit_factor": 0.2449,
-      "since_utc": "2026-07-28T19:07:06Z",
+      "since_utc": "2026-07-28T19:12:06Z",
       "trade_count": 4,
       "win_rate_pct": 50.0,
       "window": "24h"
@@ -1289,7 +1296,7 @@
       "gross_profit": 4.6201,
       "net_pnl": -30.1178,
       "profit_factor": 0.133,
-      "since_utc": "2026-07-22T19:07:06Z",
+      "since_utc": "2026-07-22T19:12:06Z",
       "trade_count": 13,
       "win_rate_pct": 30.77,
       "window": "7d"
@@ -1309,7 +1316,7 @@
       "gross_profit": 59.9411,
       "net_pnl": -25.5667,
       "profit_factor": 0.701,
-      "since_utc": "2026-06-29T19:07:06Z",
+      "since_utc": "2026-06-29T19:12:06Z",
       "trade_count": 66,
       "win_rate_pct": 56.06,
       "window": "30d"
@@ -2161,7 +2168,32 @@
     },
     "total_public_bot_trades": 57
   },
-  "strategy_shadow": {},
+  "strategy_shadow": {
+    "atr_pct": 0.00134148,
+    "blockers": [
+      "rsi_low_enough",
+      "h19_range_guard_ok",
+      "rsi_high_enough",
+      "short_hour_filter_ok",
+      "short_ret240_positive_block_ok"
+    ],
+    "data_end": "2026-07-29T19:10:00Z",
+    "hour_utc": 19,
+    "live_long_gate": "12/16",
+    "live_model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_block_rsi2_ret30m3_pvol12_st30p50_rg15_st30g15_qg1_qg2",
+    "live_short_gate": "10/13",
+    "live_status": "flat_no_pending_signal",
+    "live_would_enter_on_latest_candle": false,
+    "model": "entry_lrsi6.45_srsi91.25_lrm0.90_srm0.95_atr_q975_long_stop220_block_long_h10_fasttrail25_6_block_long_h07_trail18_5_lt012_005_st035_010_sh15_lbe005_002_sbe010_005_lt008_004_lt006_003_lbe004_004_lt004_002_snp3_005",
+    "name": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_snp3",
+    "primary_blocker": "rsi_low_enough",
+    "rsi5": 13.2523,
+    "shadow_long_gate": "10/12",
+    "shadow_short_gate": "10/13",
+    "shadow_would_enter_on_latest_candle": false,
+    "status": "both_wait",
+    "updated_at_utc": "2026-07-29T19:11:50Z"
+  },
   "strategy_shadow_activity": {
     "latest_event_utc": "2026-07-28T23:10:30Z",
     "models": [
