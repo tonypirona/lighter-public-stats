@@ -630,7 +630,7 @@
       "topic": "Model/live match"
     },
     {
-      "evidence": "7d PF 0.29 vs all PF 0.83.",
+      "evidence": "7d PF 0.33 vs all PF 0.83.",
       "next_step": "Watch whether recent PF keeps lagging.",
       "priority": "watch",
       "status": "watch",
@@ -934,8 +934,8 @@
   "live_status": {
     "available_balance": 176.527148,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-29T21:37:04Z",
-    "monitor_cycle": 1516,
+    "monitor_checked_at_utc": "2026-07-29T21:42:06Z",
+    "monitor_cycle": 1530,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -943,7 +943,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 176.527148,
-    "watchdog_checked_at_utc": "2026-07-29T21:37:04Z",
+    "watchdog_checked_at_utc": "2026-07-29T21:42:06Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -1001,11 +1001,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-29T21:37:07Z",
+    "generated_at_utc": "2026-07-29T21:42:07Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-29T21:36:14+00:00"
+    "tracker_synced_at_utc": "2026-07-29T21:40:14+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1021,14 +1021,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-29T21:37:06+00:00",
+    "generated_at_utc": "2026-07-29T21:42:06+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
     "unexpected_live_entries": 4,
-    "until_utc": "2026-07-29T21:37:03+00:00"
+    "until_utc": "2026-07-29T21:42:03+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1275,29 +1275,29 @@
       "gross_profit": 9.5583,
       "net_pnl": -7.1022,
       "profit_factor": 0.5737,
-      "since_utc": "2026-07-28T21:37:07Z",
+      "since_utc": "2026-07-28T21:42:07Z",
       "trade_count": 5,
       "win_rate_pct": 60.0,
       "window": "24h"
     },
     {
-      "avg_execution_cost_bp": 2.7182,
-      "avg_slippage_bp": 2.4464,
-      "avg_trade_pnl": -1.76,
-      "avg_trade_return_pct": -0.02988,
-      "clean_25x_max_drawdown": 16.6928,
-      "clean_25x_max_drawdown_pct": 16.69,
-      "clean_25x_net_pct": -12.26,
-      "clean_leveraged_max_drawdown": 16.6928,
-      "clean_leveraged_max_drawdown_pct": 16.69,
-      "clean_leveraged_net_pct": -12.26,
-      "gross_loss": -34.7378,
+      "avg_execution_cost_bp": 2.6178,
+      "avg_slippage_bp": 2.3664,
+      "avg_trade_pnl": -1.6042,
+      "avg_trade_return_pct": -0.02735,
+      "clean_25x_max_drawdown": 15.0946,
+      "clean_25x_max_drawdown_pct": 15.09,
+      "clean_25x_net_pct": -10.57,
+      "clean_leveraged_max_drawdown": 15.0946,
+      "clean_leveraged_max_drawdown_pct": 15.09,
+      "clean_leveraged_net_pct": -10.57,
+      "gross_loss": -30.9531,
       "gross_profit": 10.0983,
-      "net_pnl": -24.6396,
-      "profit_factor": 0.2907,
-      "since_utc": "2026-07-22T21:37:07Z",
-      "trade_count": 14,
-      "win_rate_pct": 35.71,
+      "net_pnl": -20.8548,
+      "profit_factor": 0.3262,
+      "since_utc": "2026-07-22T21:42:07Z",
+      "trade_count": 13,
+      "win_rate_pct": 38.46,
       "window": "7d"
     },
     {
@@ -1315,7 +1315,7 @@
       "gross_profit": 65.4193,
       "net_pnl": -20.0885,
       "profit_factor": 0.7651,
-      "since_utc": "2026-06-29T21:37:07Z",
+      "since_utc": "2026-06-29T21:42:07Z",
       "trade_count": 67,
       "win_rate_pct": 56.72,
       "window": "30d"
