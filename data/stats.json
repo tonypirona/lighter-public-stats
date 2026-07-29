@@ -507,15 +507,15 @@
     "avg_entry_book_chase_bp": -1.6852,
     "avg_slippage_bp": 0.5105,
     "avg_trade_pnl": -1.5496,
-    "block_rate_pct": 12.5,
+    "block_rate_pct": 11.11,
     "blocked_entries": 1,
     "closed_trades": 7,
     "effective_at_utc": "2026-07-24T09:25:00Z",
-    "entry_records": 8,
+    "entry_records": 9,
     "max_block_chase_bp": 6.1576,
     "net_pnl": -10.8474,
     "profit_factor": 0.0976,
-    "sent_entries": 7,
+    "sent_entries": 8,
     "version": "chase_2p5_live_execution_2026-07-24"
   },
   "current_model_slice": {
@@ -596,17 +596,17 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "8 signals since chase_2p5_live_execution_2026-07-24.",
-      "next_step": "Need 12 more post-guard signals before changing guard thresholds.",
+      "evidence": "9 signals since chase_2p5_live_execution_2026-07-24.",
+      "next_step": "Need 11 more post-guard signals before changing guard thresholds.",
       "priority": "watch",
       "status": "collecting",
       "topic": "Entry guard"
     },
     {
-      "evidence": "0 missed and 0 unexpected live entries in latest model-match report.",
-      "next_step": "Keep monitoring.",
-      "priority": "ok",
-      "status": "healthy",
+      "evidence": "0 missed, 1 unexpected.",
+      "next_step": "Inspect model-match records before trusting new optimization ideas.",
+      "priority": "urgent",
+      "status": "review now",
       "topic": "Model/live match"
     },
     {
@@ -799,27 +799,27 @@
         "avg_block_chase_bp": 0.0,
         "block_rate_pct": 0.0,
         "blocked_entries": 0,
-        "entry_records": 2,
+        "entry_records": 3,
         "max_block_chase_bp": 0.0,
-        "sent_entries": 2,
+        "sent_entries": 3,
         "window": "24h"
       },
       {
         "avg_block_chase_bp": 6.1576,
-        "block_rate_pct": 8.33,
+        "block_rate_pct": 7.69,
         "blocked_entries": 1,
-        "entry_records": 12,
+        "entry_records": 13,
         "max_block_chase_bp": 6.1576,
-        "sent_entries": 11,
+        "sent_entries": 12,
         "window": "7d"
       },
       {
         "avg_block_chase_bp": 11.7371,
-        "block_rate_pct": 9.09,
+        "block_rate_pct": 9.0,
         "blocked_entries": 9,
-        "entry_records": 99,
+        "entry_records": 100,
         "max_block_chase_bp": 52.6915,
-        "sent_entries": 90,
+        "sent_entries": 91,
         "window": "all"
       }
     ]
@@ -914,8 +914,8 @@
   "live_status": {
     "available_balance": 181.844922,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-29T18:42:06Z",
-    "monitor_cycle": 1028,
+    "monitor_checked_at_utc": "2026-07-29T18:47:05Z",
+    "monitor_cycle": 1042,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -923,7 +923,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 181.844922,
-    "watchdog_checked_at_utc": "2026-07-29T18:42:06Z",
+    "watchdog_checked_at_utc": "2026-07-29T18:47:05Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -981,11 +981,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-29T18:42:06Z",
+    "generated_at_utc": "2026-07-29T18:47:06Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-29T18:41:23+00:00"
+    "tracker_synced_at_utc": "2026-07-29T18:46:27+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1001,14 +1001,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 0,
     "filled_expected_entries": 0,
-    "generated_at_utc": "2026-07-29T18:42:06+00:00",
+    "generated_at_utc": "2026-07-29T18:47:06+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": 0,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
-    "unexpected_live_entries": 0,
-    "until_utc": "2026-07-29T18:42:03+00:00"
+    "unexpected_live_entries": 1,
+    "until_utc": "2026-07-29T18:47:03+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1255,7 +1255,7 @@
       "gross_profit": 0.6337,
       "net_pnl": -1.7643,
       "profit_factor": 0.2643,
-      "since_utc": "2026-07-28T18:42:06Z",
+      "since_utc": "2026-07-28T18:47:06Z",
       "trade_count": 2,
       "win_rate_pct": 50.0,
       "window": "24h"
@@ -1275,7 +1275,7 @@
       "gross_profit": 1.1737,
       "net_pnl": -19.3017,
       "profit_factor": 0.0573,
-      "since_utc": "2026-07-22T18:42:06Z",
+      "since_utc": "2026-07-22T18:47:06Z",
       "trade_count": 11,
       "win_rate_pct": 27.27,
       "window": "7d"
@@ -1295,7 +1295,7 @@
       "gross_profit": 56.4947,
       "net_pnl": -14.7507,
       "profit_factor": 0.793,
-      "since_utc": "2026-06-29T18:42:06Z",
+      "since_utc": "2026-06-29T18:47:06Z",
       "trade_count": 64,
       "win_rate_pct": 56.25,
       "window": "30d"
