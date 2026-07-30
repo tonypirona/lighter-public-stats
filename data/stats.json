@@ -823,11 +823,11 @@
     "windows": [
       {
         "avg_block_chase_bp": 4.338,
-        "block_rate_pct": 40.0,
+        "block_rate_pct": 50.0,
         "blocked_entries": 2,
-        "entry_records": 5,
+        "entry_records": 4,
         "max_block_chase_bp": 4.5198,
-        "sent_entries": 3,
+        "sent_entries": 2,
         "window": "24h"
       },
       {
@@ -940,8 +940,8 @@
   "live_status": {
     "available_balance": 175.72447,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-07-30T18:52:06Z",
-    "monitor_cycle": 1020,
+    "monitor_checked_at_utc": "2026-07-30T18:57:05Z",
+    "monitor_cycle": 1025,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -949,7 +949,7 @@
     "position_btc_abs": 0.0,
     "position_side": "flat",
     "total_asset_value": 175.72447,
-    "watchdog_checked_at_utc": "2026-07-30T18:52:06Z",
+    "watchdog_checked_at_utc": "2026-07-30T18:57:05Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -1007,11 +1007,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-07-30T18:52:07Z",
+    "generated_at_utc": "2026-07-30T18:57:07Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-07-30T18:51:38+00:00"
+    "tracker_synced_at_utc": "2026-07-30T18:55:37+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1027,14 +1027,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 1,
     "filled_expected_entries": 1,
-    "generated_at_utc": "2026-07-30T18:52:06+00:00",
+    "generated_at_utc": "2026-07-30T18:57:06+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": -0.076393,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
     "unexpected_live_entries": 6,
-    "until_utc": "2026-07-30T18:52:03+00:00"
+    "until_utc": "2026-07-30T18:57:03+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1267,23 +1267,23 @@
   },
   "performance_windows": [
     {
-      "avg_execution_cost_bp": 4.7522,
-      "avg_slippage_bp": 4.5149,
-      "avg_trade_pnl": -1.5351,
-      "avg_trade_return_pct": -0.02535,
-      "clean_25x_max_drawdown": 7.8462,
-      "clean_25x_max_drawdown_pct": 7.85,
-      "clean_25x_net_pct": -3.38,
-      "clean_leveraged_max_drawdown": 7.8462,
-      "clean_leveraged_max_drawdown_pct": 7.85,
-      "clean_leveraged_net_pct": -3.38,
-      "gross_loss": -15.0651,
+      "avg_execution_cost_bp": 4.667,
+      "avg_slippage_bp": 4.392,
+      "avg_trade_pnl": 2.7073,
+      "avg_trade_return_pct": 0.05337,
+      "clean_25x_max_drawdown": 0.479,
+      "clean_25x_max_drawdown_pct": 0.45,
+      "clean_25x_net_pct": 4.85,
+      "clean_leveraged_max_drawdown": 0.479,
+      "clean_leveraged_max_drawdown_pct": 0.45,
+      "clean_leveraged_net_pct": 4.85,
+      "gross_loss": -0.8027,
       "gross_profit": 8.9246,
-      "net_pnl": -6.1405,
-      "profit_factor": 0.5924,
-      "since_utc": "2026-07-29T18:52:06Z",
-      "trade_count": 4,
-      "win_rate_pct": 50.0,
+      "net_pnl": 8.1219,
+      "profit_factor": 11.1185,
+      "since_utc": "2026-07-29T18:57:07Z",
+      "trade_count": 3,
+      "win_rate_pct": 66.67,
       "window": "24h"
     },
     {
@@ -1301,7 +1301,7 @@
       "gross_profit": 10.0983,
       "net_pnl": -21.6575,
       "profit_factor": 0.318,
-      "since_utc": "2026-07-23T18:52:06Z",
+      "since_utc": "2026-07-23T18:57:07Z",
       "trade_count": 14,
       "win_rate_pct": 35.71,
       "window": "7d"
@@ -1321,7 +1321,7 @@
       "gross_profit": 56.8021,
       "net_pnl": -23.9878,
       "profit_factor": 0.7031,
-      "since_utc": "2026-06-30T18:52:06Z",
+      "since_utc": "2026-06-30T18:57:07Z",
       "trade_count": 64,
       "win_rate_pct": 54.69,
       "window": "30d"
