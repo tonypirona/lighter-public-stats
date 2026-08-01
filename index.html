@@ -1558,14 +1558,9 @@
     }
 
     async function fetchSource(source) {
-      const headers = {
-        "Accept": "application/json",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache"
-      };
       const response = await fetch(cacheBust(source.url), {
         cache: "no-store",
-        headers
+        headers: { "Accept": "application/json" }
       });
       if (!response.ok) throw new Error(`${source.label}: ${response.status}`);
 

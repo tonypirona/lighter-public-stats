@@ -12,9 +12,16 @@ function Invoke-Checked {
     [string]$Label,
     [scriptblock]$Command
   )
-  & $Command
-  if ($LASTEXITCODE -ne 0) {
-    throw "$Label failed with exit code $LASTEXITCODE"
+  $PreviousErrorActionPreference = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    & $Command 2>&1 | ForEach-Object { Write-Host $_ }
+    $CommandExitCode = $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $PreviousErrorActionPreference
+  }
+  if ($CommandExitCode -ne 0) {
+    throw "$Label failed with exit code $CommandExitCode"
   }
 }
 
@@ -24,9 +31,16 @@ function Invoke-AllowExitCodes {
     [int[]]$AllowedExitCodes,
     [scriptblock]$Command
   )
-  & $Command
-  if ($AllowedExitCodes -notcontains $LASTEXITCODE) {
-    throw "$Label failed with exit code $LASTEXITCODE"
+  $PreviousErrorActionPreference = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    & $Command 2>&1 | ForEach-Object { Write-Host $_ }
+    $CommandExitCode = $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $PreviousErrorActionPreference
+  }
+  if ($AllowedExitCodes -notcontains $CommandExitCode) {
+    throw "$Label failed with exit code $CommandExitCode"
   }
 }
 
