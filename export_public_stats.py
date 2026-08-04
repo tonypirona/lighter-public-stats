@@ -230,9 +230,11 @@ def clean_curve(trades: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], flo
 
 def strategy_key_for_trade(trade: dict[str, Any]) -> str:
     explicit = str(trade.get("strategyKey") or trade.get("strategy_key") or "").lower()
-    if explicit in {"qg1", "channel_v3"}:
+    if explicit in {"qg1", "channel_v3", "trend_v1"}:
         return explicit
     strategy_text = str(trade.get("strategy") or "").lower()
+    if "trend" in strategy_text or "strategy 3" in strategy_text:
+        return "trend_v1"
     if "channel" in strategy_text or "strategy 2" in strategy_text:
         return "channel_v3"
     return "qg1"
@@ -246,7 +248,7 @@ def recent_public_trades(trades: list[dict[str, Any]], limit: int = 30) -> list[
                 "opened_at": public_time(trade.get("openedAt")),
                 "closed_at": public_time(trade.get("closedAt")),
                 "market": trade.get("market", "BTCUSDC.P"),
-                "strategy_key": strategy_key_for_trade(trade),
+                "strategy": trade.get("strategy", ""),
                 "strategy_key": strategy_key_for_trade(trade),
                 "side": str(trade.get("side", "")).lower(),
                 "status": trade.get("status", ""),
@@ -2122,6 +2124,8 @@ def main() -> None:
                 "opened_at": public_time(trade.get("openedAt")),
                 "closed_at": public_time(trade.get("closedAt")),
                 "market": trade.get("market", "BTCUSDC.P"),
+                "strategy": trade.get("strategy", ""),
+                "strategy_key": strategy_key_for_trade(trade),
                 "side": str(trade.get("side", "")).lower(),
                 "status": trade.get("status", ""),
                 "order_type": trade.get("orderType") or trade.get("entryOrderType") or "",
@@ -2151,10 +2155,44 @@ def main() -> None:
         trade for trade in published_trades
         if strategy_key_for_trade(trade) == "channel_v3"
     ]
+    trend_trades = [
+        trade for trade in published_trades
+        if strategy_key_for_trade(trade) == "trend_v1"
+    ]
     strategy_views = {
         "combined": public_strategy_view("Total", published_trades),
         "qg1": public_strategy_view("Strategy 1 - QG1", qg1_trades),
         "channel_v3": public_strategy_view("Strategy 2 - Channel V3", channel_trades),
+        "trend_v1": public_strategy_view("Strategy 3 - Trend V1", trend_trades),
+    }
+
+    active_risk = live_status.get("active_risk") or {}
+    raw_strategy_controls = live_status.get("strategy_controls") or {}
+    strategy_states = {
+        key: {
+            "strategy": str((raw_strategy_controls.get(key) or {}).get("strategy") or ""),
+            "enabled": bool((raw_strategy_controls.get(key) or {}).get("enabled")),
+        }
+        for key in ("qg1", "channel_v3", "trend_v1")
+    }
+    public_active_risk = {
+        "open": bool(active_risk.get("open")),
+        "strategy_key": str(active_risk.get("strategy_key") or ""),
+        "strategy": str(active_risk.get("strategy") or ""),
+        "strategy_enabled": bool(active_risk.get("strategy_enabled")),
+        "side": str(active_risk.get("side") or "flat"),
+        "qty": number(active_risk.get("qty")),
+        "entry_price": number(active_risk.get("entry_price")),
+        "notional_usdc": number(active_risk.get("notional_usdc")),
+        "stop_trigger_price": number(active_risk.get("stop_trigger_price")),
+        "target_trigger_price": number(active_risk.get("target_trigger_price")),
+        "projected_stop_pnl_usdc": number(active_risk.get("projected_stop_pnl_usdc")),
+        "projected_target_pnl_usdc": number(active_risk.get("projected_target_pnl_usdc")),
+        "projected_account_risk_pct": number(active_risk.get("projected_account_risk_pct")),
+        "native_protection_complete": bool(active_risk.get("native_protection_complete")),
+        "native_breakeven_enabled": bool(active_risk.get("native_breakeven_enabled")),
+        "native_trailing_enabled": bool(active_risk.get("native_trailing_enabled")),
+        "protection_source": str(active_risk.get("protection_source") or ""),
     }
 
     payload = {
@@ -2238,6 +2276,10 @@ def main() -> None:
             "available_balance": available_balance,
             "total_asset_value": number(latest_account.get("total_asset_value")),
             "pending_order_count": int(number(latest_account.get("pending_order_count"))),
+            "active_strategy_key": str(live_status.get("active_strategy_key") or ""),
+            "active_strategy": str(live_status.get("active_strategy") or ""),
+            "active_risk": public_active_risk,
+            "strategy_states": strategy_states,
         },
         "model_match": compact_expected(expected),
         "current_model_slice": current_model,

@@ -319,6 +319,9 @@
       main { width: min(100vw - 20px, 1380px); padding-top: 16px; }
       header { display: block; }
       .pill { margin-top: 14px; white-space: normal; }
+      .strategy-switch { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; }
+      .strategy-switch button { min-width: 0; padding-inline: 4px; }
+      .strategy-scope { grid-column: 1 / -1; margin-left: 0; }
       .cards { grid-template-columns: 1fr 1fr; }
       .alerts { grid-template-columns: 1fr; }
       .card { min-height: 100px; padding: 14px; }
@@ -341,7 +344,8 @@
       <button type="button" data-strategy-view="combined" class="active">Total</button>
       <button type="button" data-strategy-view="qg1">Strategy 1</button>
       <button type="button" data-strategy-view="channel_v3">Strategy 2</button>
-      <span class="strategy-scope" id="strategyScope">Both strategies</span>
+      <button type="button" data-strategy-view="trend_v1">Strategy 3</button>
+      <span class="strategy-scope" id="strategyScope">All strategies</span>
     </nav>
 
     <section class="grid cards">
@@ -818,7 +822,7 @@
     }
 
     function setStrategyView(view) {
-      state.selectedStrategy = ["qg1", "channel_v3"].includes(view) ? view : "combined";
+      state.selectedStrategy = ["qg1", "channel_v3", "trend_v1"].includes(view) ? view : "combined";
       localStorage.setItem("lighterPublicStats.strategyView", state.selectedStrategy);
       document.querySelectorAll("[data-strategy-view]").forEach(button => {
         button.classList.toggle("active", button.dataset.strategyView === state.selectedStrategy);
@@ -1076,6 +1080,17 @@
       const guard = data.execution_guard || {};
       const guardActivity = data.guard_activity || {};
       const currentGuard = data.current_guard_stats || {};
+      const activeRisk = live.active_risk || {};
+      const strategyStates = live.strategy_states || {};
+      const strategyStateText = [
+        ["qg1", "S1"],
+        ["channel_v3", "S2"],
+        ["trend_v1", "S3"]
+      ].map(([key, label]) => `${label} ${strategyStates[key]?.enabled ? "on" : "paused"}`).join(" / ");
+      const riskOpen = activeRisk.open === true;
+      const protectionComplete = activeRisk.native_protection_complete === true;
+      const stopLoss = Math.max(0, -(activeRisk.projected_stop_pnl_usdc || 0));
+      const targetGain = Math.max(0, activeRisk.projected_target_pnl_usdc || 0);
       const guard24h = (guardActivity.windows || []).find(item => item.window === "24h") || {};
       const latestBlock = guardActivity.latest_block || {};
       const checkedAt = data.__checked_at || new Date().toISOString();
@@ -1093,9 +1108,33 @@
         row("Watchdog", watchdogEnabled ? (live.watchdog_ok ? "Running" : "Not running") : "Disabled intentionally", watchdogEnabled ? (live.watchdog_ok ? "green" : "red") : ""),
         row("Watchdog heartbeat", watchdogEnabled ? `${formatTime(live.watchdog_checked_at_utc)} | ${timeAgo(live.watchdog_checked_at_utc)}` : "--", watchdogEnabled && !live.watchdog_ok ? "red" : ""),
         row("Trading", live.live_enabled ? "Enabled" : "Disabled", live.live_enabled ? "green" : "red"),
+        row("Strategy set", strategyStateText || "--"),
         row("Paper status", live.paper_status || "--"),
         row("Paper action", live.paper_action || "--"),
         row("Position", `${live.position_side || "flat"} ${live.position_btc_abs ? fmtNum.format(live.position_btc_abs) + " BTC" : ""}`.trim()),
+        row("Position owner", riskOpen ? (activeRisk.strategy || "Unknown") : "Flat", riskOpen && !activeRisk.strategy_enabled ? "yellow" : ""),
+        row(
+          "Native TP / SL",
+          riskOpen
+            ? (protectionComplete
+              ? `${fmtUsd.format(activeRisk.target_trigger_price || 0)} / ${fmtUsd.format(activeRisk.stop_trigger_price || 0)}`
+              : "Incomplete active bracket")
+            : "No position",
+          riskOpen ? (protectionComplete ? "green" : "red") : ""
+        ),
+        row(
+          "Stop risk",
+          riskOpen
+            ? `${fmtUsd.format(stopLoss)} / ${fmtNum.format(activeRisk.projected_account_risk_pct || 0)}% account | target ${fmtUsd.format(targetGain)}`
+            : "$0.00 / 0.00% account",
+          riskOpen && (activeRisk.projected_account_risk_pct || 0) > 6.6 ? "red" : ""
+        ),
+        row(
+          "Profit protection",
+          riskOpen
+            ? `BE ${activeRisk.native_breakeven_enabled ? "on" : "off"} / trail ${activeRisk.native_trailing_enabled ? "on" : "off"}`
+            : "No position"
+        ),
         row("Available", fmtUsd.format(live.available_balance || 0)),
         row("Target leverage", guard.target_leverage ? `${fmtNum.format(guard.target_leverage)}x` : "--"),
         row("Next entry notional", guard.intended_entry_notional_usdc ? fmtUsd.format(guard.intended_entry_notional_usdc) : "--", guard.notional_cap_active ? "yellow" : ""),
