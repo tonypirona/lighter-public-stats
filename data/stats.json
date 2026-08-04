@@ -962,18 +962,53 @@
     "weak_weekday_bucket": {}
   },
   "live_status": {
+    "active_risk": {
+      "entry_price": 0.0,
+      "native_breakeven_enabled": false,
+      "native_protection_complete": true,
+      "native_trailing_enabled": false,
+      "notional_usdc": 0.0,
+      "open": false,
+      "projected_account_risk_pct": 0.0,
+      "projected_stop_pnl_usdc": 0.0,
+      "projected_target_pnl_usdc": 0.0,
+      "protection_source": "",
+      "qty": 0.0,
+      "side": "flat",
+      "stop_trigger_price": 0.0,
+      "strategy": "",
+      "strategy_enabled": false,
+      "strategy_key": "",
+      "target_trigger_price": 0.0
+    },
+    "active_strategy": "",
+    "active_strategy_key": "",
     "available_balance": 149.568464,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-08-04T23:47:06Z",
-    "monitor_cycle": 140,
+    "monitor_checked_at_utc": "2026-08-04T23:51:40Z",
+    "monitor_cycle": 144,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
     "pending_order_count": 0,
     "position_btc_abs": 0.0,
     "position_side": "flat",
+    "strategy_states": {
+      "channel_v3": {
+        "enabled": true,
+        "strategy": "Strategy 2 - Channel V3"
+      },
+      "qg1": {
+        "enabled": true,
+        "strategy": "Strategy 1 - QG2"
+      },
+      "trend_v1": {
+        "enabled": false,
+        "strategy": "Strategy 3 - Trend V1"
+      }
+    },
     "total_asset_value": 149.568464,
-    "watchdog_checked_at_utc": "2026-08-04T23:47:06Z",
+    "watchdog_checked_at_utc": "2026-08-04T23:51:40Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -1031,11 +1066,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-08-04T23:47:07Z",
+    "generated_at_utc": "2026-08-04T23:51:42Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-08-04T23:46:48+00:00"
+    "tracker_synced_at_utc": "2026-08-04T23:51:09+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1305,7 +1340,7 @@
       "gross_profit": 0,
       "net_pnl": -17.5758,
       "profit_factor": 0.0,
-      "since_utc": "2026-08-03T23:47:07Z",
+      "since_utc": "2026-08-03T23:51:42Z",
       "trade_count": 1,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -1325,7 +1360,7 @@
       "gross_profit": 12.4542,
       "net_pnl": -32.2965,
       "profit_factor": 0.2783,
-      "since_utc": "2026-07-28T23:47:07Z",
+      "since_utc": "2026-07-28T23:51:42Z",
       "trade_count": 8,
       "win_rate_pct": 50.0,
       "window": "7d"
@@ -1345,7 +1380,7 @@
       "gross_profit": 51.9348,
       "net_pnl": -58.2057,
       "profit_factor": 0.4715,
-      "since_utc": "2026-07-05T23:47:07Z",
+      "since_utc": "2026-07-05T23:51:42Z",
       "trade_count": 62,
       "win_rate_pct": 51.61,
       "window": "30d"
@@ -1410,7 +1445,9 @@
       "side": "long",
       "slippage_bp": -2.6792,
       "spread_bp": 0.0544,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 3 - Trend V1",
+      "strategy_key": "trend_v1"
     },
     {
       "closed_at": "2026-07-31T02:38:00Z",
@@ -1429,7 +1466,9 @@
       "side": "long",
       "slippage_bp": 1.0889,
       "spread_bp": 0.0933,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-31T01:52:00Z",
@@ -1448,7 +1487,9 @@
       "side": "long",
       "slippage_bp": -0.976,
       "spread_bp": 0.0155,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-31T01:47:00Z",
@@ -1467,7 +1508,9 @@
       "side": "long",
       "slippage_bp": 0.9676,
       "spread_bp": 0.2776,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-29T22:05:00Z",
@@ -1486,7 +1529,9 @@
       "side": "short",
       "slippage_bp": 3.1278,
       "spread_bp": 0.2269,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-29T19:12:00Z",
@@ -1505,7 +1550,9 @@
       "side": "long",
       "slippage_bp": 8.0898,
       "spread_bp": 0.3038,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-29T19:01:00Z",
@@ -1524,7 +1571,9 @@
       "side": "short",
       "slippage_bp": 1.9585,
       "spread_bp": 0.2943,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-29T18:53:00Z",
@@ -1543,7 +1592,9 @@
       "side": "short",
       "slippage_bp": 4.8834,
       "spread_bp": 0.1242,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 2 - Channel V3",
+      "strategy_key": "channel_v3"
     },
     {
       "closed_at": "2026-07-28T23:11:00Z",
@@ -1562,7 +1613,9 @@
       "side": "long",
       "slippage_bp": -0.2214,
       "spread_bp": 0.2517,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-28T23:09:00Z",
@@ -1581,7 +1634,9 @@
       "side": "long",
       "slippage_bp": 3.7905,
       "spread_bp": 0.1179,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-28T17:12:00Z",
@@ -1600,7 +1655,9 @@
       "side": "long",
       "slippage_bp": 4.3818,
       "spread_bp": 0.0078,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-27T22:02:00Z",
@@ -1619,7 +1676,9 @@
       "side": "long",
       "slippage_bp": 2.9636,
       "spread_bp": 0.4021,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T19:10:00Z",
@@ -1638,7 +1697,9 @@
       "side": "long",
       "slippage_bp": 1.9458,
       "spread_bp": 0.6784,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T13:11:00Z",
@@ -1657,7 +1718,9 @@
       "side": "long",
       "slippage_bp": -0.8756,
       "spread_bp": 0.5048,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T13:07:00Z",
@@ -1676,7 +1739,9 @@
       "side": "long",
       "slippage_bp": -8.4112,
       "spread_bp": 0.0154,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T09:17:00Z",
@@ -1695,7 +1760,9 @@
       "side": "long",
       "slippage_bp": 4.6309,
       "spread_bp": 0.0154,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T09:09:00Z",
@@ -1714,7 +1781,9 @@
       "side": "long",
       "slippage_bp": 5.9172,
       "spread_bp": 0.2381,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-24T08:58:00Z",
@@ -1733,7 +1802,9 @@
       "side": "long",
       "slippage_bp": 1.7102,
       "spread_bp": 0.3139,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-22T21:38:00Z",
@@ -1752,7 +1823,9 @@
       "side": "short",
       "slippage_bp": 3.4855,
       "spread_bp": 0.5378,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-22T12:10:00Z",
@@ -1771,7 +1844,9 @@
       "side": "long",
       "slippage_bp": 0.9729,
       "spread_bp": 0.6378,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-22T09:36:00Z",
@@ -1790,7 +1865,9 @@
       "side": "long",
       "slippage_bp": 1.1433,
       "spread_bp": 0.4024,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-21T21:09:00Z",
@@ -1809,7 +1886,9 @@
       "side": "long",
       "slippage_bp": 1.3719,
       "spread_bp": 0.5051,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-20T08:37:00Z",
@@ -1828,7 +1907,9 @@
       "side": "long",
       "slippage_bp": -20.9863,
       "spread_bp": 1.0024,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-20T00:55:00Z",
@@ -1847,7 +1928,9 @@
       "side": "long",
       "slippage_bp": -6.7794,
       "spread_bp": 0.0775,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-19T09:22:00Z",
@@ -1866,7 +1949,9 @@
       "side": "long",
       "slippage_bp": -1.1773,
       "spread_bp": 0.1084,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-19T05:35:00Z",
@@ -1885,7 +1970,9 @@
       "side": "long",
       "slippage_bp": 3.4032,
       "spread_bp": 0.3015,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-19T03:34:00Z",
@@ -1904,7 +1991,9 @@
       "side": "long",
       "slippage_bp": 2.861,
       "spread_bp": 0.2781,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-18T13:32:00Z",
@@ -1923,7 +2012,9 @@
       "side": "long",
       "slippage_bp": -0.2638,
       "spread_bp": 0.039,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-17T13:12:00Z",
@@ -1942,7 +2033,9 @@
       "side": "long",
       "slippage_bp": 0.0857,
       "spread_bp": 0.2227,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     },
     {
       "closed_at": "2026-07-17T05:49:00Z",
@@ -1961,7 +2054,9 @@
       "side": "long",
       "slippage_bp": -1.3176,
       "spread_bp": 0.4534,
-      "status": "closed"
+      "status": "closed",
+      "strategy": "Strategy 1 - QG2",
+      "strategy_key": "qg1"
     }
   ],
   "risk_hotspots": {
@@ -2567,6 +2662,7 @@
           "slippage_bp": 1.0889,
           "spread_bp": 0.0933,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -2587,6 +2683,7 @@
           "slippage_bp": -0.976,
           "spread_bp": 0.0155,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -2607,6 +2704,7 @@
           "slippage_bp": 0.9676,
           "spread_bp": 0.2776,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -2627,6 +2725,7 @@
           "slippage_bp": 8.0898,
           "spread_bp": 0.3038,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -2647,6 +2746,7 @@
           "slippage_bp": 1.9585,
           "spread_bp": 0.2943,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -2667,6 +2767,7 @@
           "slippage_bp": 4.8834,
           "spread_bp": 0.1242,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         }
       ],
@@ -3256,7 +3357,8 @@
           "slippage_bp": -2.6792,
           "spread_bp": 0.0544,
           "status": "closed",
-          "strategy_key": "qg1"
+          "strategy": "Strategy 3 - Trend V1",
+          "strategy_key": "trend_v1"
         },
         {
           "closed_at": "2026-07-31T02:38:00Z",
@@ -3276,6 +3378,7 @@
           "slippage_bp": 1.0889,
           "spread_bp": 0.0933,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3296,6 +3399,7 @@
           "slippage_bp": -0.976,
           "spread_bp": 0.0155,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3316,6 +3420,7 @@
           "slippage_bp": 0.9676,
           "spread_bp": 0.2776,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3336,6 +3441,7 @@
           "slippage_bp": 3.1278,
           "spread_bp": 0.2269,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3356,6 +3462,7 @@
           "slippage_bp": 8.0898,
           "spread_bp": 0.3038,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3376,6 +3483,7 @@
           "slippage_bp": 1.9585,
           "spread_bp": 0.2943,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3396,6 +3504,7 @@
           "slippage_bp": 4.8834,
           "spread_bp": 0.1242,
           "status": "closed",
+          "strategy": "Strategy 2 - Channel V3",
           "strategy_key": "channel_v3"
         },
         {
@@ -3416,6 +3525,7 @@
           "slippage_bp": -0.2214,
           "spread_bp": 0.2517,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3436,6 +3546,7 @@
           "slippage_bp": 3.7905,
           "spread_bp": 0.1179,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3456,6 +3567,7 @@
           "slippage_bp": 4.3818,
           "spread_bp": 0.0078,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3476,6 +3588,7 @@
           "slippage_bp": 2.9636,
           "spread_bp": 0.4021,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3496,6 +3609,7 @@
           "slippage_bp": 1.9458,
           "spread_bp": 0.6784,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3516,6 +3630,7 @@
           "slippage_bp": -0.8756,
           "spread_bp": 0.5048,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3536,6 +3651,7 @@
           "slippage_bp": -8.4112,
           "spread_bp": 0.0154,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3556,6 +3672,7 @@
           "slippage_bp": 4.6309,
           "spread_bp": 0.0154,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3576,6 +3693,7 @@
           "slippage_bp": 5.9172,
           "spread_bp": 0.2381,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3596,6 +3714,7 @@
           "slippage_bp": 1.7102,
           "spread_bp": 0.3139,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3616,6 +3735,7 @@
           "slippage_bp": 3.4855,
           "spread_bp": 0.5378,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3636,6 +3756,7 @@
           "slippage_bp": 0.9729,
           "spread_bp": 0.6378,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3656,6 +3777,7 @@
           "slippage_bp": 1.1433,
           "spread_bp": 0.4024,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3676,6 +3798,7 @@
           "slippage_bp": 1.3719,
           "spread_bp": 0.5051,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3696,6 +3819,7 @@
           "slippage_bp": -20.9863,
           "spread_bp": 1.0024,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3716,6 +3840,7 @@
           "slippage_bp": -6.7794,
           "spread_bp": 0.0775,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3736,6 +3861,7 @@
           "slippage_bp": -1.1773,
           "spread_bp": 0.1084,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3756,6 +3882,7 @@
           "slippage_bp": 3.4032,
           "spread_bp": 0.3015,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3776,6 +3903,7 @@
           "slippage_bp": 2.861,
           "spread_bp": 0.2781,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3796,6 +3924,7 @@
           "slippage_bp": -0.2638,
           "spread_bp": 0.039,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3816,6 +3945,7 @@
           "slippage_bp": 0.0857,
           "spread_bp": 0.2227,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -3836,6 +3966,7 @@
           "slippage_bp": -1.3176,
           "spread_bp": 0.4534,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         }
       ],
@@ -3855,11 +3986,11 @@
     },
     "qg1": {
       "clean_curve": {
-        "ending_equity": 99.4312,
+        "ending_equity": 111.1162,
         "leverage": 30.0,
-        "max_drawdown": 49.6601,
-        "max_drawdown_pct": 33.31,
-        "net_pct": -0.57,
+        "max_drawdown": 37.9751,
+        "max_drawdown_pct": 25.47,
+        "net_pct": 11.12,
         "notional_cap": 8000.0,
         "points": [
           {
@@ -4359,38 +4490,12 @@
             "pnl": -0.5077,
             "return_pct": -0.01516,
             "time": "2026-07-29T22:05:00Z"
-          },
-          {
-            "equity": 99.4312,
-            "pnl": -11.685,
-            "return_pct": -0.35053,
-            "time": "2026-08-04T23:31:00Z"
           }
         ],
         "starting_equity": 100.0
       },
       "label": "Strategy 1 - QG1",
       "recent_trades": [
-        {
-          "closed_at": "2026-08-04T23:31:00Z",
-          "entry": 64389.44,
-          "execution_cost_bp": -2.6248,
-          "exit": 64163.73,
-          "exit_reason": "market",
-          "market": "BTCUSDC.P",
-          "notional": 5014.01,
-          "opened_at": "2026-08-04T23:15:00Z",
-          "order_type": "mixed",
-          "pnl": -17.5758,
-          "qty": 0.07787,
-          "return_pct": -0.35053,
-          "role": "taker -> taker",
-          "side": "long",
-          "slippage_bp": -2.6792,
-          "spread_bp": 0.0544,
-          "status": "closed",
-          "strategy_key": "qg1"
-        },
         {
           "closed_at": "2026-07-29T22:05:00Z",
           "entry": 63907.9,
@@ -4409,6 +4514,7 @@
           "slippage_bp": 3.1278,
           "spread_bp": 0.2269,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4429,6 +4535,7 @@
           "slippage_bp": -0.2214,
           "spread_bp": 0.2517,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4449,6 +4556,7 @@
           "slippage_bp": 3.7905,
           "spread_bp": 0.1179,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4469,6 +4577,7 @@
           "slippage_bp": 4.3818,
           "spread_bp": 0.0078,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4489,6 +4598,7 @@
           "slippage_bp": 2.9636,
           "spread_bp": 0.4021,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4509,6 +4619,7 @@
           "slippage_bp": 1.9458,
           "spread_bp": 0.6784,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4529,6 +4640,7 @@
           "slippage_bp": -0.8756,
           "spread_bp": 0.5048,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4549,6 +4661,7 @@
           "slippage_bp": -8.4112,
           "spread_bp": 0.0154,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4569,6 +4682,7 @@
           "slippage_bp": 4.6309,
           "spread_bp": 0.0154,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4589,6 +4703,7 @@
           "slippage_bp": 5.9172,
           "spread_bp": 0.2381,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4609,6 +4724,7 @@
           "slippage_bp": 1.7102,
           "spread_bp": 0.3139,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4629,6 +4745,7 @@
           "slippage_bp": 3.4855,
           "spread_bp": 0.5378,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4649,6 +4766,7 @@
           "slippage_bp": 0.9729,
           "spread_bp": 0.6378,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4669,6 +4787,7 @@
           "slippage_bp": 1.1433,
           "spread_bp": 0.4024,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4689,6 +4808,7 @@
           "slippage_bp": 1.3719,
           "spread_bp": 0.5051,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4709,6 +4829,7 @@
           "slippage_bp": -20.9863,
           "spread_bp": 1.0024,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4729,6 +4850,7 @@
           "slippage_bp": -6.7794,
           "spread_bp": 0.0775,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4749,6 +4871,7 @@
           "slippage_bp": -1.1773,
           "spread_bp": 0.1084,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4769,6 +4892,7 @@
           "slippage_bp": 3.4032,
           "spread_bp": 0.3015,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4789,6 +4913,7 @@
           "slippage_bp": 2.861,
           "spread_bp": 0.2781,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4809,6 +4934,7 @@
           "slippage_bp": -0.2638,
           "spread_bp": 0.039,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4829,6 +4955,7 @@
           "slippage_bp": 0.0857,
           "spread_bp": 0.2227,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4849,6 +4976,7 @@
           "slippage_bp": -1.3176,
           "spread_bp": 0.4534,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4869,6 +4997,7 @@
           "slippage_bp": 1.8754,
           "spread_bp": 0.2353,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4889,6 +5018,7 @@
           "slippage_bp": 1.7413,
           "spread_bp": 0.0156,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4909,6 +5039,7 @@
           "slippage_bp": -8.4533,
           "spread_bp": 0.6227,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4929,6 +5060,7 @@
           "slippage_bp": 0.9607,
           "spread_bp": 0.1626,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4949,6 +5081,7 @@
           "slippage_bp": -10.6285,
           "spread_bp": 0.6635,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         },
         {
@@ -4969,21 +5102,105 @@
           "slippage_bp": 3.285,
           "spread_bp": 0.1705,
           "status": "closed",
+          "strategy": "Strategy 1 - QG2",
+          "strategy_key": "qg1"
+        },
+        {
+          "closed_at": "2026-07-14T09:41:00Z",
+          "entry": 62508.74,
+          "execution_cost_bp": 2.5493,
+          "exit": 62543.5,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 1835.88,
+          "opened_at": "2026-07-14T09:38:00Z",
+          "order_type": "market",
+          "pnl": 1.0209,
+          "qty": 0.02937,
+          "return_pct": 0.05561,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": 2.1495,
+          "spread_bp": 0.3998,
+          "status": "closed",
+          "strategy": "Strategy 1 - QG2",
           "strategy_key": "qg1"
         }
       ],
       "summary": {
-        "avg_execution_cost_bp": -0.8393,
-        "avg_slippage_bp": -1.1632,
-        "avg_spread_bp": 0.3491,
-        "avg_trade_pnl": -0.3621,
-        "avg_trade_return_pct": 0.00188,
-        "gross_loss": -106.5194,
+        "avg_execution_cost_bp": -0.8175,
+        "avg_slippage_bp": -1.1447,
+        "avg_spread_bp": 0.353,
+        "avg_trade_pnl": -0.1522,
+        "avg_trade_return_pct": 0.00618,
+        "gross_loss": -88.9436,
         "gross_profit": 76.4666,
-        "net_pnl": -30.0528,
-        "profit_factor": 0.7179,
-        "trade_count": 83,
-        "win_rate_pct": 55.42
+        "net_pnl": -12.477,
+        "profit_factor": 0.8597,
+        "trade_count": 82,
+        "win_rate_pct": 56.1
+      }
+    },
+    "trend_v1": {
+      "clean_curve": {
+        "ending_equity": 89.484,
+        "leverage": 30.0,
+        "max_drawdown": 10.516,
+        "max_drawdown_pct": 10.52,
+        "net_pct": -10.52,
+        "notional_cap": 8000.0,
+        "points": [
+          {
+            "equity": 100.0,
+            "pnl": 0.0,
+            "return_pct": 0.0,
+            "time": ""
+          },
+          {
+            "equity": 89.484,
+            "pnl": -10.516,
+            "return_pct": -0.35053,
+            "time": "2026-08-04T23:31:00Z"
+          }
+        ],
+        "starting_equity": 100.0
+      },
+      "label": "Strategy 3 - Trend V1",
+      "recent_trades": [
+        {
+          "closed_at": "2026-08-04T23:31:00Z",
+          "entry": 64389.44,
+          "execution_cost_bp": -2.6248,
+          "exit": 64163.73,
+          "exit_reason": "market",
+          "market": "BTCUSDC.P",
+          "notional": 5014.01,
+          "opened_at": "2026-08-04T23:15:00Z",
+          "order_type": "mixed",
+          "pnl": -17.5758,
+          "qty": 0.07787,
+          "return_pct": -0.35053,
+          "role": "taker -> taker",
+          "side": "long",
+          "slippage_bp": -2.6792,
+          "spread_bp": 0.0544,
+          "status": "closed",
+          "strategy": "Strategy 3 - Trend V1",
+          "strategy_key": "trend_v1"
+        }
+      ],
+      "summary": {
+        "avg_execution_cost_bp": -2.6248,
+        "avg_slippage_bp": -2.6792,
+        "avg_spread_bp": 0.0544,
+        "avg_trade_pnl": -17.5758,
+        "avg_trade_return_pct": -0.35053,
+        "gross_loss": -17.5758,
+        "gross_profit": 0,
+        "net_pnl": -17.5758,
+        "profit_factor": 0.0,
+        "trade_count": 1,
+        "win_rate_pct": 0.0
       }
     }
   },
