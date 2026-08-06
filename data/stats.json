@@ -551,15 +551,15 @@
     "starting_equity": 100.0
   },
   "current_guard_stats": {
-    "avg_block_chase_bp": 4.9446,
+    "avg_block_chase_bp": 4.0348,
     "avg_entry_book_chase_bp": -0.6792,
     "avg_slippage_bp": 1.3356,
     "avg_trade_pnl": -2.8763,
-    "block_rate_pct": 15.0,
-    "blocked_entries": 3,
+    "block_rate_pct": 19.05,
+    "blocked_entries": 4,
     "closed_trades": 15,
     "effective_at_utc": "2026-07-24T09:25:00Z",
-    "entry_records": 20,
+    "entry_records": 21,
     "max_block_chase_bp": 6.1576,
     "net_pnl": -43.1439,
     "profit_factor": 0.24,
@@ -646,7 +646,7 @@
       "topic": "Live-forward edge diagnostics"
     },
     {
-      "evidence": "20 signals, 3 blocked.",
+      "evidence": "21 signals, 4 blocked.",
       "next_step": "Compare current-guard PF/drawdown before loosening or tightening.",
       "priority": "watch",
       "status": "review",
@@ -838,36 +838,36 @@
   },
   "guard_activity": {
     "latest_block": {
-      "book_chase_bp": 4.5198,
-      "effect": "open_short",
-      "reason": "Entry preflight blocked: sell/short entry book moved 4.5198 bp from reference, max is 1.5000 bp.",
-      "spread_bp": 0.0307,
-      "time": "2026-07-30T13:51:08Z"
+      "book_chase_bp": 1.3056,
+      "effect": "open_long",
+      "reason": "Entry preflight blocked: buy/long entry book moved 1.3056 bp from reference, max is 0.7500 bp.",
+      "spread_bp": 0.1869,
+      "time": "2026-08-06T13:08:05Z"
     },
     "windows": [
       {
-        "avg_block_chase_bp": 0.0,
-        "block_rate_pct": 0.0,
-        "blocked_entries": 0,
-        "entry_records": 0,
-        "max_block_chase_bp": 0.0,
+        "avg_block_chase_bp": 1.3056,
+        "block_rate_pct": 100.0,
+        "blocked_entries": 1,
+        "entry_records": 1,
+        "max_block_chase_bp": 1.3056,
         "sent_entries": 0,
         "window": "24h"
       },
       {
-        "avg_block_chase_bp": 4.5198,
-        "block_rate_pct": 16.67,
-        "blocked_entries": 1,
-        "entry_records": 6,
+        "avg_block_chase_bp": 2.9127,
+        "block_rate_pct": 28.57,
+        "blocked_entries": 2,
+        "entry_records": 7,
         "max_block_chase_bp": 4.5198,
         "sent_entries": 5,
         "window": "7d"
       },
       {
-        "avg_block_chase_bp": 10.3918,
-        "block_rate_pct": 9.91,
-        "blocked_entries": 11,
-        "entry_records": 111,
+        "avg_block_chase_bp": 9.6346,
+        "block_rate_pct": 10.71,
+        "blocked_entries": 12,
+        "entry_records": 112,
         "max_block_chase_bp": 52.6915,
         "sent_entries": 100,
         "window": "all"
@@ -985,8 +985,8 @@
     "active_strategy_key": "",
     "available_balance": 149.568464,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-08-06T13:07:07Z",
-    "monitor_cycle": 2380,
+    "monitor_checked_at_utc": "2026-08-06T13:12:06Z",
+    "monitor_cycle": 2385,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -1008,7 +1008,7 @@
       }
     },
     "total_asset_value": 149.568464,
-    "watchdog_checked_at_utc": "2026-08-06T13:07:07Z",
+    "watchdog_checked_at_utc": "2026-08-06T13:12:06Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -1066,11 +1066,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-08-06T13:07:07Z",
+    "generated_at_utc": "2026-08-06T13:12:07Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-08-06T13:06:42+00:00"
+    "tracker_synced_at_utc": "2026-08-06T13:10:42+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1084,16 +1084,16 @@
     "closed_bot_trades": 8,
     "current_paper_action": "WAIT",
     "current_paper_status": "flat_no_pending_signal",
-    "expected_model_trades": 1,
-    "filled_expected_entries": 1,
-    "generated_at_utc": "2026-08-06T13:07:06+00:00",
+    "expected_model_trades": 2,
+    "filled_expected_entries": 2,
+    "generated_at_utc": "2026-08-06T13:12:07+00:00",
     "missing_expected_entries": 0,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": -0.076393,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
     "unexpected_live_entries": 11,
-    "until_utc": "2026-08-06T13:07:04+00:00"
+    "until_utc": "2026-08-06T13:12:04+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1340,7 +1340,7 @@
       "gross_profit": 0,
       "net_pnl": 0,
       "profit_factor": 0.0,
-      "since_utc": "2026-08-05T13:07:07Z",
+      "since_utc": "2026-08-05T13:12:07Z",
       "trade_count": 0,
       "win_rate_pct": 0.0,
       "window": "24h"
@@ -1360,7 +1360,7 @@
       "gross_profit": 3.5296,
       "net_pnl": -26.156,
       "profit_factor": 0.1189,
-      "since_utc": "2026-07-30T13:07:07Z",
+      "since_utc": "2026-07-30T13:12:07Z",
       "trade_count": 4,
       "win_rate_pct": 50.0,
       "window": "7d"
@@ -1380,7 +1380,7 @@
       "gross_profit": 48.2378,
       "net_pnl": -53.8611,
       "profit_factor": 0.4725,
-      "since_utc": "2026-07-07T13:07:07Z",
+      "since_utc": "2026-07-07T13:12:07Z",
       "trade_count": 54,
       "win_rate_pct": 48.15,
       "window": "30d"
