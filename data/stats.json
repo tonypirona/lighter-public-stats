@@ -873,12 +873,12 @@
         "window": "24h"
       },
       {
-        "avg_block_chase_bp": 0.522,
-        "block_rate_pct": 75.0,
-        "blocked_entries": 3,
-        "entry_records": 4,
+        "avg_block_chase_bp": 1.5031,
+        "block_rate_pct": 100.0,
+        "blocked_entries": 2,
+        "entry_records": 2,
         "max_block_chase_bp": 2.1808,
-        "sent_entries": 1,
+        "sent_entries": 0,
         "window": "7d"
       },
       {
@@ -1003,8 +1003,8 @@
     "active_strategy_key": "",
     "available_balance": 146.299902,
     "live_enabled": true,
-    "monitor_checked_at_utc": "2026-08-18T15:37:07Z",
-    "monitor_cycle": 2237,
+    "monitor_checked_at_utc": "2026-08-18T15:42:08Z",
+    "monitor_cycle": 2242,
     "monitor_ok": true,
     "paper_action": "WAIT",
     "paper_status": "flat_no_pending_signal",
@@ -1026,7 +1026,7 @@
       }
     },
     "total_asset_value": 146.299902,
-    "watchdog_checked_at_utc": "2026-08-18T15:37:07Z",
+    "watchdog_checked_at_utc": "2026-08-18T15:42:08Z",
     "watchdog_enabled": true,
     "watchdog_intentionally_disabled": false,
     "watchdog_ok": true
@@ -1084,11 +1084,11 @@
     }
   },
   "meta": {
-    "generated_at_utc": "2026-08-18T15:37:07Z",
+    "generated_at_utc": "2026-08-18T15:42:10Z",
     "market": "BTCUSDC.P",
     "public_notice": "No API keys, account index, order IDs, client IDs, or raw exchange payloads are included.",
     "source": "sanitized local export",
-    "tracker_synced_at_utc": "2026-08-18T15:32:11+00:00"
+    "tracker_synced_at_utc": "2026-08-18T15:38:09+00:00"
   },
   "model_match": {
     "actual_duplicate_trade_links": 0,
@@ -1104,14 +1104,14 @@
     "current_paper_status": "flat_no_pending_signal",
     "expected_model_trades": 10,
     "filled_expected_entries": 4,
-    "generated_at_utc": "2026-08-18T15:37:07+00:00",
+    "generated_at_utc": "2026-08-18T15:42:09+00:00",
     "missing_expected_entries": 2,
     "model": "entry_research_atr975_stop220_h07_h10_trail12_short35h15_lbe5_sbe10_lt4_ld2_rsi2_ret30m3_pvol12rg15_st30g15_qg2",
     "return_delta_pct_sum": -0.215493,
     "sent_no_fill_entries": 0,
     "since_utc": "2026-07-29T00:22:53.677817+00:00",
     "unexpected_live_entries": 11,
-    "until_utc": "2026-08-18T15:37:03+00:00"
+    "until_utc": "2026-08-18T15:42:04+00:00"
   },
   "net_preserving_regime_scan": {
     "candidate_summaries": [
@@ -1358,28 +1358,28 @@
       "gross_profit": 0,
       "net_pnl": 0,
       "profit_factor": 0.0,
-      "since_utc": "2026-08-17T15:37:07Z",
+      "since_utc": "2026-08-17T15:42:10Z",
       "trade_count": 0,
       "win_rate_pct": 0.0,
       "window": "24h"
     },
     {
-      "avg_execution_cost_bp": 2.7727,
-      "avg_slippage_bp": 2.5049,
-      "avg_trade_pnl": -4.1255,
-      "avg_trade_return_pct": -0.09143,
-      "clean_25x_max_drawdown": 2.743,
-      "clean_25x_max_drawdown_pct": 2.74,
-      "clean_25x_net_pct": -2.74,
-      "clean_leveraged_max_drawdown": 2.743,
-      "clean_leveraged_max_drawdown_pct": 2.74,
-      "clean_leveraged_net_pct": -2.74,
-      "gross_loss": -4.1255,
+      "avg_execution_cost_bp": 0.0,
+      "avg_slippage_bp": 0.0,
+      "avg_trade_pnl": 0.0,
+      "avg_trade_return_pct": 0.0,
+      "clean_25x_max_drawdown": 0.0,
+      "clean_25x_max_drawdown_pct": 0.0,
+      "clean_25x_net_pct": 0.0,
+      "clean_leveraged_max_drawdown": 0.0,
+      "clean_leveraged_max_drawdown_pct": 0.0,
+      "clean_leveraged_net_pct": 0.0,
+      "gross_loss": 0,
       "gross_profit": 0,
-      "net_pnl": -4.1255,
+      "net_pnl": 0,
       "profit_factor": 0.0,
-      "since_utc": "2026-08-11T15:37:07Z",
-      "trade_count": 1,
+      "since_utc": "2026-08-11T15:42:10Z",
+      "trade_count": 0,
       "win_rate_pct": 0.0,
       "window": "7d"
     },
@@ -1398,7 +1398,7 @@
       "gross_profit": 26.7033,
       "net_pnl": -44.7273,
       "profit_factor": 0.3738,
-      "since_utc": "2026-07-19T15:37:07Z",
+      "since_utc": "2026-07-19T15:42:10Z",
       "trade_count": 27,
       "win_rate_pct": 40.74,
       "window": "30d"
